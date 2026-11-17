@@ -59,7 +59,7 @@ const COURSE_LESSONS = [
   { n: 10, label: "10", step: "schedules", title: "Jobs on a schedule", file: "lesson10.html", ready: true, test: 9,
     summary: "Every morning, today's post idea and caption, sent to your phone. Jobs that run by themselves.",
     leaves: "Your team now acts on its own. How do you keep it safe?" },
-  { n: 11, label: "11", step: "safety", title: "Safe by default", file: "lesson11.html", ready: false,
+  { n: 11, label: "11", step: "safety", title: "Safe by default", file: "lesson11.html", ready: true, test: 9,
     summary: "Approval before anything risky, API keys kept secret, and a limit on what it can spend.",
     leaves: "It's safe. Will it still be running next week?" },
   { n: 12, label: "12", step: "for real", title: "Run it every day", file: "lesson12.html", ready: false,
