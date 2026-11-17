@@ -18,6 +18,11 @@ window.PYWORDS_EXTRA = {
   "and": { what: "True only when both sides are True.", ex: "owner = \"Support\"\nstatus = \"todo\"\nprint(owner == \"Support\" and status == \"todo\")", out: "True" },
   "startswith": { what: "True if the text begins with the given text.", ex: "print(\"HANDOFF to CEO: ok\".startswith(\"HANDOFF to \"))", out: "True" },
   "replace": { what: "Gives the text with every copy of the first text swapped for the second.", ex: "print(\"HANDOFF to Support\".replace(\"HANDOFF to \", \"\"))", out: "Support" },
+  "try": { what: "Try the indented lines. If one goes wrong, jump to except instead of crashing.", ex: "try:\n    print(10 / 0)\nexcept Exception:\n    print(\"can't divide by 0\")", out: "can't divide by 0" },
+  "except": { what: "What to do when the lines under try go wrong.", ex: "try:\n    print(int(\"abc\"))\nexcept Exception:\n    print(\"not a number\")", out: "not a number" },
+  "Exception": { what: "Python's name for any error. except Exception: catches them all.", ex: "try:\n    print(10 / 0)\nexcept Exception:\n    print(\"an error\")", out: "an error" },
+  "get": { what: "Looks a key up in a dictionary. If it isn't there, you get the second value instead.", ex: "orders = {101: \"paid\"}\nprint(orders.get(101, \"none\"))\nprint(orders.get(999, \"none\"))", out: "paid\nnone" },
+  "loads": { what: "json.loads reads JSON text and gives back the list or dictionary it holds.", ex: "import json\nd = json.loads('{\"order_id\": 101}')\nprint(d[\"order_id\"] + 1)", out: "102" },
   "clear": { what: "Empties a list: every item is taken out.", ex: "chat = [1, 2]\nchat.clear()\nprint(chat)", out: "[]" },
 };
 
@@ -36,7 +41,7 @@ const COURSE_LESSONS = [
   { n: 4, label: "4", step: "handoffs", title: "Shared notes and handoffs", file: "lesson4.html", ready: true, test: 10,
     summary: "A shared board of tasks, and clean handoffs from one bot to the next.",
     leaves: "Your bots only use tools you wrote. How do they plug into everything else?" },
-  { n: 5, label: "5", step: "standards", title: "MCP and A2A", file: "lesson5.html", ready: false,
+  { n: 5, label: "5", step: "standards", title: "MCP and A2A", file: "lesson5.html", ready: true, test: 11,
     summary: "The open standards: MCP plugs a bot into tools, A2A lets agents talk to each other.",
     leaves: "You know how it works inside. Time to set up a real one on your laptop." },
   { n: 6, label: "6", step: "install", title: "Hermes on your laptop", file: "lesson6.html", ready: false,

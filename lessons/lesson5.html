@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCP and A2A</title>
+<meta name="description" content="Lesson 5 of Build an AI Team: MCP plugs a bot into tools (tools/list, tools/call), A2A lets your agent hand work to another company's agent (Agent Cards, tasks).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Kalam:wght@400&family=Patrick+Hand&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem("notebook-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
+<link rel="stylesheet" href="https://mo-ri-ch.github.io/study-notebook-design/v1/style.css">
+<link rel="stylesheet" href="../assets/course.css">
+<style>
+  .json { font-family: var(--mono); font-size: 0.82rem; line-height: 1.45; white-space: pre-wrap; word-break: break-word; padding: 8px 12px; background: var(--paper); border: 2px solid var(--ink); border-radius: 8px; color: var(--ink); }
+  .json .k { color: var(--pen); }
+  .json .new { background: var(--hl-yellow); color: var(--on-hl); border-radius: 3px; }
+  .wire { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 640px) { .wire { grid-template-columns: 1fr; } }
+  .wire .lab { font-family: var(--hand); color: var(--pencil); margin: 0 0 2px; }
+  .grid { display: inline-grid; gap: 3px; margin: 6px 0; }
+  .grid span { width: 14px; height: 14px; border: 1.5px solid var(--ink); border-radius: 3px; background: var(--note-yellow); }
+  .toolrow { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px dashed var(--rule); font-size: .92rem; }
+  .toolrow .risk { font-size: .8rem; color: var(--redpen); }
+  .states { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+  .states span { font-family: var(--mono); font-size: .82rem; padding: 2px 10px; border-radius: 12px; border: 1.5px solid var(--rule); color: var(--pencil); }
+  .states span.on { border-color: var(--ink); background: var(--note-yellow); color: var(--ink); }
+  .states span.was { border-color: var(--ink); color: var(--ink); }
+</style>
+</head>
+<body data-pen="blue">
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← Build an AI Team</a>
+    <span class="where">Lesson 5 of 12</span>
+  </header>
+
+  <main data-paged>
+    <div class="paged-head">
+      <h1>MCP and A2A</h1>
+      <div class="progress" aria-label="Lesson parts"></div>
+    </div>
+
+    <!-- 1 -->
+    <section class="part" data-title="One plug for everything">
+      <h2>One plug for everything</h2>
+      <p class="say">Amal Designers' work lives in many <mark>services</mark>: an order sheet, Instagram, a courier, WhatsApp. And there are many AI apps that run agents. Without a shared standard, every app needs its own connection to every service: 3 apps × 4 services = 12 to build.</p>
+      <p class="say">With <mark data-peek="Model Context Protocol. Started by Anthropic in 2024; now an open standard looked after by the Agentic AI Foundation, part of the Linux Foundation.">MCP</mark>, each service is wrapped once, as an <mark>MCP server</mark>, and each app learns MCP once, as an <mark>MCP client</mark>: 3 + 4 = 7.<br><b class="eqbox">without a standard: apps × services · with MCP: apps + services</b></p>
+      <div class="activity">
+        <div class="do">Change the numbers. Compare.</div>
+        <div class="tryrow"><label for="s1A">AI apps</label><input id="s1A" type="range" min="1" max="8" value="3" style="width:8em"><b id="s1AV"></b>
+          <label for="s1S" style="margin-left:12px">services</label><input id="s1S" type="range" min="1" max="12" value="4" style="width:8em"><b id="s1SV"></b></div>
+        <div id="s1Out"></div>
+      </div>
+      <p class="hook">So what does an MCP server actually say?</p>
+    </section>
+
+    <!-- 2 -->
+    <section class="part" data-title="A server lists its tools">
+      <h2>A server lists its tools</h2>
+      <p class="say">First, the client asks the server: what tools do you have? This question is called <code>tools/list</code>. For each tool, the server answers with its name, a description, and the inputs it needs. The client then writes one line per tool into the bot's instructions, so the bot knows what it can use.<br><b class="eqbox">tools/list → name, description, inputs</b></p>
+      <div class="activity">
+        <div class="do">Pick a server. See its answer, and the lines the bot gets.</div>
+        <div class="chips" id="s2Srv"></div>
+        <div class="wire">
+          <div><p class="lab">the server's answer (JSON)</p><div class="json" id="s2Json"></div></div>
+          <div><p class="lab">lines in the bot's instructions</p><div class="json" id="s2Lines"></div></div>
+        </div>
+      </div>
+      <p class="say" style="position:relative">These messages are <mark data-peek="JavaScript Object Notation: a common way to write lists and dictionaries as text, so programs can send them to each other.">JSON</mark>: lists and dictionaries written as text.<button class="doubt" type="button" data-peek-from="realPeek" aria-label="Are these the real MCP messages?">🤔</button></p>
+      <div hidden id="realPeek"><b>🤔 Are these the real MCP messages?</b>
+        <div style="margin-top:6px">The shape is real: <code>tools/list</code>, <code>tools/call</code>, and each tool's name, description and <code>inputSchema</code>. Real messages carry a few more fields, like the protocol version (the current one is dated 2026-07-28). The services here are made up.</div>
+      </div>
+      <p class="hook">The bot knows the tool. How does it use it?</p>
+    </section>
+
+    <!-- 3 -->
+    <section class="part" data-title="Calling a tool">
+      <h2>Calling a tool</h2>
+      <p class="say">To use a tool, the client sends <code>tools/call</code> with the tool's name and its arguments. The server checks them, runs the tool, and sends back the result, or an error that says what was wrong. The error goes back to the bot, like any tool result, so it can try again.<br><b class="eqbox">tools/call {name, arguments} → result or error</b></p>
+      <div class="activity">
+        <div class="do">Change the call. Send it.</div>
+        <div class="tryrow"><label for="s3Name">name</label><select id="s3Name"><option>order_status</option><option>order_stats</option></select>
+          <label for="s3Key">argument</label><select id="s3Key"><option>order_id</option><option>id</option></select>
+          <label for="s3Val">value</label><select id="s3Val"><option>101</option><option>102</option><option>999</option></select>
+          <button class="primary" id="s3Send" type="button">Send</button></div>
+        <div class="wire">
+          <div><p class="lab">tools/call</p><div class="json" id="s3Req"></div></div>
+          <div><p class="lab">the server's reply</p><div class="json" id="s3Res"></div></div>
+        </div>
+      </div>
+      <p class="hook">Count it on new numbers.</p>
+    </section>
+
+    <section class="part" data-nonum data-title="✏️ Practice 5.1">
+      <h2>✏️ Practice 5.1</h2>
+      <p class="say">Remember:<br><b class="eqbox">without a standard: apps × services · with MCP: apps + services</b><br><b class="eqbox">tools/list → name, description, inputs</b> (one line per tool for the bot)</p>
+      <div class="activity">
+        <div class="do"><span data-peek="Take a pen and paper, or use the ✎ pen on this page.">Work each one out.</span> Type the answer, press Check.</div>
+        <div class="pq" data-ans="20" data-tol="0.1" data-hint="Every app needs its own connection to every service: multiply." data-work="4 apps × 5 services = 20 connections.">
+          <div class="pq-q">4 AI apps, 5 services, no standard. How many connections must be built?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="9" data-tol="0.1" data-hint="With MCP, each service is wrapped once and each app learns MCP once: add." data-work="4 MCP clients + 5 MCP servers = 9.">
+          <div class="pq-q">Same apps and services, with MCP. How many pieces must be built?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="1" data-tol="0.1" data-hint="With MCP, a new service only needs its own server. The apps already speak MCP." data-work="One new MCP server. The 4 apps can use it straight away.<br>(Without a standard: 4 new connections.)">
+          <div class="pq-q">Same setup, with MCP. You add one new service, a payments app. How many new pieces must be built?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="5" data-tol="0.1" data-hint="tools/list gives one line per tool. Add the tools from both servers." data-work="3 tools from the order sheet + 2 from the courier = 5 lines.">
+          <div class="pq-q">Operations is connected to two MCP servers: the order sheet with <b>3</b> tools and the courier with <b>2</b>. How many tool lines are added to its instructions?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+      </div>
+      <p class="hook">Should every bot get every tool?</p>
+    </section>
+
+    <!-- 4 -->
+    <section class="part" data-title="Only the tools it needs">
+      <h2>Only the tools it needs</h2>
+      <p class="say">An MCP server may offer tools that change things for real: publish a post, delete one, refund an order. A bot that only drafts captions doesn't need those. So you choose, bot by bot, which tools it sees. Fewer tools also means shorter instructions.<br><b class="eqbox">each bot gets only the tools its role needs</b></p>
+      <div class="activity">
+        <div class="do">The Instagram server's tools. Which should Marketing get?</div>
+        <div id="s4Rows"></div>
+        <p class="redcheck" id="s4Say" hidden></p>
+      </div>
+      <p class="say">The social media manager still publishes. Marketing drafts, she decides.</p>
+      <p class="hook">Some services aren't tools, though. They're agents.</p>
+    </section>
+
+    <!-- 5 -->
+    <section class="part" data-title="A2A: agent to agent">
+      <h2>A2A: agent to agent</h2>
+      <p class="say">Say the courier company runs its own agent. You can't call it like a tool: it's a whole agent that works on its own side. <mark data-peek="Agent2Agent. Started by Google in 2025; version 1.0 came out in 2026. Looked after by the Agentic AI Foundation, part of the Linux Foundation.">A2A</mark> is the standard for this. First, you read its <mark>Agent Card</mark>: who it is, its address, and its skills. Then you send it a <mark>task</mark> in plain words, and follow the task's status until it's done.<br><b class="eqbox">MCP: a bot uses a tool · A2A: an agent asks another agent</b></p>
+      <div class="activity">
+        <div class="do">Operations books a pickup with the courier's agent. Step through.</div>
+        <div class="json" id="s5Card" style="font-size:.78rem"></div>
+        <div class="states" id="s5States"></div>
+        <div class="tx" id="s5Tx" style="min-height:5em;align-content:start"></div>
+        <p class="count" id="s5Say" style="margin:8px 0 0"></p>
+        <div class="btnrow">
+          <button class="primary" id="s5Next">Next step →</button>
+          <button id="s5Back" hidden>← Back</button>
+          <button id="s5Again" hidden>↺ Start again</button>
+        </div>
+      </div>
+      <p class="hook">MCP or A2A: how do you tell?</p>
+    </section>
+
+    <!-- 6 -->
+    <section class="part" data-title="MCP or A2A?">
+      <h2>MCP or A2A?</h2>
+      <p class="say">Ask: is the other side a tool that does one thing when called, or an agent that thinks and works on its own, maybe asking questions back? A tool → MCP. An agent → A2A.</p>
+      <div class="activity">
+        <div class="do">Pick for each one.</div>
+        <div id="s6Rows"></div>
+        <p class="redcheck" id="s6Say" hidden></p>
+      </div>
+      <p class="hook">Try it on new numbers.</p>
+    </section>
+
+    <section class="part" data-nonum data-title="✏️ Practice 5.2">
+      <h2>✏️ Practice 5.2</h2>
+      <p class="say">Remember:<br><b class="eqbox">each bot gets only the tools its role needs</b><br><b class="eqbox">MCP: a bot uses a tool · A2A: an agent asks another agent</b><br>An A2A task's status: <code>submitted</code> → <code>working</code> → <code>completed</code>, with <code>input-required</code> when it needs an answer from you.</p>
+      <div class="activity">
+        <div class="do"><span data-peek="Take a pen and paper, or use the ✎ pen on this page.">Work each one out.</span> Type the answer, press Check.</div>
+        <div class="pq" data-ans="2" data-tol="0.1" data-hint="Keep only the tools that can't change anything for real without a person." data-work="read_comments and draft_post change nothing for real.<br>publish_post and delete_post do.<br>2 tools.">
+          <div class="pq-q">An Instagram server has <b>4</b> tools: <code>read_comments</code>, <code>draft_post</code>, <code>publish_post</code>, <code>delete_post</code>. Marketing only drafts. How many should it get?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="3" data-tol="0.1" data-hint="One line per tool the bot can see, after you choose." data-work="The server has 6 tools, but Production only sees the 3 it needs.<br>3 lines.">
+          <div class="pq-q">The order sheet server has <b>6</b> tools. Production is given only <b>3</b> of them. How many tool lines are in Production's instructions?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="2" data-tol="0.1" data-hint="Write the statuses in order. Count how often working appears." data-work="submitted → working → input-required → working → completed.<br>working appears 2 times.">
+          <div class="pq-q">An A2A task to the courier: it starts, then the courier asks “how heavy are the parcels?”, gets the answer, and finishes. How many times is the task <code>working</code>?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="4" data-tol="0.1" data-hint="Count the status changes: each arrow is one change." data-work="submitted → working (1) → input-required (2) → working (3) → completed (4).<br>4 changes.">
+          <div class="pq-q">Same task. How many times does its status <b>change</b>, from <code>submitted</code> to <code>completed</code>?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+      </div>
+      <p class="hook">What happens when a real LLM writes the call?</p>
+    </section>
+
+    <!-- 7 -->
+    <section class="part" data-title="A real LLM writes the call">
+      <h2>A real LLM writes the call</h2>
+      <p class="say">In Colab, a real model gets the tool lines in its instructions and asks for a tool by writing one line: <code>CALL</code>, then the JSON. The program reads the JSON, checks the tool and its inputs, and only then runs it. Anything wrong comes back as an error.<br><b class="eqbox">the program checks every call before it runs</b></p>
+      <div class="activity">
+        <div class="do">Example lines, made for this page. Does the tool run?</div>
+        <div id="s7Rows"></div>
+        <p class="redcheck" id="s7Say" hidden></p>
+      </div>
+      <p class="hook">Here's all of it in Python.</p>
+    </section>
+
+    <!-- 8 -->
+    <section class="part" data-title="The code">
+      <h2>The code</h2>
+      <p class="say">A tiny MCP server and client, and an A2A task, all in plain Python, with no network. Guess each <code>print</code>, then press <b>▶ Run</b>.</p>
+<pre><code>import json   <span class="c"># JSON: text that holds lists and dictionaries, so programs can send them to each other</span>
+
+<span class="c"># An MCP server for the order sheet. It lists its tools, and runs one when asked.</span>
+ORDERS = {101: "red frock, size 5, paid", 102: "pastel frock, size 3, packed"}
+
+def order_status(args):
+    return ORDERS.get(args["order_id"], "No order with that number")
+
+order_server = {
+    "tools": [{"name": "order_status",
+               "description": "Look up one order by its number.",
+               "inputSchema": {"type": "object",
+                               "properties": {"order_id": {"type": "integer"}},
+                               "required": ["order_id"]}}],
+    "run": {"order_status": order_status},
+}
+
+<span class="c"># tools/list: the first thing a client asks</span>
+def list_tools(server):
+    return {"jsonrpc": "2.0", "id": 1, "result": {"tools": server["tools"]}}
+
+<span class="c"># The client turns the list into lines for the bot's instructions</span>
+def describe(server):
+    lines = []
+    for t in list_tools(server)["result"]["tools"]:
+        needs = ", ".join(t["inputSchema"]["required"])
+        lines.append(f'{t["name"]}({needs}): {t["description"]}')
+    return "\n".join(lines)
+
+print(describe(order_server))
+
+<span class="c"># tools/call: run one tool with its arguments, or send back an error</span>
+def call_tool(server, request):
+    name = request["params"]["name"]
+    args = request["params"]["arguments"]
+    tool = None
+    for t in server["tools"]:
+        if t["name"] == name:
+            tool = t
+    if tool is None:
+        return {"jsonrpc": "2.0", "id": request["id"], "error": {"message": "Unknown tool: " + name}}
+    for need in tool["inputSchema"]["required"]:
+        if need not in args:
+            return {"jsonrpc": "2.0", "id": request["id"], "error": {"message": "Missing: " + need}}
+    text = server["run"][name](args)
+    return {"jsonrpc": "2.0", "id": request["id"], "result": {"content": [{"type": "text", "text": text}]}}
+
+<span class="c"># A bot asks for a tool by writing one line: CALL, then JSON</span>
+def handle(line, server):
+    try:
+        call = json.loads(line.replace("CALL ", "", 1))
+    except Exception:
+        return "Error: not valid JSON"
+    request = {"jsonrpc": "2.0", "id": 2, "method": "tools/call", "params": call}
+    reply = call_tool(server, request)
+    if "error" in reply:
+        return "Error: " + reply["error"]["message"]
+    return reply["result"]["content"][0]["text"]
+
+print(handle('CALL {"name": "order_status", "arguments": {"order_id": 101}}', order_server))
+print(handle('CALL {"name": "order_status", "arguments": {"id": 101}}', order_server))
+
+<span class="c"># A2A: another company's agent. First, read its Agent Card: who it is, what it can do.</span>
+courier_card = {"name": "SwiftShip Courier Agent",
+                "url": "https://swiftship.example/a2a",
+                "skills": [{"id": "book_pickup", "description": "Book a parcel pickup"}]}
+print(courier_card["name"], "can:", courier_card["skills"][0]["description"])
+
+<span class="c"># Send it a task. It works on its own side; we watch the task's status change.</span>
+def send_task(card, message):
+    task = {"id": "t-7", "status": "submitted", "message": message}
+    print(task["status"])
+    for status in ["working", "completed"]:   <span class="c"># what the courier's agent reports back</span>
+        task["status"] = status
+        print(task["status"])
+    task["result"] = "Pickup booked: Saturday 4 PM, 6 parcels"
+    return task
+
+task = send_task(courier_card, "Pick up 6 parcels from Kochi on Saturday.")
+print(task["result"])</code></pre>
+      <div class="run-area">
+        <button class="run-code" type="button" aria-expanded="false">▶ Run</button>
+        <div class="terminal" hidden><div class="term-bar">Terminal</div><pre class="term-out"><span class="prompt">$ python lesson5.py</span>
+order_status(order_id): Look up one order by its number.
+red frock, size 5, paid
+Error: Missing: order_id
+SwiftShip Courier Agent can: Book a parcel pickup
+submitted
+working
+completed
+Pickup booked: Saturday 4 PM, 6 parcels</pre></div>
+      </div>
+      <p class="run-links">
+        <a class="btn primary" href="https://colab.research.google.com/github/mo-ri-ch/agent-team/blob/main/notebooks/lesson5.ipynb" target="_blank" rel="noopener">▶ Run it in Google Colab</a>
+      </p>
+      <p class="muted-note">The notebook has all of this, then a real model choosing the tool and writing the call. Its first run downloads the model (about 3 GB). In Lesson 7, your bots use real MCP servers through Hermes.</p>
+      <p class="hook">Quick check: did it all make sense?</p>
+    </section>
+
+    <!-- 9 -->
+    <section class="part" data-title="Lesson test">
+      <h2>Lesson 5 test</h2>
+      <p class="say">5 questions, one for each idea in this lesson. Answer them all right to pass. A wrong answer tells you why, and which page to look at again.</p>
+      <div class="test" data-test="5">
+        <div class="quiz" data-page="lesson5.html#1" data-topic="One plug for everything" data-right="Right. 2 apps + 6 services = 8 with MCP, instead of 2 × 6 = 12.">
+          <div class="q"><small>1. Work it out</small>2 AI apps and 6 services, with MCP. How many pieces must be built?</div>
+          <div class="options">
+            <button data-why="That's without a standard: 2 × 6. With MCP, you add.">12</button>
+            <button data-right>8</button>
+            <button data-why="Each app needs its own MCP client too: 2 + 6.">6</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson5.html#2" data-topic="A server lists its tools" data-right="Right. tools/list tells the client what tools exist; the client puts them in the bot's instructions.">
+          <div class="q"><small>2. Idea</small>How does a bot find out what tools an MCP server has?</div>
+          <div class="options">
+            <button data-why="The bot can't look inside the server. The client asks for the list.">It guesses from the server's name</button>
+            <button data-right>The client asks tools/list and writes the tools into its instructions</button>
+            <button data-why="No one has to type them in: the server describes its own tools.">You type them into the chat</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson5.html#3" data-topic="Calling a tool" data-right="Right. The server checks the inputs and says what's missing; the bot can fix it.">
+          <div class="q"><small>3. Predict</small>A call sends <code>{"id": 101}</code> to a tool that needs <code>order_id</code>. What comes back?</div>
+          <div class="options">
+            <button data-why="The server checks the inputs first. id isn't order_id.">The order's details</button>
+            <button data-right>An error: Missing: order_id</button>
+            <button data-why="The server always answers: with a result, or with an error.">Nothing at all</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson5.html#5" data-topic="Only the tools it needs" data-right="Right. Marketing drafts; a person publishes. So it doesn't get publish_post.">
+          <div class="q"><small>4. Decide</small>Should Marketing get the Instagram tool <code>publish_post</code>?</div>
+          <div class="options">
+            <button data-why="Its role is to draft. Publishing is for the person who decides.">Yes: it writes the posts, so it should post them</button>
+            <button data-right>No: each bot gets only what its role needs, and a person publishes</button>
+            <button data-why="Bots can have tools. It's about which ones fit the role.">No: bots should never have any tools</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson5.html#7" data-topic="MCP or A2A?" data-right="Right. It's another company's agent that works on its own and can ask questions back: A2A.">
+          <div class="q"><small>5. Pick</small>A fabric supplier runs an agent that checks stock, asks which colour you want, and places the order. MCP or A2A?</div>
+          <div class="options">
+            <button data-why="It isn't one tool you call: it thinks, asks back and works on its own side.">MCP</button>
+            <button data-right>A2A</button>
+            <button data-why="There's a standard for this: A2A, agent to agent.">Neither</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+      <p class="hook">What comes next.</p>
+    </section>
+
+    <!-- 10 -->
+    <section class="part" data-title="Time for a real one">
+      <h2>Time for a real one</h2>
+      <p class="say">You've now built every part by hand: roles, a group chat, @mentions, a board, handoffs, MCP and A2A. A ready-made app does all of this for you, and runs all day. From Lesson 6, you set one up on your own laptop.</p>
+      <p class="bot-say" data-bot="operations">Will I get a real courier tool, and my own computer to work on?</p>
+      <div class="open-question">
+        <div>This leaves a question</div>
+        <div class="big">You've built it all by hand. What does a ready-made team app look like?</div>
+        <div>Lesson 6 answers it. (Coming soon.)</div>
+      </div>
+      <div class="mybiz" data-key="l5">For your business: list the services your work lives in. For each, write MCP (a tool to use) or A2A (another company's agent), and which bot should get it.</div>
+      <p><button class="done-toggle" data-done="5">Mark lesson as done</button></p>
+    </section>
+  </main>
+</div>
+
+<nav class="pagebar" aria-label="Move between parts">
+  <div class="inner">
+    <button data-page-back>← Previous</button>
+    <span data-page-label></span>
+    <button class="primary" data-page-next>Next →</button>
+  </div>
+</nav>
+
+<script src="../assets/course.js"></script>
+<script src="../assets/practice.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/common.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/pen.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/guide.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/codewalk.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = AG.esc;
+AG.WHO.swift = ["a-note", "SwiftShip"];
+// Pretty JSON with keys coloured; mark: a key whose line is highlighted
+const pretty = (o, mark) => "{\n" + Object.entries(o).map(([k, v]) => {
+    const l = `  <span class="k">"${k}"</span>: ${esc(JSON.stringify(v, null, 1).replace(/\n\s*/g, " "))}`;
+    return mark && JSON.stringify(v).includes(`"${mark}"`) ? `<span class="new">${l}</span>` : l;
+  }).join(",\n") + "\n}";
+
+// ---------- Part 1: apps × services vs apps + services ----------
+(function plugs() {
+  const a = $("s1A"), s = $("s1S"), out = $("s1Out");
+  function draw() {
+    const A = +a.value, S = +s.value; $("s1AV").textContent = A; $("s1SV").textContent = S;
+    const grid = `<span class="grid" style="grid-template-columns:repeat(${S},14px)">${"<span></span>".repeat(A * S)}</span>`;
+    out.innerHTML = `<div class="bar" style="grid-template-columns:11em 1fr 3em"><span>no standard</span><span class="track"><span class="fill" style="width:${A * S / 96 * 100}%"></span></span><span class="pct">${A * S}</span></div>
+      <div class="bar" style="grid-template-columns:11em 1fr 3em"><span>with MCP</span><span class="track"><span class="fill" style="width:${(A + S) / 96 * 100}%;background:var(--hl-green)"></span></span><span class="pct">${A + S}</span></div>
+      <p class="count" style="margin:4px 0 0">${A} × ${S} = ${A * S} connections, one per square: ${grid}<br>With MCP: ${A} clients + ${S} servers = ${A + S}.</p>`;
+  }
+  a.oninput = s.oninput = draw;
+  addReset(out, () => { a.value = 3; s.value = 4; draw(); });
+  draw();
+})();
+
+// ---------- Part 2: tools/list for three made-up servers ----------
+const SERVERS = {
+  "Order sheet": [{ name: "order_status", description: "Look up one order by its number.", inputSchema: { type: "object", properties: { order_id: { type: "integer" } }, required: ["order_id"] } },
+                  { name: "list_orders", description: "List orders with a given status.", inputSchema: { type: "object", properties: { status: { type: "string" } }, required: ["status"] } }],
+  "Instagram": [{ name: "draft_post", description: "Save a post as a draft. Nothing is published.", inputSchema: { type: "object", properties: { caption: { type: "string" } }, required: ["caption"] } },
+                { name: "read_comments", description: "Read the latest comments.", inputSchema: { type: "object", properties: { limit: { type: "integer" } }, required: [] } }],
+  "Courier": [{ name: "delivery_days", description: "How many days delivery takes to a city.", inputSchema: { type: "object", properties: { city: { type: "string" } }, required: ["city"] } }],
+};
+(function listTools() {
+  const json = $("s2Json"), lines = $("s2Lines"), names = Object.keys(SERVERS);
+  function show(i) {
+    const tools = SERVERS[names[i]];
+    json.innerHTML = pretty({ jsonrpc: "2.0", id: 1, result: { tools } });
+    lines.innerHTML = tools.map(t => esc(`${t.name}(${t.inputSchema.required.join(", ")}): ${t.description}`)).join("\n");
+  }
+  const pick = AG.chips($("s2Srv"), names, i => { pick(i); show(i); });
+  addReset(json, () => { pick(0); show(0); });
+  pick(0); show(0);
+})();
+
+// ---------- Part 3: tools/call, result or error ----------
+(function callTool() {
+  const ORDERS = { 101: "red frock, size 5, paid", 102: "pastel frock, size 3, packed" };
+  const n = $("s3Name"), k = $("s3Key"), v = $("s3Val"), req = $("s3Req"), res = $("s3Res");
+  function send() {
+    const r = { jsonrpc: "2.0", id: 2, method: "tools/call", params: { name: n.value, arguments: { [k.value]: +v.value } } };
+    req.innerHTML = pretty(r);
+    let reply;
+    if (n.value !== "order_status") reply = { jsonrpc: "2.0", id: 2, error: { message: "Unknown tool: " + n.value } };
+    else if (k.value !== "order_id") reply = { jsonrpc: "2.0", id: 2, error: { message: "Missing: order_id" } };
+    else reply = { jsonrpc: "2.0", id: 2, result: { content: [{ type: "text", text: ORDERS[v.value] || "No order with that number" }] } };
+    res.innerHTML = pretty(reply, reply.error ? "message" : "text");
+  }
+  $("s3Send").onclick = send;
+  [n, k, v].forEach(x => x.onchange = send);
+  addReset(req, () => { n.value = "order_status"; k.value = "order_id"; v.value = "101"; send(); });
+  send();
+})();
+
+// Sort rows: [label, right key, why]; opts: [[key, text]]
+function sortRows(rowsEl, sayEl, items, opts, allRight) {
+  let pick = {};
+  function draw() {
+    rowsEl.innerHTML = items.map(([l, right, why], i) => {
+      const p = pick[i], cls = p ? (p === right ? " right" : " wrong") : "";
+      return `<div class="sortrow${cls}" style="grid-template-columns:1fr auto"><span>${l}</span><span class="seg">${opts.map(([key, t]) =>
+        `<button type="button" data-i="${i}" data-b="${key}" class="${p === key ? "on" : ""}">${t}</button>`).join("")}</span>${p ? `<span class="why">${p === right ? "✓" : "✗"} ${why}</span>` : ""}</div>`;
+    }).join("");
+    rowsEl.querySelectorAll("button").forEach(b => b.onclick = () => { pick[b.dataset.i] = b.dataset.b; draw(); });
+    const n = Object.keys(pick).length, ok = items.filter((q, i) => pick[i] === q[1]).length;
+    sayEl.hidden = n < items.length; sayEl.classList.toggle("good", ok === items.length);
+    sayEl.textContent = ok === items.length ? allRight : `${ok} of ${items.length} right. Tap another choice to change one.`;
+  }
+  addReset(rowsEl, () => { pick = {}; draw(); });
+  draw();
+}
+
+// ---------- Part 4: which Instagram tools for Marketing? ----------
+sortRows($("s4Rows"), $("s4Say"), [
+  ["<code>read_comments</code>: read the latest comments", "yes", "Reading changes nothing, and helps plan posts."],
+  ["<code>draft_post</code>: save a draft, nothing published", "yes", "Drafting is Marketing's job, and nothing goes out."],
+  ["<code>publish_post</code>: post it for everyone to see", "no", "Publishing is for the person who decides. Marketing drafts."],
+  ["<code>delete_post</code>: remove a post", "no", "Deleting can't be undone. No bot needs it."],
+], [["yes", "Give it"], ["no", "Leave out"]], "✓ All 4 right. Marketing reads and drafts; a person publishes and deletes.");
+
+// ---------- Part 5: an A2A task to the courier's agent ----------
+(function a2a() {
+  $("s5Card").innerHTML = pretty({ name: "SwiftShip Courier Agent", url: "https://swiftship.example/a2a", skills: [{ id: "book_pickup", description: "Book a parcel pickup" }] });
+  const ST = ["submitted", "working", "input-required", "completed"];
+  const states = $("s5States");
+  const S = [
+    { at: -1, add: [["operations", "(reads the Agent Card at swiftship.example) It can book pickups."]], say: "The Agent Card says who the courier's agent is and what it can do." },
+    { at: 0, add: [["operations", "TASK → SwiftShip: Pick up 6 parcels from Kochi on Saturday."]], say: "Operations sends a task, in plain words. Status: submitted." },
+    { at: 1, add: [["swift", "working…"]], say: "The courier's agent works on its own side. Status: working." },
+    { at: 2, add: [["swift", "How heavy are the parcels in total?"]], say: "It needs an answer before it can go on. Status: input-required." },
+    { at: 1, add: [["operations", "About 3 kg in total."]], say: "Operations answers, and the task goes back to working." },
+    { at: 3, add: [["swift", "Pickup booked: Saturday 4 PM, 6 parcels."]], say: "Done. Status: completed, with the result. Operations can hand off to the CEO." },
+  ];
+  AG.stepper({ tx: $("s5Tx"), say: $("s5Say"), next: $("s5Next"), back: $("s5Back"), again: $("s5Again"), steps: S,
+    onStep: (i, s) => { const seen = S.slice(0, i + 1).map(x => x.at); states.innerHTML = ST.map((t, k) => `<span class="${s.at === k ? "on" : seen.includes(k) ? "was" : ""}">${t}</span>`).join(" → "); } });
+})();
+
+// ---------- Part 6: MCP or A2A? ----------
+sortRows($("s6Rows"), $("s6Say"), [
+  ["Look up an order in the order sheet", "mcp", "One thing, done when called: a tool."],
+  ["A fabric supplier's agent that checks stock and asks which colour you want", "a2a", "It thinks and asks back, on its own side: an agent."],
+  ["Find how many days delivery to Delhi takes", "mcp", "A simple lookup: a tool."],
+  ["A marketplace's seller agent that lists your dress and haggles with buyers' agents", "a2a", "It works on its own and talks to other agents: A2A."],
+], [["mcp", "MCP"], ["a2a", "A2A"]], "✓ All 4 right. A tool you call → MCP. An agent you ask → A2A.");
+
+// ---------- Part 7: which CALL lines run? ----------
+sortRows($("s7Rows"), $("s7Say"), [
+  ['<code>CALL {"name": "order_status", "arguments": {"order_id": 101}}</code>', "runs", "Valid JSON, a real tool, and its input is there: it runs."],
+  ['<code>CALL {"name": "order_stats", "arguments": {"order_id": 101}}</code>', "error", "No tool called order_stats: “Unknown tool”."],
+  ['<code>CALL {"name": "order_status", "arguments": {"order": 101}}</code>', "error", "The input must be called order_id: “Missing: order_id”."],
+  ["<code>CALL {'name': 'order_status', 'arguments': {'order_id': 101}}</code>", "error", "JSON needs double quotes \" \", not ' ': “not valid JSON”."],
+], [["runs", "Runs"], ["error", "Error"]], "✓ All 4 right. Only a call that passes every check runs.");
+</script>
+</body>
+</html>

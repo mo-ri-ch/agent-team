@@ -10,7 +10,7 @@ import json
 import os
 import re
 
-TITLES = {2: "Two bots talk", 3: "Who speaks next", 4: "Shared notes and handoffs"}
+TITLES = {2: "Two bots talk", 3: "Who speaks next", 4: "Shared notes and handoffs", 5: "MCP and A2A"}
 
 
 def cells_from(code):
@@ -37,9 +37,9 @@ for path in sorted(glob.glob("code/lesson[0-9].py")):
     if os.path.exists(real):
         cells.append({"cell_type": "markdown", "metadata": {}, "source": [
             "## Now a real LLM\n", "\n",
-            "The same code, with a small free model (Qwen2.5 1.5B) instead of the fake LLM.\n",
+            "Now with a small free model (Qwen2.5 1.5B) writing the replies.\n",
             "The first run downloads it (about 3 GB), so give it a few minutes.\n", "\n",
-            "Small models make mistakes, and may not write DONE. The turn limit stops the chat anyway.",
+            "Small models make mistakes. The program checks everything they write, and its limits stop a chat that goes wrong.",
         ]})
         cells += cells_from(open(real, encoding="utf-8").read())
     notebook = {"cells": cells,
