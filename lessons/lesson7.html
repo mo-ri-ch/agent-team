@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your team of bots</title>
+<meta name="description" content="Lesson 7 of Build an AI Team: set up Marketing, Production, Operations and an Analyst in Hermes Bot Mode. Profiles, SOUL.md, a model per bot, tools per bot, and the team chat.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Kalam:wght@400&family=Patrick+Hand&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem("notebook-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
+<link rel="stylesheet" href="https://mo-ri-ch.github.io/study-notebook-design/v1/style.css">
+<link rel="stylesheet" href="../assets/course.css">
+<style>
+  .tree { font-family: var(--mono); font-size: .88rem; line-height: 1.7; }
+  .tree button { font: inherit; background: none; border: 1.5px dashed transparent; border-radius: 6px; padding: 0 6px; color: var(--ink); cursor: pointer; }
+  .tree button:hover { border-color: var(--pencil); }
+  .tree button.on { background: var(--hl-yellow); color: var(--on-hl); border-color: var(--ink); }
+  .split { display: grid; grid-template-columns: 15em 1fr; gap: 14px; align-items: start; }
+  @media (max-width: 640px) { .split { grid-template-columns: 1fr; } }
+  .what { padding: 8px 12px; border-left: 4px solid var(--pen); background: var(--card); font-size: .92rem; }
+  .what pre { margin: 6px 0 0; font-size: .8rem; }
+  .soul { font-family: var(--mono); font-size: .82rem; white-space: pre-wrap; padding: 8px 12px; border: 2px solid var(--ink); border-radius: 8px; background: var(--paper); color: var(--ink); min-height: 9em; }
+  .soul .miss { color: var(--redpen); }
+  .checks label { display: flex; gap: 8px; align-items: baseline; padding: 3px 0; }
+  .mrow { display: grid; grid-template-columns: 7em 1fr 6em; gap: 10px; align-items: center; padding: 5px 0; border-bottom: 1px dashed var(--rule); font-size: .9rem; }
+  .mrow select { font: inherit; font-size: .85rem; }
+  .mrow .c { text-align: right; font-family: var(--mono); }
+  .vnote { font-size: .9rem; color: var(--pencil); }
+</style>
+</head>
+<body data-pen="blue">
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← Build an AI Team</a>
+    <span class="where">Lesson 7 of 12</span>
+  </header>
+
+  <main data-paged>
+    <div class="paged-head">
+      <h1>Your team of bots</h1>
+      <div class="progress" aria-label="Lesson parts"></div>
+    </div>
+
+    <!-- 1 -->
+    <section class="part" data-title="A bot is a profile">
+      <h2>A bot is a profile</h2>
+      <p class="say">In Hermes, each bot is a <mark>profile</mark>: its own folder, with its own settings, keys, instructions, memory and chat. That's the role you met at the start, made real: <code>SOUL.md</code> holds its instructions, and <code>config.yaml</code> its model and tools.<br><b class="eqbox">bot = SOUL.md (role) + config.yaml (model, tools)</b></p>
+      <div class="activity">
+        <div class="do">Marketing's folder. Tap a file to see what it holds.</div>
+        <div class="split">
+          <div class="tree" id="s1Tree"></div>
+          <div class="what" id="s1What"></div>
+        </div>
+      </div>
+      <p class="say">Because each bot has its own folder, Marketing's memory and keys never mix with Production's.</p>
+      <p class="hook">Let's hire the first one.</p>
+    </section>
+
+    <!-- 2 -->
+    <section class="part" data-title="Hire your first bot">
+      <h2>Hire your first bot</h2>
+      <p class="say">In the Hermes Desktop app, Bot Mode is on by default: open <b>Bots</b>, choose <b>New Agent</b>, and give it a name, a title and a one-line description. <b>Advanced</b> lets you pick its model, write its SOUL.md and choose its skills and tools. In the terminal, one command makes the profile, and the bot's name becomes a command of its own.<br><b class="eqbox">hermes profile create marketing → marketing chat</b></p>
+      <div class="activity">
+        <div class="do">Pick how you'll do it.</div>
+        <div class="modes" role="tablist" aria-label="Desktop or terminal">
+          <button class="mode on" data-how="app" role="tab" aria-selected="true">Desktop app</button>
+          <button class="mode" data-how="cli" role="tab" aria-selected="false">Terminal</button>
+        </div>
+        <div data-howp="app">
+          <ol style="margin:0;padding-left:1.3em;line-height:1.8">
+            <li>Open Hermes Desktop → <b>Bots</b> → <b>New Agent</b>.</li>
+            <li>Name: <code>Marketing</code> · Title: <code>Marketing lead</code></li>
+            <li>Description: <code>Plans posts and captions for the social media manager.</code></li>
+            <li><b>Advanced</b> → pin a model, and paste its SOUL.md (next page).</li>
+            <li>Save. Marketing appears in your roster, with its own chat.</li>
+          </ol>
+        </div>
+        <div data-howp="cli" hidden>
+          <p class="count" style="margin:0 0 4px">Make the profile. It also makes the command <code>marketing</code>.</p>
+<pre><code>hermes profile create marketing</code></pre>
+          <p class="count" style="margin:6px 0 4px">Pick its model (the same questions as <code>hermes model</code>):</p>
+<pre><code>marketing setup</code></pre>
+          <p class="count" style="margin:6px 0 4px">Write its instructions, then chat:</p>
+<pre><code>nano ~/.hermes/profiles/marketing/SOUL.md
+marketing chat</code></pre>
+        </div>
+      </div>
+      <p class="vnote">Checked against Hermes Agent v0.23 (November 2026). Bot Mode is new and changes often: if a step looks different, see the <a href="https://hermes-agent.nousresearch.com/docs/user-guide/bot-mode" target="_blank" rel="noopener">Bot Mode docs</a>.<button class="doubt" type="button" data-peek-from="nanoPeek" aria-label="What is nano?">🤔</button></p>
+      <div hidden id="nanoPeek"><b>🤔 What is nano?</b>
+        <div style="margin-top:6px">A simple text editor inside the terminal. Type or paste, then press Ctrl+O and Enter to save, and Ctrl+X to leave. Any text editor works too: the file is just text.</div>
+      </div>
+      <p class="hook">Its SOUL.md decides how it works. What goes in it?</p>
+    </section>
+
+    <!-- 3 -->
+    <section class="part" data-title="Write a good SOUL.md">
+      <h2>Write a good SOUL.md</h2>
+      <p class="say">SOUL.md is read before every chat, like the instructions you wrote by hand. A good one is short and covers four things: who the bot helps, its job, what it must never do, and who it hands work to.<br><b class="eqbox">SOUL.md: who you help · your job · never · hand off to</b></p>
+      <div class="activity">
+        <div class="do">Pick a bot. Tick the parts. Watch its SOUL.md.</div>
+        <div class="chips" id="s3Bots"></div>
+        <div class="checks" id="s3Parts"></div>
+        <div class="soul" id="s3Soul"></div>
+        <p class="redcheck" id="s3Say"></p>
+      </div>
+      <p class="say near" style="position:relative">The “never” lines matter most: they're the bot's half of the safety story.<button class="doubt" type="button" data-peek-from="neverPeek" aria-label="Will it always obey its never lines?">🤔</button></p>
+      <div hidden id="neverPeek"><b>🤔 Will it always obey its “never” lines?</b>
+        <div style="margin-top:6px">No. SOUL.md guides the model, but a model can slip. Real limits come from the program: which tools a bot has (later in this lesson), its own sandbox (Lesson 8) and approvals (Lesson 11).</div>
+      </div>
+      <p class="hook">Next: which brain for which bot?</p>
+    </section>
+
+    <!-- 4 -->
+    <section class="part" data-title="A model for each bot">
+      <h2>A model for each bot</h2>
+      <p class="say">Each bot can use a different model. Routine jobs, like packing lists, run fine on a cheap one. Writing posts, or reading weekly numbers, may need a stronger one. You pay for each bot's own tokens at its model's price.<br><b class="eqbox">team cost = sum of (bot's tokens × its price)</b><br>Operations: 3 million tokens × $0.10 = $0.30. Marketing: 2 million × $1.00 = $2. Together: $2.30 a month.</p>
+      <div class="activity">
+        <div class="do">Pick a model for each bot. Watch the monthly cost.</div>
+        <div id="s4Rows"></div>
+        <p class="qbig" id="s4Total" style="font-family:var(--mono);margin:8px 0 0"></p>
+      </div>
+      <p class="say">In the terminal: <code>operations config set model.default</code>, then the model's name. Prices here are examples.</p>
+      <p class="hook">Now put them in one room.</p>
+    </section>
+
+    <!-- 5 -->
+    <section class="part" data-title="The team chat">
+      <h2>The team chat</h2>
+      <p class="say">A <mark>group chat</mark> holds 2 to 6 bots. When you @mention bots, those answer, and they can @mention each other to hand work on. After each of your messages, the bots get at most 3 rounds, then it's your turn again: the round limit, built in.<br><b class="eqbox">2–6 bots · @mention who answers · 3 rounds max</b></p>
+      <div class="activity">
+        <div class="do"><span data-peek="An example chat, written for this page.">Step through a team chat.</span> Watch the rounds.</div>
+        <div class="tx" id="s5Tx" style="min-height:11em;align-content:start"></div>
+        <p class="count" id="s5Say" style="margin:8px 0 0"></p>
+        <div class="btnrow">
+          <button class="primary" id="s5Next">Next step →</button>
+          <button id="s5Back" hidden>← Back</button>
+          <button id="s5Again" hidden>↺ Start again</button>
+        </div>
+      </div>
+      <p class="hook">Count it on new numbers.</p>
+    </section>
+
+    <section class="part" data-nonum data-title="✏️ Practice 7.1">
+      <h2>✏️ Practice 7.1</h2>
+      <p class="say">Remember:<br><b class="eqbox">team cost = sum of (bot's tokens × its price)</b><br><b class="eqbox">2–6 bots · @mention who answers · 3 rounds max</b></p>
+      <div class="activity">
+        <div class="do"><span data-peek="Take a pen and paper, or use the ✎ pen on this page.">Work each one out.</span> Type the answer, press Check.</div>
+        <div class="pq" data-ans="3.9" data-tol="0.01" data-hint="Work out each bot's cost (tokens × price), then add them." data-work="Marketing: 2 × $1.00 = $2.00<br>Production: 1 × $0.50 = $0.50<br>Operations: 3 × $0.10 = $0.30<br>Analyst: 1 × $1.10 = $1.10<br>Total: $3.90 a month.">
+          <div class="pq-q">A month's tokens, in millions: Marketing <b>2</b> at $1.00, Production <b>1</b> at $0.50, Operations <b>3</b> at $0.10, Analyst <b>1</b> at $1.10. What does the team cost?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="1.8" data-tol="0.01" data-hint="Only Marketing changes: the new cost is 2 × 0.10. How much less is that?" data-work="Before: 2 × $1.00 = $2.00. After: 2 × $0.10 = $0.20.<br>$2.00 − $0.20 = $1.80 saved.">
+          <div class="pq-q">Same team. You move Marketing to the $0.10 model. How many dollars a month do you save?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="3" data-tol="0.1" data-hint="Each round, one bot is mentioned, so one reply. How many rounds are allowed?" data-work="Round 1: Production. Round 2: Operations. Round 3: Marketing.<br>The limit is 3 rounds, so 3 replies, then your turn.">
+          <div class="pq-q">You @mention Production. Every bot that replies @mentions exactly one other bot. How many bot replies come before it's your turn again?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="2" data-tol="0.1" data-hint="A room holds 2 to 6 bots. With the 4 you have, how many more fit?" data-work="A room holds at most 6 bots.<br>6 − 4 = 2 more.">
+          <div class="pq-q">Your room has Marketing, Production, Operations and the Analyst. How many more bots can join the same room?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+      </div>
+      <p class="hook">The bots can talk. Now, what can each one touch?</p>
+    </section>
+
+    <!-- 6 -->
+    <section class="part" data-title="Tools for each bot">
+      <h2>Tools for each bot</h2>
+      <p class="say">The MCP servers a bot can use are listed in its own <code>config.yaml</code>, under <code>mcp_servers</code>. So each bot gets only the tools its role needs. After you change them, type <code>/reload-mcp</code> in that bot's chat.<br><b class="eqbox">a bot's tools live in its own config.yaml</b></p>
+      <div class="activity">
+        <div class="do">Which bot should get each tool?</div>
+        <div id="s6Rows"></div>
+        <p class="redcheck" id="s6Say" hidden></p>
+<pre><code><span class="c"># ~/.hermes/profiles/production/config.yaml (an example)</span>
+mcp_servers:
+  orders:
+    url: "https://orders.example.com/mcp"</code></pre>
+      </div>
+      <p class="say">Make a new bot only when a role needs its own tools, keys, memory or schedule. Four good bots beat ten vague ones.</p>
+      <p class="hook">And when the team misbehaves?</p>
+    </section>
+
+    <!-- 7 -->
+    <section class="part" data-title="When it goes wrong">
+      <h2>When it goes wrong</h2>
+      <p class="say">Most team problems come from three places: a SOUL.md that's too vague, the wrong tools in a bot's config.yaml, or a model too weak for the job. Look there first.</p>
+      <div class="activity">
+        <div class="do">Match each problem to its fix.</div>
+        <div id="s7Rows"></div>
+        <p class="redcheck" id="s7Say" hidden></p>
+      </div>
+      <p class="hook">Quick check: did it all make sense?</p>
+    </section>
+
+    <!-- 8 -->
+    <section class="part" data-title="Lesson test">
+      <h2>Lesson 7 test</h2>
+      <p class="say">5 questions, one for each idea in this lesson. Answer them all right to pass. A wrong answer tells you why, and which page to look at again.</p>
+      <div class="test" data-test="7">
+        <div class="quiz" data-page="lesson7.html#1" data-topic="A bot is a profile" data-right="Right. SOUL.md is read before every chat: it's the bot's role.">
+          <div class="q"><small>1. Where</small>You want Operations to always write delivery messages in Malayalam. Which file do you change?</div>
+          <div class="options">
+            <button data-right>Operations' SOUL.md</button>
+            <button data-why=".env holds secrets like keys, not instructions.">Operations' .env</button>
+            <button data-why="Each bot has its own folder. Marketing's files don't change Operations.">Marketing's SOUL.md</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson7.html#2" data-topic="Hire your first bot" data-right="Right. Creating the profile also makes a command with its name.">
+          <div class="q"><small>2. Predict</small>You run <code>hermes profile create analyst</code>. How do you chat with it?</div>
+          <div class="options">
+            <button data-right><code>analyst chat</code></button>
+            <button data-why="That chats with your default Hermes, not the new bot.">hermes chat</button>
+            <button data-why="No install needed: the profile is ready, with its own command.">Install Hermes again</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson7.html#3" data-topic="Write a good SOUL.md" data-right="Right. Without a “never” line, nothing in its instructions stops it.">
+          <div class="q"><small>3. Spot the gap</small>Marketing's SOUL.md says who it helps, its job, and who it hands off to. What's missing?</div>
+          <div class="options">
+            <button data-why="Its model is set in config.yaml, not SOUL.md.">Its model</button>
+            <button data-right>What it must never do, like publish without approval</button>
+            <button data-why="Keys belong in .env, never in SOUL.md.">Its API key</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson7.html#5" data-topic="The team chat" data-right="Right. After 3 rounds it stops and waits for you.">
+          <div class="q"><small>4. Predict</small>Two bots keep @mentioning each other in a group chat. What stops them?</div>
+          <div class="options">
+            <button data-why="They'd go on: each is mentioned by the other.">Nothing</button>
+            <button data-right>At most 3 rounds per message, then it's your turn</button>
+            <button data-why="The room size doesn't stop the back and forth.">The 6-bot limit</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson7.html#7" data-topic="Tools for each bot" data-right="Right. Production checks orders; the order sheet goes in its own config.yaml.">
+          <div class="q"><small>5. Decide</small>Where should the order sheet's MCP server be listed?</div>
+          <div class="options">
+            <button data-why="Then every bot would see it, even ones that don't need it.">In every bot's config.yaml</button>
+            <button data-right>In Production's config.yaml</button>
+            <button data-why="SOUL.md holds instructions; tools are listed in config.yaml.">In Production's SOUL.md</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+      <p class="hook">One thing a profile doesn't do.</p>
+    </section>
+
+    <!-- 9 -->
+    <section class="part" data-title="Same laptop, same files">
+      <h2>Same laptop, same files</h2>
+      <p class="say">Each bot has its own folder, memory and keys. But a profile is not a locked room: every bot still runs commands on the same laptop, with your files. Tick what you've really done:</p>
+      <div class="activity checks" id="s9Checks">
+        <label><input type="checkbox" data-k="marketing"> Made Marketing, with a SOUL.md</label>
+        <label><input type="checkbox" data-k="production"> Made Production</label>
+        <label><input type="checkbox" data-k="operations"> Made Operations</label>
+        <label><input type="checkbox" data-k="analyst"> Made the Analyst</label>
+        <label><input type="checkbox" data-k="room"> Put them in one group chat</label>
+      </div>
+      <p class="bot-say" data-bot="operations">If Marketing tidies up “old files”, could it delete my packing lists?</p>
+      <div class="open-question">
+        <div>This leaves a question</div>
+        <div class="big">Your bots share one computer. What if one deletes another's files?</div>
+        <div>Lesson 8 answers it. (Coming soon.)</div>
+      </div>
+      <div class="mybiz" data-key="l7">For your business: write the SOUL.md for your most important bot: who it helps, its job, what it must never do, and who it hands off to.</div>
+      <p><button class="done-toggle" data-done="7">Mark lesson as done</button></p>
+    </section>
+  </main>
+</div>
+
+<nav class="pagebar" aria-label="Move between parts">
+  <div class="inner">
+    <button data-page-back>← Previous</button>
+    <span data-page-label></span>
+    <button class="primary" data-page-next>Next →</button>
+  </div>
+</nav>
+
+<script src="../assets/course.js"></script>
+<script src="../assets/practice.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/common.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/pen.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/guide.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = AG.esc;
+AG.WHO.hermes = ["llm", "Hermes"];
+const at = t => esc(t).replace(/@(Marketing|Production|Operations|Analyst|CEO)/g, '<span class="at">@$1</span>');
+
+// ---------- Part 1: a bot's folder ----------
+(function folder() {
+  const FILES = [
+    ["SOUL.md", "Its instructions: who it is and what it does. Read before every chat. This is its role.", "You are Marketing at Amal Designers.\nYou plan posts and captions for\nthe social media manager. …"],
+    ["config.yaml", "Its settings: which model it uses, its tools and MCP servers.", "model:\n  default: (its own model)\nmcp_servers:\n  …"],
+    [".env", "Its secrets: API keys and tokens. Never share this file.", "OPENROUTER_API_KEY=sk-or-…"],
+    ["memories/", "What it has learned and saved for later, like “posts at 7 PM do best”. Only this bot reads it.", ""],
+    ["skills/", "Ready-made know-how it can use, like how to write a reel script.", ""],
+    ["sessions/", "Its chat history.", ""],
+  ];
+  const tree = $("s1Tree"), what = $("s1What");
+  function show(i) {
+    tree.querySelectorAll("button").forEach((b, j) => b.classList.toggle("on", i === j));
+    const [n, t, ex] = FILES[i];
+    what.innerHTML = `<b>${n}</b><br>${esc(t)}${ex ? `<pre><code>${esc(ex)}</code></pre>` : ""}`;
+  }
+  tree.innerHTML = "~/.hermes/profiles/marketing/<br>" + FILES.map(([n], i) => `&nbsp;&nbsp;├─ <button type="button" data-i="${i}">${n}</button>`).join("<br>");
+  tree.querySelectorAll("button").forEach(b => b.onclick = () => show(+b.dataset.i));
+  addReset(tree, () => show(0));
+  show(0);
+})();
+
+// ---------- Part 2: desktop or terminal ----------
+(function how() {
+  const box = document.querySelector('[data-howp="app"]').closest(".activity");
+  const show = v => box.querySelectorAll("[data-howp]").forEach(p => p.hidden = p.dataset.howp !== v);
+  const set = AG.modes(box, "how", show);
+  addReset(box.querySelector("[data-howp]"), () => { set("app"); show("app"); });
+})();
+
+// ---------- Part 3: SOUL.md builder ----------
+(function soul() {
+  const SOULS = {
+    Marketing: { who: "You are Marketing at Amal Designers, a kids' dress brand. You help the social media manager.",
+      job: "Plan one Instagram post a day: the dress, a caption, and the best time to post. Find trends with search, and say where each came from.",
+      never: "Never publish anything yourself. Never invent sizes or prices: ask Production.",
+      hand: "When a draft is ready, @mention Production to check sizes and prices." },
+    Production: { who: "You are Production at Amal Designers. You help the designer.",
+      job: "Answer from the catalogue: sizes, stock, prices and sewing time. Warn when orders grow faster than we can sew.",
+      never: "Never change a price yourself: only the designer sets prices.",
+      hand: "When an order is ready to ship, @mention Operations." },
+    Operations: { who: "You are Operations at Amal Designers. You help whoever packs and ships.",
+      job: "Make the daily packing list, book courier pickups, and draft tracking messages for customers.",
+      never: "Never send a message to a customer yourself: draft it for the CEO.",
+      hand: "When a pickup is booked, @mention the CEO with the time." },
+    Analyst: { who: "You are the Analyst at Amal Designers. You help the CEO.",
+      job: "Every week, count orders, sales and followers, and show where this pace leads in 1, 2 and 3 years.",
+      never: "Never present a projection as a promise: label it as a projection.",
+      hand: "Post your weekly report and @mention the CEO." },
+  };
+  const PARTS = [["who", "who you help"], ["job", "your job"], ["never", "never"], ["hand", "hand off to"]];
+  const names = Object.keys(SOULS);
+  let bot = 0, on = { who: true, job: true, never: false, hand: false };
+  const parts = $("s3Parts"), out = $("s3Soul"), say = $("s3Say");
+  parts.innerHTML = PARTS.map(([k, t]) => `<label><input type="checkbox" data-k="${k}"> ${t}</label>`).join("");
+  function draw() {
+    parts.querySelectorAll("input").forEach(c => c.checked = on[c.dataset.k]);
+    const s = SOULS[names[bot]];
+    out.innerHTML = PARTS.map(([k, t]) => on[k] ? at(s[k]) : `<span class="miss">(missing: ${t})</span>`).join("\n\n");
+    const missing = PARTS.filter(([k]) => !on[k]).map(([, t]) => t);
+    say.classList.toggle("good", !missing.length);
+    say.textContent = !missing.length ? "✓ All four parts. Short, clear, and safe." :
+      missing.includes("never") ? "Without a “never” line, nothing in its instructions stops it from going too far." : `Still missing: ${missing.join(", ")}.`;
+  }
+  parts.querySelectorAll("input").forEach(c => c.onchange = () => { on[c.dataset.k] = c.checked; draw(); });
+  const pick = AG.chips($("s3Bots"), names, i => { bot = i; pick(i); draw(); });
+  addReset(out, () => { bot = 0; on = { who: true, job: true, never: false, hand: false }; pick(0); draw(); });
+  pick(0); draw();
+})();
+
+// ---------- Part 4: a model for each bot ----------
+(function models() {
+  const MODELS = [["a cheap model", 0.10], ["a mid model", 0.50], ["a strong model", 1.00], ["local (Ollama)", 0]];
+  const BOTS = [["Marketing", 2, 2], ["Production", 1, 1], ["Operations", 3, 0], ["Analyst", 1, 2]];   // [name, million tokens a month, starting model]
+  let pick = BOTS.map(b => b[2]);
+  const rows = $("s4Rows"), total = $("s4Total");
+  function draw() {
+    rows.innerHTML = BOTS.map(([n, t], i) => `<div class="mrow"><span><b>${n}</b><br><span class="count">${t} million tokens</span></span>
+      <select data-i="${i}" aria-label="Model for ${n}">${MODELS.map(([m, p], k) => `<option value="${k}" ${k === pick[i] ? "selected" : ""}>${m} ($${p.toFixed(2)})</option>`).join("")}</select>
+      <span class="c">$${(t * MODELS[pick[i]][1]).toFixed(2)}</span></div>`).join("");
+    rows.querySelectorAll("select").forEach(s => s.onchange = () => { pick[+s.dataset.i] = +s.value; draw(); });
+    const sum = BOTS.reduce((a, [, t], i) => a + t * MODELS[pick[i]][1], 0);
+    total.innerHTML = `Team: <b>$${sum.toFixed(2)} a month</b>`;
+  }
+  addReset(rows, () => { pick = BOTS.map(b => b[2]); draw(); });
+  draw();
+})();
+
+// ---------- Part 5: a team chat, with rounds ----------
+AG.stepper({ tx: $("s5Tx"), say: $("s5Say"), next: $("s5Next"), back: $("s5Back"), again: $("s5Again"), html: true, steps: [
+  { add: [["ceo", at("Diwali is in 3 weeks. @Marketing @Production can we launch the festive frock?")]], say: "Your message. You @mention two bots, so those two answer." },
+  { add: [["marketing", at("Yes: 3 posts, starting Monday. @Production how many can we make?")], ["production", at("12 by Diwali, if we start this week. ₹1,650 each.")]], say: "Round 1: both mentioned bots reply. Marketing passes a question on with @Production." },
+  { add: [["production", at("@Marketing 12 by Diwali. @Operations can the courier take 12 orders that week?")]], say: "Round 2: Production answers, and hands a question to Operations." },
+  { add: [["operations", at("Yes. Pickups on Mon, Wed and Fri. @Marketing say “order by the 28th” in the posts.")]], say: "Round 3: Operations answers and @mentions Marketing…" },
+  { add: [["hermes", "3 rounds done. Waiting for you."]], say: "…but that was the 3rd round. The bots stop, and it's your turn: approve, or ask for more." },
+] });
+
+// Sort rows helper
+function sortRows(rowsEl, sayEl, items, opts, allRight) {
+  let pick = {};
+  function draw() {
+    rowsEl.innerHTML = items.map(([l, right, why], i) => {
+      const p = pick[i], cls = p ? (p === right ? " right" : " wrong") : "";
+      return `<div class="sortrow${cls}" style="grid-template-columns:1fr"><span>${l}</span><span class="seg">${opts.map(([key, t]) =>
+        `<button type="button" data-i="${i}" data-b="${key}" class="${p === key ? "on" : ""}">${t}</button>`).join("")}</span>${p ? `<span class="why">${p === right ? "✓" : "✗"} ${why}</span>` : ""}</div>`;
+    }).join("");
+    rowsEl.querySelectorAll("button").forEach(b => b.onclick = () => { pick[b.dataset.i] = b.dataset.b; draw(); });
+    const n = Object.keys(pick).length, ok = items.filter((q, i) => pick[i] === q[1]).length;
+    sayEl.hidden = n < items.length; sayEl.classList.toggle("good", ok === items.length);
+    sayEl.textContent = ok === items.length ? allRight : `${ok} of ${items.length} right. Tap another choice to change one.`;
+  }
+  addReset(rowsEl, () => { pick = {}; draw(); });
+  draw();
+}
+
+// ---------- Part 6: which bot gets which tool ----------
+const TEAM = [["marketing", "Marketing"], ["production", "Production"], ["operations", "Operations"], ["analyst", "Analyst"]];
+sortRows($("s6Rows"), $("s6Say"), [
+  ["Web search, and Instagram drafts", "marketing", "Finding trends and drafting posts is Marketing's job."],
+  ["The catalogue and the order sheet", "production", "Sizes, stock and orders: Production."],
+  ["The courier's booking tool", "operations", "Pickups and deliveries: Operations."],
+  ["Read-only sales numbers and a spreadsheet", "analyst", "Weekly numbers and projections: the Analyst."],
+], TEAM, "✓ All 4 right. Each bot sees only its own tools.");
+
+// ---------- Part 7: problem → fix ----------
+sortRows($("s7Rows"), $("s7Say"), [
+  ["Marketing writes prices it made up", "soul", "Add to its SOUL.md: never invent prices, ask Production."],
+  ["Production can't see the new order sheet tool", "reload", "Check its config.yaml, then type /reload-mcp in its chat."],
+  ["Operations' packing lists are muddled on a small local model", "model", "Give that bot a stronger model, or check its instructions are short and clear."],
+  ["Every bot replies to every message", "mention", "@mention the bots you want; only those answer."],
+], [["soul", "Fix its SOUL.md"], ["reload", "Reload its tools"], ["model", "Change its model"], ["mention", "Use @mentions"]], "✓ All 4 right. SOUL.md, config.yaml or the model: look there first.");
+
+// ---------- Part 9: what you've really done ----------
+(function checks() {
+  const key = `${COURSE.id}-l7-checks`;
+  let saved = {}; try { saved = JSON.parse(localStorage.getItem(key) || "{}"); } catch (e) {}
+  document.querySelectorAll("#s9Checks input").forEach(c => {
+    c.checked = !!saved[c.dataset.k];
+    c.onchange = () => { saved[c.dataset.k] = c.checked; try { localStorage.setItem(key, JSON.stringify(saved)); } catch (e) {} };
+  });
+})();
+</script>
+</body>
+</html>

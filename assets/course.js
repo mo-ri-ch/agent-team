@@ -47,7 +47,7 @@ const COURSE_LESSONS = [
   { n: 6, label: "6", step: "install", title: "Hermes on your laptop", file: "lesson6.html", ready: true, test: 9,
     summary: "Install Hermes Agent and pick a model: free on your own laptop, or a cheap one online.",
     leaves: "One agent runs. How do you make it a team?" },
-  { n: 7, label: "7", step: "your team", title: "Your team of bots", file: "lesson7.html", ready: false,
+  { n: 7, label: "7", step: "your team", title: "Your team of bots", file: "lesson7.html", ready: true, test: 9,
     summary: "Hire Amal Designers' team in Bot Mode: Marketing, Production, Operations and an Analyst, each with its own role, model, memory and skills.",
     leaves: "Your bots share one computer. What if one deletes another's files?" },
   { n: 8, label: "8", step: "own computer", title: "A computer for each bot", file: "lesson8.html", ready: false,
