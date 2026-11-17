@@ -23,6 +23,12 @@
 - The team so far: Researcher (orange, search), Marketer (pink), Support (green, catalogue). `<p class="bot-say" data-bot="marketer">…</p>`.
 - Lesson numbers start at 1. Saved progress uses `n`; never change `n` or the id "agent-team".
 - Lesson 1: browser activities only. Code (Colab) starts in Lesson 2.
+- Every lesson ends with `<div class="mybiz" data-key="lN">task</div>` (Rishal, 17 Nov 2026: usable in college; each
+  student builds for their own business alongside Amal Designers). Notes are saved in the browser.
+- Code lessons: code/lessonN.py is the source for "The code" page, its output, the Step through trace and the Colab
+  notebook. After changing it: `python3 tools/fill_code.py N`, `python3 tools/make_traces.py code/lessonN.py`,
+  `python3 tools/make_notebooks.py`. code/lessonN_real.py (Qwen2.5 1.5B in Colab) only goes into the notebook and has
+  not been run by Claude: check it in Colab. Line explanations live in tools/explanations.py.
 - Messages shown before Lesson 2 are examples written for the page; say so (a peek or a note).
 - **Goal (Rishal, 17 Nov 2026): production, not a classroom toy.** By the end, a student runs a team of assistants on
   their own laptop every day: Hermes Agent with Bot Mode, a sandbox (Docker) per bot, Telegram from their phone,

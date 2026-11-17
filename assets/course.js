@@ -2,13 +2,26 @@
 // The shared look and features come from study-notebook-design (loaded after this file),
 // which reads the settings below.
 
+// Extra Python words for this course: tap a dotted word in a code block for a short explanation.
+// (The shared codewalk.js adds these to its own list. "in" replaces the shared one, which only covers for loops.)
+window.PYWORDS_EXTRA = {
+  "in": { what: "With for: go through each item. On its own, a in b asks: is a inside b? True or False.", ex: "print(\"DONE\" in \"Final caption DONE\")\nfor ch in \"hi\":\n    print(ch)", out: "True\nh\ni" },
+  "f": { what: "An f-string: the f lets you put a value inside {} in the text.", ex: "who = \"CEO\"\nprint(f\"{who}: hello\")", out: "CEO: hello" },
+  "str": { what: "Turns a value into text (a string), so it can be joined to other text with +.", ex: "print(\"Done after \" + str(4) + \" turns.\")", out: "Done after 4 turns." },
+  "join": { what: "Glues a list of texts into one text, with the given text between them. \"\\n\" puts each on its own line.", ex: "print(\" + \".join([\"a\", \"b\", \"c\"]))", out: "a + b + c" },
+  "pop": { what: "Takes an item out of a list and gives it back. pop(0) takes the first one.", ex: "replies = [\"one\", \"two\"]\nprint(replies.pop(0))\nprint(replies)", out: "one\n['two']" },
+  "split": { what: "Cuts text into a list of pieces, at every place the given text appears. split(\":\", 1) cuts only at the first one.", ex: "print(\"CEO: hi: there\".split(\":\", 1))", out: "['CEO', ' hi: there']" },
+  "strip": { what: "Takes spaces off both ends of the text.", ex: "print(\"  hi  \".strip() + \"!\")", out: "hi!" },
+  "clear": { what: "Empties a list: every item is taken out.", ex: "chat = [1, 2]\nchat.clear()\nprint(chat)", out: "[]" },
+};
+
 const COURSE_LESSONS = [
   // n: lesson number used for saved progress (never change it) · label: the number students see
   // Lessons 1–5: how a team works, built from scratch. Lessons 6–12: a real team on your own laptop (Hermes Agent).
   { n: 1, label: "1", step: "roles", title: "Why a team?", file: "lesson1.html", ready: true, test: 7,
     summary: "You're the CEO. Your AI employees each have one role and talk in one group chat.",
     leaves: "You've watched a team chat. Can you build two bots that talk, yourself?" },
-  { n: 2, label: "2", step: "build it", title: "Two bots talk", file: "lesson2.html", ready: false,
+  { n: 2, label: "2", step: "build it", title: "Two bots talk", file: "lesson2.html", ready: true, test: 10,
     summary: "Write two agents in plain Python that pass messages back and forth.",
     leaves: "Two bots take turns easily. With five, who speaks next?" },
   { n: 3, label: "3", step: "who speaks", title: "Who speaks next", file: "lesson3.html", ready: false,
@@ -62,6 +75,22 @@ function botSvg(kind) {
   <path d="M23 40 Q31 46 39 40" />${b.extra}
 </svg>`;
 }
+// ---------- Now for your business: a note box at the end of each lesson, saved in this browser ----------
+// <div class="mybiz" data-key="l1">The task, in one or two sentences.</div>
+function setupMyBiz() {
+  document.querySelectorAll("div.mybiz").forEach(box => {
+    const key = `${window.COURSE.id}-mybiz-${box.dataset.key}`;
+    const task = box.innerHTML;
+    box.classList.add("activity");
+    box.innerHTML = `<div class="do">✏️ Now for your business</div><p class="mybiz-task">${task}</p>
+      <textarea rows="4" aria-label="Your notes"></textarea><p class="count mybiz-saved"></p>`;
+    const ta = box.querySelector("textarea"), saved = box.querySelector(".mybiz-saved");
+    try { ta.value = localStorage.getItem(key) || ""; } catch (e) {}
+    saved.textContent = ta.value ? "Saved in this browser." : "Any business works: your own, a family shop, a college club.";
+    ta.oninput = () => { try { localStorage.setItem(key, ta.value); saved.textContent = "Saved in this browser."; } catch (e) {} };
+  });
+}
+
 function setupBots() {
   document.querySelectorAll("p.bot-say").forEach(p => {
     const kind = p.dataset.bot || "researcher";
@@ -163,5 +192,5 @@ window.COURSE = {
   id: "agent-team",                // prefix for everything saved in this browser (progress, notes). Never change it.
   pathLabel: "Building the team",
   lessons: COURSE_LESSONS,
-  setup: [setupBots],
+  setup: [setupBots, setupMyBiz],
 };

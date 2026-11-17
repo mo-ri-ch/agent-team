@@ -214,3 +214,7 @@ pre.mapcode code .cl.dim { opacity: 0.45; }
 .brand-logo { flex: 0 0 auto; width: 56px; height: auto; transform: rotate(-3deg); }
 .brand-logo.big { float: right; width: 84px; margin: -8px 0 8px 14px; }
 @media (max-width: 520px) { .brand-logo.big { width: 64px; } }
+
+/* Now for your business */
+.mybiz textarea { width: 100%; font: inherit; font-family: var(--hand); font-size: 1.1rem; padding: 8px 10px; border: 2px solid var(--ink); border-radius: 8px; background: var(--paper); color: var(--ink); }
+.mybiz-task { margin: 0 0 8px; }
