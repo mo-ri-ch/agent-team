@@ -56,7 +56,7 @@ const COURSE_LESSONS = [
   { n: 9, label: "9", step: "phone", title: "Reach it from your phone", file: "lesson9.html", ready: true, test: 8,
     summary: "Connect your team to Telegram, so only you can message it from anywhere.",
     leaves: "It answers when you ask. Can it start work on its own?" },
-  { n: 10, label: "10", step: "schedules", title: "Jobs on a schedule", file: "lesson10.html", ready: false,
+  { n: 10, label: "10", step: "schedules", title: "Jobs on a schedule", file: "lesson10.html", ready: true, test: 9,
     summary: "Every morning, today's post idea and caption, sent to your phone. Jobs that run by themselves.",
     leaves: "Your team now acts on its own. How do you keep it safe?" },
   { n: 11, label: "11", step: "safety", title: "Safe by default", file: "lesson11.html", ready: false,

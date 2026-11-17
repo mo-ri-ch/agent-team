@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jobs on a schedule</title>
+<meta name="description" content="Lesson 10 of Build an AI Team: jobs that run by themselves. Reading a schedule, a morning plan for the social media manager, an evening nudge only when needed, every bot's routine, and jobs with no LLM at all.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Kalam:wght@400&family=Patrick+Hand&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem("notebook-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
+<link rel="stylesheet" href="https://mo-ri-ch.github.io/study-notebook-design/v1/style.css">
+<link rel="stylesheet" href="../assets/course.css">
+<style>
+  .cron { display: flex; gap: 6px; flex-wrap: wrap; align-items: end; margin: 4px 0 8px; }
+  .cron label { display: grid; gap: 2px; font-family: var(--hand); color: var(--pencil); font-size: .95rem; }
+  .cron select { font: inherit; font-family: var(--mono); font-size: .9rem; }
+  .bigcron { font-family: var(--mono); font-size: 1.4rem; font-weight: 600; letter-spacing: .08em; }
+  .week { display: grid; grid-template-columns: 4.5em repeat(7, 1fr); gap: 3px; font-size: .78rem; }
+  .week .h { font-family: var(--hand); text-align: center; color: var(--pencil); }
+  .week .t { font-family: var(--mono); color: var(--pencil); align-self: center; }
+  .week .c { min-height: 1.6em; border: 1px dashed var(--rule); border-radius: 4px; display: flex; gap: 2px; flex-wrap: wrap; padding: 1px; }
+  .week .dot { width: 15px; height: 15px; border-radius: 50%; border: 1px solid var(--ink); }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: .85rem; margin: 6px 0; }
+  .legend span { display: inline-flex; gap: 4px; align-items: center; }
+  .prompt { font-family: var(--mono); font-size: .84rem; white-space: pre-wrap; padding: 8px 10px; border: 2px solid var(--ink); border-radius: 8px; background: var(--paper); color: var(--ink); }
+  .checks label { display: flex; gap: 8px; align-items: baseline; padding: 3px 0; }
+  .vnote { font-size: .9rem; color: var(--pencil); }
+</style>
+</head>
+<body data-pen="blue">
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← Build an AI Team</a>
+    <span class="where">Lesson 10 of 12</span>
+  </header>
+
+  <main data-paged>
+    <div class="paged-head">
+      <h1>Jobs on a schedule</h1>
+      <div class="progress" aria-label="Lesson parts"></div>
+    </div>
+
+    <!-- 1 -->
+    <section class="part" data-title="Jobs that start themselves">
+      <h2>Jobs that start themselves</h2>
+      <p class="say">A <mark>scheduled job</mark> is a task a bot does by itself, at set times. You give it three things: when to run, what to do (a prompt, like a message you'd send), and where to send the result. The gateway checks every minute. When a job is due, it starts a fresh chat with that prompt, and sends the answer.<br><b class="eqbox">job = when + what to do + where to send</b></p>
+      <div class="activity">
+        <div class="do"><span data-peek="An example run, written for this page.">Step through one morning.</span></div>
+        <div class="tx" id="s1Tx" style="min-height:8em;align-content:start"></div>
+        <p class="count" id="s1Say" style="margin:8px 0 0"></p>
+        <div class="btnrow">
+          <button class="primary" id="s1Next">Next step →</button>
+          <button id="s1Back" hidden>← Back</button>
+          <button id="s1Again" hidden>↺ Start again</button>
+        </div>
+      </div>
+      <p class="say">In Hermes these are called <mark data-peek="From cron, the name of the classic scheduler on Linux and macOS. Bot Mode shows a bot's jobs as its Routines.">cron jobs</mark>. They run only while the gateway runs.</p>
+      <p class="hook">First: how do you write “every day at 9”?</p>
+    </section>
+
+    <!-- 2 -->
+    <section class="part" data-title="Reading a schedule">
+      <h2>Reading a schedule</h2>
+      <p class="say">Simple ones are plain words: <code>every 2h</code>, <code>every 30m</code>. For set times, a schedule has five slots: minute, hour, day of the month, month, day of the week. A <code>*</code> means “any”.<br><b class="eqbox">minute hour day month weekday</b><br><code>0 9 * * *</code> = minute 0, hour 9, any day: 9:00 every morning.</p>
+      <div class="activity">
+        <div class="do">Change the slots. Read it in words.</div>
+        <div class="cron">
+          <label>minute<select id="c0"><option>0</option><option>15</option><option>30</option><option>45</option></select></label>
+          <label>hour<select id="c1"></select></label>
+          <label>day<select id="c2"><option>*</option><option>1</option><option>15</option></select></label>
+          <label>month<select id="c3"><option>*</option></select></label>
+          <label>weekday<select id="c4"><option value="*">*</option><option value="1">1 (Mon)</option><option value="1-5">1-5 (Mon–Fri)</option><option value="0">0 (Sun)</option><option value="6">6 (Sat)</option></select></label>
+        </div>
+        <div class="bigcron" id="s2Cron"></div>
+        <p class="qbig" id="s2Words" style="margin:4px 0 0"></p>
+      </div>
+      <p class="say">Times follow the clock of the computer running Hermes. <code>hermes cron status</code> shows each job's next run, so you can check.</p>
+      <p class="hook">Now a real job: the morning plan.</p>
+    </section>
+
+    <!-- 3 -->
+    <section class="part" data-title="The morning plan">
+      <h2>The morning plan</h2>
+      <p class="say">Every morning, Marketing sends the social media manager today's plan. Each run starts a fresh chat: the bot remembers nothing of the chat where you made the job. So the prompt must say everything: who it's for, what to include, and how long.<br><b class="eqbox">a job's prompt must stand on its own</b></p>
+      <div class="activity">
+        <div class="do">Pick a prompt. See what the job sends at 9:00.</div>
+        <div class="modes" role="tablist" aria-label="Which prompt">
+          <button class="mode on" data-p="vague" role="tab" aria-selected="true">Vague</button>
+          <button class="mode" data-p="full" role="tab" aria-selected="false">Stands on its own</button>
+        </div>
+        <div class="prompt" id="s3Prompt"></div>
+        <div class="tx" id="s3Out" style="margin-top:8px"></div>
+        <p class="redcheck" id="s3Say"></p>
+      </div>
+<pre><code>marketing cron create "0 9 * * *" "(the full prompt)" --name "Morning plan" --deliver telegram</code></pre>
+      <p class="say near" style="position:relative"><code>--deliver telegram</code> sends it to the bot's home chat. Pick it once: in that chat, send <code>/sethome</code>.<button class="doubt" type="button" data-peek-from="chatPeek" aria-label="Can I just ask in a chat?">🤔</button></p>
+      <div hidden id="chatPeek"><b>🤔 Can I just ask in a chat instead?</b>
+        <div style="margin-top:6px">Yes: tell the bot “every morning at 9, send the post plan here”, and it makes the job for you, sent back to that chat. The command shows exactly what gets saved.</div>
+      </div>
+      <p class="hook">And if she forgets to post?</p>
+    </section>
+
+    <!-- 4 -->
+    <section class="part" data-title="Only when needed">
+      <h2>Only when needed</h2>
+      <p class="say">At 7 PM, a second job checks: did today's post go up? If yes, there's nothing to say. A reply containing <code>[SILENT]</code> is never sent, so the prompt says: “If the post is up, reply [SILENT].” A gentle nudge arrives only on the days it's needed.<br><b class="eqbox">reply contains [SILENT] → nothing is sent</b></p>
+      <div class="activity">
+        <div class="do">Pick an evening. What arrives on her phone?</div>
+        <div class="chips" id="s4Days"></div>
+        <div class="tx" id="s4Tx"></div>
+        <p class="count" id="s4Say" style="margin:8px 0 0"></p>
+      </div>
+      <p class="say">The job still runs every evening, so it still uses tokens. Only the message is skipped.</p>
+      <p class="hook">Count it on new numbers.</p>
+    </section>
+
+    <section class="part" data-nonum data-title="✏️ Practice 10.1">
+      <h2>✏️ Practice 10.1</h2>
+      <p class="say">Remember:<br><b class="eqbox">minute hour day month weekday</b> (<code>*</code> = any)<br><b class="eqbox">reply contains [SILENT] → nothing is sent</b><br>Cost: million tokens × price per million.</p>
+      <div class="activity">
+        <div class="do"><span data-peek="Take a pen and paper, or use the ✎ pen on this page.">Work each one out.</span> Type the answer, press Check.</div>
+        <div class="pq" data-ans="12" data-tol="0.1" data-hint="A day has 24 hours." data-work="24 ÷ 2 = 12 runs a day.">
+          <div class="pq-q">A job runs <code>every 2h</code>. How many times a day?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="20" data-tol="0.1" data-hint="1-5 in the weekday slot means Monday to Friday. A 4-week month has 4 of each." data-work="5 days a week × 4 weeks = 20 runs.">
+          <div class="pq-q">A job is <code>0 8 * * 1-5</code>. How many times does it run in 4 weeks?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="6" data-tol="0.1" data-hint="A message goes out only on the days the post didn't go up." data-work="30 evenings − 24 posted = 6 nudges sent.">
+          <div class="pq-q">The 7 PM check runs for <b>30</b> days. The post went up on <b>24</b> of them. How many nudges are sent?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="0.6" data-tol="0.01" data-hint="Every run uses tokens, even the silent ones. Runs × tokens, in millions, × price." data-work="30 runs × 40,000 tokens = 1,200,000 = 1.2 million.<br>1.2 × $0.50 = $0.60 a month.">
+          <div class="pq-q">Same job: <b>30</b> runs, each about <b>40,000</b> tokens, at <b>$0.50</b> per million. What does it cost a month?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+      </div>
+      <p class="hook">Now the whole team's week.</p>
+    </section>
+
+    <!-- 5 -->
+    <section class="part" data-title="The team's week">
+      <h2>The team's week</h2>
+      <p class="say">Each bot keeps its own jobs, in its own profile, so you create each one with that bot's command: <code>production cron create …</code>. Together they make a rhythm for the business: a plan in the morning, packing in the afternoon, a check at night, and a report each Monday.<br><b class="eqbox">each bot's jobs live in its own profile</b></p>
+      <div class="activity">
+        <div class="do">Turn jobs on and off. See the week.</div>
+        <div class="checks" id="s5Jobs"></div>
+        <div class="legend" id="s5Legend"></div>
+        <div class="week" id="s5Week"></div>
+        <p class="count" id="s5Say" style="margin:6px 0 0"></p>
+      </div>
+      <p class="say">The Analyst's report shows where this pace leads in 1, 2 and 3 years, always labelled as a projection, not a promise.</p>
+      <p class="hook">Do all these jobs need an LLM?</p>
+    </section>
+
+    <!-- 6 -->
+    <section class="part" data-title="No LLM needed">
+      <h2>No LLM needed</h2>
+      <p class="say">Some jobs need no thinking. If you already know the exact message, or a small script can work it out, run the job with <code>--no-agent</code>: the script's output is sent as it is, and no model is used, so it costs nothing. If the script prints nothing, nothing is sent.<br><b class="eqbox">needs judgment → a prompt · fixed or countable → --no-agent</b></p>
+      <div class="activity">
+        <div class="do">Which jobs need an LLM?</div>
+        <div id="s6Rows"></div>
+        <p class="redcheck" id="s6Say" hidden></p>
+      </div>
+      <p class="hook">And when a job doesn't arrive?</p>
+    </section>
+
+    <!-- 7 -->
+    <section class="part" data-title="When it goes wrong">
+      <h2>When it goes wrong</h2>
+      <p class="say">Test a new job right away with <code>/cron run</code> and its ID (from <code>/cron list</code>): it runs once, now. Then match the problem to the fix.</p>
+      <div class="activity">
+        <div class="do">Match each problem to its fix.</div>
+        <div id="s7Rows"></div>
+        <p class="redcheck" id="s7Say" hidden></p>
+      </div>
+      <p class="vnote">Checked against Hermes Agent v0.23 (November 2026). See the <a href="https://hermes-agent.nousresearch.com/docs/guides/automate-with-cron" target="_blank" rel="noopener">Hermes cron guide</a> for every option.</p>
+      <p class="hook">Quick check: did it all make sense?</p>
+    </section>
+
+    <!-- 8 -->
+    <section class="part" data-title="Lesson test">
+      <h2>Lesson 10 test</h2>
+      <p class="say">5 questions, one for each idea in this lesson. Answer them all right to pass. A wrong answer tells you why, and which page to look at again.</p>
+      <div class="test" data-test="10">
+        <div class="quiz" data-page="lesson10.html#2" data-topic="Reading a schedule" data-right="Right. Minute 30, hour 18, any day: 6:30 PM every day.">
+          <div class="q"><small>1. Read it</small>What does <code>30 18 * * *</code> mean?</div>
+          <div class="options">
+            <button data-why="The first slot is the minute, the second the hour.">18:30 on the 30th</button>
+            <button data-right>6:30 PM every day</button>
+            <button data-why="Only the minute and hour are set; every day matches.">Every 30 minutes</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson10.html#3" data-topic="The morning plan" data-right="Right. Each run starts fresh, so the prompt must say who, what and how.">
+          <div class="q"><small>2. Why</small>The prompt “do the usual” gives a muddled plan every morning. Why?</div>
+          <div class="options">
+            <button data-why="The model may be fine: it just doesn't know what “the usual” is.">The model is too weak</button>
+            <button data-right>Each run starts a fresh chat, so “the usual” means nothing</button>
+            <button data-why="The time is fine; the plan arrives, it's just muddled.">The schedule is wrong</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson10.html#4" data-topic="Only when needed" data-right="Right. The reply contains [SILENT], so nothing is sent.">
+          <div class="q"><small>3. Predict</small>At 7 PM the post is up, and the bot replies “All good. [SILENT]”. What arrives?</div>
+          <div class="options">
+            <button data-why="A reply containing [SILENT] isn't sent at all.">“All good.”</button>
+            <button data-right>Nothing</button>
+            <button data-why="Nothing is sent, so there's no error either.">An error</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson10.html#6" data-topic="The team's week" data-right="Right. Production's jobs live in Production's profile.">
+          <div class="q"><small>4. Where</small>You want Production to send a sewing plan every morning. How do you create the job?</div>
+          <div class="options">
+            <button data-right><code>production cron create …</code></button>
+            <button data-why="Each bot keeps its own jobs. This one is Production's.">marketing cron create …</button>
+            <button data-why="SOUL.md holds instructions, not schedules.">Add it to Production's SOUL.md</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson10.html#7" data-topic="No LLM needed" data-right="Right. The message is fixed, so a script can send it, with no model and no cost.">
+          <div class="q"><small>5. Decide</small>Every Friday at 4 PM: “Reminder: courier pickup at 5.” Which kind of job?</div>
+          <div class="options">
+            <button data-why="No judgment needed: the message never changes.">A prompt, with the strongest model</button>
+            <button data-right>A <code>--no-agent</code> script job</button>
+            <button data-why="It can run by itself, every Friday.">It can't be scheduled</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+      <p class="hook">What's next.</p>
+    </section>
+
+    <!-- 9 -->
+    <section class="part" data-title="On its own">
+      <h2>On its own</h2>
+      <p class="say">Your team now works by itself: plans in the morning, nudges at night, a report every week. Tick what you've really done:</p>
+      <div class="activity" id="s9Checks"><div class="checks">
+        <label><input type="checkbox" data-k="home"> Set a home chat with <code>/sethome</code></label>
+        <label><input type="checkbox" data-k="morning"> Made the morning plan job, and tested it with <code>/cron run</code></label>
+        <label><input type="checkbox" data-k="silent"> Made a check that stays [SILENT] when all is well</label>
+        <label><input type="checkbox" data-k="team"> Gave each bot at least one job</label>
+        </div>
+      </div>
+      <p class="bot-say" data-bot="operations">I work while you sleep now. What stops me sending a customer something wrong at 3 AM?</p>
+      <div class="open-question">
+        <div>This leaves a question</div>
+        <div class="big">Your team now acts on its own. How do you keep it safe?</div>
+        <div>Lesson 11 answers it. (Coming soon.)</div>
+      </div>
+      <div class="mybiz" data-key="l10">For your business: write one scheduled job: its schedule (like 0 9 * * *), its full prompt, and where it's sent. Then one that can stay [SILENT].</div>
+      <p><button class="done-toggle" data-done="10">Mark lesson as done</button></p>
+    </section>
+  </main>
+</div>
+
+<nav class="pagebar" aria-label="Move between parts">
+  <div class="inner">
+    <button data-page-back>← Previous</button>
+    <span data-page-label></span>
+    <button class="primary" data-page-next>Next →</button>
+  </div>
+</nav>
+
+<script src="../assets/course.js"></script>
+<script src="../assets/practice.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/common.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/pen.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/guide.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = AG.esc;
+AG.WHO.gw = ["prog", "gateway"];
+AG.WHO.smm = ["a-pink", "social media manager"];
+
+// ---------- Part 1: one morning ----------
+AG.stepper({ tx: $("s1Tx"), say: $("s1Say"), next: $("s1Next"), back: $("s1Back"), again: $("s1Again"), steps: [
+  { add: [["gw", "8:59 … nothing due."]], say: "The gateway checks the jobs every minute." },
+  { add: [["gw", "9:00 → “Morning plan” is due. Starting Marketing with its prompt."]], say: "The job is due: a fresh chat starts, with the job's prompt as the first message." },
+  { add: [["marketing", "Today: the pastel frock. Caption: “Twirl-ready for birthdays 💫 Sizes 1 to 8.” Post at 7 PM."]], say: "Marketing does the work, with its usual tools." },
+  { add: [["gw", "→ sent to Telegram"]], say: "The answer goes where the job says: here, Telegram. Nobody had to ask." },
+] });
+
+// ---------- Part 2: read a schedule ----------
+(function cron() {
+  const h = $("c1"); for (let i = 0; i < 24; i++) h.innerHTML += `<option ${i === 9 ? "selected" : ""}>${i}</option>`;
+  const sel = [0, 1, 2, 3, 4].map(i => $("c" + i)), out = $("s2Cron"), words = $("s2Words");
+  const DAYS = { "*": "every day", "1": "every Monday", "1-5": "Monday to Friday", "0": "every Sunday", "6": "every Saturday" };
+  function draw() {
+    const [m, hr, d, , wd] = sel.map(s => s.value);
+    out.textContent = sel.map(s => s.value).join(" ");
+    const t = `${(+hr % 12) || 12}:${String(m).padStart(2, "0")} ${+hr < 12 ? "AM" : "PM"}`;
+    let when = d !== "*" ? `on day ${d} of every month` : DAYS[wd];
+    if (d !== "*" && wd !== "*") when += ` (and ${DAYS[wd]})`;
+    words.innerHTML = `At <b>${t}</b>, <b>${when}</b>.`;
+  }
+  sel.forEach(s => s.onchange = draw);
+  addReset(out, () => { sel[0].value = "0"; sel[1].value = "9"; sel[2].value = "*"; sel[4].value = "*"; draw(); });
+  draw();
+})();
+
+// ---------- Part 3: vague vs self-contained prompt ----------
+(function prompt() {
+  const P = {
+    vague: { p: "Do the usual morning post thing.", out: [["marketing", "Good morning! What would you like me to do today?"]], say: "A fresh chat doesn't know “the usual”. It asks a question nobody is there to answer." },
+    full: { p: "You are writing to the social media manager of Amal Designers, a kids' dress brand.\nPick one dress from the catalogue to post today.\nGive: the dress, a caption under 25 words, and the best time to post.\nKeep it under 60 words.", out: [["marketing", "Today: the pastel frock. Caption: “Twirl-ready for birthdays 💫 Sizes 1 to 8.” Post at 7 PM."]], say: "✓ Who it's for, what to give, how long: a clear plan, every morning." },
+  };
+  const box = $("s3Prompt").closest(".activity");
+  function show(k) { $("s3Prompt").textContent = P[k].p; $("s3Out").innerHTML = P[k].out.map(l => AG.line(l)).join(""); const s = $("s3Say"); s.textContent = P[k].say; s.classList.toggle("good", k === "full"); }
+  const set = AG.modes(box, "p", show);
+  addReset($("s3Prompt"), () => { set("vague"); show("vague"); });
+  show("vague");
+})();
+
+// ---------- Part 4: the evening check ----------
+(function evening() {
+  const D = [
+    ["Monday: posted", true, "Posted at 7:05 PM. Nothing to add. [SILENT]"],
+    ["Tuesday: not posted", false, "Hi! Today's pastel frock post isn't up yet. Want me to resend the caption?"],
+    ["Wednesday: posted", true, "Posted, 41 likes so far. [SILENT]"],
+  ];
+  const tx = $("s4Tx"), say = $("s4Say");
+  function show(i) {
+    const [, posted, reply] = D[i];
+    tx.innerHTML = AG.line(["marketing", reply]) + AG.line(["smm", posted ? "(nothing arrives)" : "Oops, posting now!"], { cls: posted ? "dim" : "" });
+    say.textContent = posted ? "The reply contains [SILENT], so it's never sent. Her phone stays quiet." : "No [SILENT]: the nudge is sent. Gentle, and only on this day.";
+  }
+  const pick = AG.chips($("s4Days"), D.map(d => d[0]), i => { pick(i); show(i); });
+  addReset(tx, () => { pick(0); show(0); });
+  pick(0); show(0);
+})();
+
+// ---------- Part 5: the team's week ----------
+(function week() {
+  const JOBS = [
+    ["Marketing: morning plan", "0 9 * * *", "var(--hl-pink)", [0, 1, 2, 3, 4, 5, 6], 9],
+    ["Marketing: 7 PM check", "0 19 * * *", "var(--hl-pink)", [0, 1, 2, 3, 4, 5, 6], 19],
+    ["Production: sewing plan", "0 8 * * 1-6", "var(--hl-orange)", [0, 1, 2, 3, 4, 5], 8],
+    ["Operations: packing list", "0 15 * * 1-5", "var(--hl-green)", [0, 1, 2, 3, 4], 15],
+    ["Analyst: weekly report", "0 9 * * 1", "var(--hl-blue)", [0], 9],
+  ];
+  const TIMES = [8, 9, 15, 19], DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  let on = JOBS.map(() => true);
+  const jobs = $("s5Jobs"), wk = $("s5Week"), say = $("s5Say");
+  jobs.innerHTML = JOBS.map(([n, c], i) => `<label><input type="checkbox" data-i="${i}" checked> ${n} <code>${c}</code></label>`).join("");
+  $("s5Legend").innerHTML = [["Marketing", "var(--hl-pink)"], ["Production", "var(--hl-orange)"], ["Operations", "var(--hl-green)"], ["Analyst", "var(--hl-blue)"]].map(([n, c]) => `<span><span class="dot" style="background:${c};width:13px;height:13px;border-radius:50%;border:1px solid var(--ink);display:inline-block"></span>${n}</span>`).join("");
+  function draw() {
+    let html = '<span></span>' + DAYS.map(d => `<span class="h">${d}</span>`).join("");
+    TIMES.forEach(t => {
+      html += `<span class="t">${t < 12 ? t + " AM" : (t - 12) + " PM"}</span>`;
+      DAYS.forEach((d, di) => {
+        const dots = JOBS.filter((j, i) => on[i] && j[4] === t && j[3].includes(di)).map(j => `<span class="dot" style="background:${j[2]}"></span>`).join("");
+        html += `<span class="c">${dots}</span>`;
+      });
+    });
+    wk.innerHTML = html;
+    const n = JOBS.reduce((a, j, i) => a + (on[i] ? j[3].length : 0), 0);
+    say.textContent = `${n} runs a week. The 7 PM check sends a message only on the days it's needed.`;
+  }
+  jobs.querySelectorAll("input").forEach(c => c.onchange = () => { on[+c.dataset.i] = c.checked; draw(); });
+  addReset(wk, () => { on = JOBS.map(() => true); jobs.querySelectorAll("input").forEach(c => c.checked = true); draw(); });
+  draw();
+})();
+
+// Sort rows helper
+function sortRows(rowsEl, sayEl, items, opts, allRight) {
+  let pick = {};
+  function draw() {
+    rowsEl.innerHTML = items.map(([l, right, why], i) => {
+      const p = pick[i], cls = p ? (p === right ? " right" : " wrong") : "";
+      return `<div class="sortrow${cls}" style="grid-template-columns:1fr"><span>${l}</span><span class="seg">${opts.map(([key, t]) =>
+        `<button type="button" data-i="${i}" data-b="${key}" class="${p === key ? "on" : ""}">${t}</button>`).join("")}</span>${p ? `<span class="why">${p === right ? "✓" : "✗"} ${why}</span>` : ""}</div>`;
+    }).join("");
+    rowsEl.querySelectorAll("button").forEach(b => b.onclick = () => { pick[b.dataset.i] = b.dataset.b; draw(); });
+    const n = Object.keys(pick).length, ok = items.filter((q, i) => pick[i] === q[1]).length;
+    sayEl.hidden = n < items.length; sayEl.classList.toggle("good", ok === items.length);
+    sayEl.textContent = ok === items.length ? allRight : `${ok} of ${items.length} right. Tap another choice to change one.`;
+  }
+  addReset(rowsEl, () => { pick = {}; draw(); });
+  draw();
+}
+
+// ---------- Part 6: LLM or script? ----------
+sortRows($("s6Rows"), $("s6Say"), [
+  ["Pick today's dress and write a caption", "llm", "Choosing and writing need judgment: a prompt."],
+  ["“Reminder: courier pickup at 5 PM” every Friday", "script", "The message never changes: a script, no model."],
+  ["Count today's orders in the order sheet and send the number", "script", "Counting is exact: a small script does it, for free."],
+  ["Read the week's numbers and explain what changed", "llm", "Explaining needs judgment: a prompt."],
+], [["llm", "Needs an LLM"], ["script", "--no-agent"]], "✓ All 4 right. Save the model for jobs that need thinking.");
+
+// ---------- Part 7: problem → fix ----------
+sortRows($("s7Rows"), $("s7Say"), [
+  ["The 9 AM plan didn't come, and the laptop was asleep", "gw", "Jobs only run while the gateway runs. Keep the laptop awake, or use a server (Lesson 12)."],
+  ["The job ran, but nothing arrived on Telegram", "home", "No home chat yet: send /sethome in the chat it should go to."],
+  ["It arrives at 9 PM, not 9 AM", "time", "Check the hour slot (9, not 21) and the computer's time zone; hermes cron status shows the next run."],
+  ["The plan is vague and different every day", "prompt", "The prompt doesn't stand on its own: say who it's for, what to give, and how long."],
+], [["gw", "Gateway asleep"], ["home", "Set a home chat"], ["time", "Check the time"], ["prompt", "Fix the prompt"]], "✓ All 4 right. And test any new job with /cron run.");
+
+// ---------- Part 9: what you've really done ----------
+(function checks() {
+  const key = `${COURSE.id}-l10-checks`;
+  let saved = {}; try { saved = JSON.parse(localStorage.getItem(key) || "{}"); } catch (e) {}
+  document.querySelectorAll("#s9Checks input").forEach(c => {
+    c.checked = !!saved[c.dataset.k];
+    c.onchange = () => { saved[c.dataset.k] = c.checked; try { localStorage.setItem(key, JSON.stringify(saved)); } catch (e) {} };
+  });
+})();
+</script>
+</body>
+</html>
