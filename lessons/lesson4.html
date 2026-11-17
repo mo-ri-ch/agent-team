@@ -454,7 +454,7 @@ function drawBoard(el, rows, changed = [], onTap) {
   const Q = [ // [who writes, last line, answer key, why]
     ["Production", "HANDOFF to Operations: 6 frocks, Friday", "next", "Its own task 2 is done, Operations' task 3 starts, and Operations writes next."],
     ["Production", "Sizes are fine. Over to you, Operations!", "none", "No HANDOFF line: the board doesn't change, and the chat waits for the CEO."],
-    ["Production", "HANDOFF to CEO: Amma must approve the price", "ceo", "Its own task 2 is done. The CEO isn't a bot, so no one is next: wait."],
+    ["Production", "HANDOFF to CEO: the price needs your OK", "ceo", "Its own task 2 is done. The CEO isn't a bot, so no one is next: wait."],
     ["Operations", "HANDOFF to CEO: task 2 is done", "none", "Operations has no doing task, so nothing closes. It can't close Production's task 2. Handed to the CEO: wait."],
   ];
   const OPTS = [["next", "Task 2 done, Operations next"], ["ceo", "Task 2 done, wait for CEO"], ["none", "No change, wait for CEO"]];

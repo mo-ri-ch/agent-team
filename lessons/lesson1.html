@@ -47,7 +47,7 @@
     <section class="part" data-title="A company in a chat">
       <h2>A company in a chat</h2>
       <img class="brand-logo big" src="../assets/img/amal-designers-256.png" alt="Amal Designers logo" width="84" height="82">
-      <p class="say">You're the CEO of <b data-peek="A real family business: handmade dresses for kids under 10, sold on Instagram and WhatsApp. Customers and prices in this course are made up.">Amal Designers</b>, a small kids' dress brand. Your sister posts on Instagram, and Amma sews and packs. You give each of them an agent to help, and the agents all talk in one group chat. Here we call each agent in the chat a <mark>bot</mark>. Writing <span class="at">@</span> and a bot's name asks that bot to reply next.</p>
+      <p class="say">You're the CEO of <b data-peek="A real family business: handmade dresses for kids under 10, sold on Instagram and WhatsApp. Customers and prices in this course are made up.">Amal Designers</b>, a small kids' dress brand. A social media manager posts on Instagram, and a tailor sews and packs. You give each of them an agent to help, and the agents all talk in one group chat. Here we call each agent in the chat a <mark>bot</mark>. Writing <span class="at">@</span> and a bot's name asks that bot to reply next.</p>
       <div class="activity">
         <div class="do"><span data-peek="These messages are examples, written for this page. Later in the course you build bots that write their own.">Step through the chat.</span> Watch who does what.</div>
         <div class="tx" id="s2Tx"></div>
@@ -69,8 +69,8 @@
       <p class="say">Each bot gets its own <mark>instructions</mark>: text, placed before the chat, that says what its job is. Each also gets its own <mark>tools</mark>: the things its program can do when asked. Only Marketing has <code>search</code>, so only it can look things up on the web.<br><b class="eqbox">role = instructions + tools</b></p>
       <div class="activity">
         <div class="roles">
-          <div class="role marketing"><h4>Marketing</h4><span class="k">instructions</span>Plan posts and captions for my sister. Find trends; say where each came from.<span class="k">tools</span><code>search</code></div>
-          <div class="role production"><h4>Production</h4><span class="k">instructions</span>Answer from Amma's catalogue: sizes, stock, prices, sewing time.<span class="k">tools</span><code>catalogue</code></div>
+          <div class="role marketing"><h4>Marketing</h4><span class="k">instructions</span>Plan posts and captions for the social media manager. Find trends; say where each came from.<span class="k">tools</span><code>search</code></div>
+          <div class="role production"><h4>Production</h4><span class="k">instructions</span>Answer from the catalogue: sizes, stock, prices, sewing time.<span class="k">tools</span><code>catalogue</code></div>
           <div class="role operations"><h4>Operations</h4><span class="k">instructions</span>Plan packing and shipping. Draft delivery messages; never send them.<span class="k">tools</span><code>courier</code></div>
         </div>
         <div class="do">Who should get each job?</div>
@@ -242,9 +242,9 @@ AG.stepper({ tx: $("s1Tx"), say: $("s1Say"), next: $("s1Next"), back: $("s1Back"
 const CHAT = [
   { add: [["ceo", withAt("We need a post for the new pastel party frock. @Marketing")]], say: "You, the CEO, post the job and ask Marketing to start." },
   { add: [["marketing", withAt("Trending in 3 kids' shops: pastel tulle for birthdays. Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years. Ships in 2 days!” @Production @Operations please check.")]], say: "Marketing searches for trends, writes a caption, and asks the other two to check it." },
-  { add: [["production", withAt("The catalogue says sizes 1 to 8 years, not 12.")]], say: "Production compares the caption with Amma's catalogue and finds a size that isn't true." },
+  { add: [["production", withAt("The catalogue says sizes 1 to 8 years, not 12.")]], say: "Production compares the caption with the catalogue and finds a size that isn't true." },
   { add: [["operations", withAt("Shipping takes 3 days to most places, not 2.")]], say: "Operations checks the delivery time and finds another mistake." },
-  { add: [["marketing", withAt("Fixed: “…Sizes 1 to 8 years. Ships in 3 days.” @CEO ready for your sister to post.")]], say: "Marketing fixes both and hands it back. Each bot did one part, and your sister still decides what goes out." },
+  { add: [["marketing", withAt("Fixed: “…Sizes 1 to 8 years. Ships in 3 days.” @CEO ready to post.")]], say: "Marketing fixes both and hands it back. Each bot did one part, and a person still decides what goes out." },
 ];
 AG.stepper({ tx: $("s2Tx"), say: $("s2Say"), next: $("s2Next"), back: $("s2Back"), again: $("s2Again"), play: $("s2Play"), steps: CHAT, html: true });
 
@@ -254,9 +254,9 @@ AG.stepper({ tx: $("s2Tx"), say: $("s2Say"), next: $("s2Next"), back: $("s2Back"
   const JOBS = [   // [job, right bot, why]
     ["Find what birthday frocks cost in other shops", "marketing", "it needs the web, and only Marketing has search."],
     ["Write a caption for Saturday's reel", "marketing", "captions are Marketing's job."],
-    ["A customer asks: is size 6 in stock?", "production", "stock is in Amma's catalogue, and only Production has that tool."],
+    ["A customer asks: is size 6 in stock?", "production", "stock is in the catalogue, and only Production has that tool."],
     ["Book tomorrow's courier pickup", "operations", "the courier is Operations' tool."],
-    ["Can Amma sew 10 more frocks by Diwali?", "production", "sewing time is in the catalogue: Production's job."],
+    ["Can we sew 10 more frocks by Diwali?", "production", "sewing time is in the catalogue: Production's job."],
   ];
   const rows = $("s3Rows"), say = $("s3Say");
   let pick = {};
@@ -280,8 +280,8 @@ AG.stepper({ tx: $("s2Tx"), say: $("s2Say"), next: $("s2Next"), back: $("s2Back"
 // ---------- Part 4: what each bot reads ----------
 (function whatItReads() {
   const OWN = {
-    marketing: ["var(--note-pink)", "Plan posts and captions for my sister. Find trends; say where each came from."],
-    production: ["var(--note-orange)", "Answer from Amma's catalogue: sizes, stock, prices, sewing time."],
+    marketing: ["var(--note-pink)", "Plan posts and captions for the social media manager. Find trends; say where each came from."],
+    production: ["var(--note-orange)", "Answer from the catalogue: sizes, stock, prices, sewing time."],
     operations: ["var(--note-green)", "Plan packing and shipping. Draft delivery messages; never send them."],
   };
   const TURN = { marketing: 1, production: 2, operations: 3 };   // how many messages are in the chat at its turn

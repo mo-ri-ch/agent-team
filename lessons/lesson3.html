@@ -227,7 +227,7 @@ def text_for(name):
 def fresh_replies():
     return {
         "Marketing": ["Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years. Ships in 2 days!” @Production please check.",
-                      "Fixed: “…Sizes 1 to 8 years. Ships in 3 days.” @CEO ready for your sister to post."],
+                      "Fixed: “…Sizes 1 to 8 years. Ships in 3 days.” @CEO ready to post."],
         "Production": ["Sizes are 1 to 8 years, not 12. @Operations please check the shipping."],
         "Operations": ["Shipping takes 3 days, not 2. @Marketing"],
     }
@@ -286,14 +286,14 @@ CEO: Plan a post for the pastel frock. @Marketing
 Marketing: Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years. Ships in 2 days!” @Production please check.
 Production: Sizes are 1 to 8 years, not 12. @Operations please check the shipping.
 Operations: Shipping takes 3 days, not 2. @Marketing
-Marketing: Fixed: “…Sizes 1 to 8 years. Ships in 3 days.” @CEO ready for your sister to post.
+Marketing: Fixed: “…Sizes 1 to 8 years. Ships in 3 days.” @CEO ready to post.
 Waiting for the CEO.
 LLM writes: 4
 CEO: Plan a post for the pastel frock. @Marketing
 Marketing: Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years. Ships in 2 days!” @Production please check.
 Production: Sizes are 1 to 8 years, not 12. @Operations please check the shipping.
 Operations: Shipping takes 3 days, not 2. @Marketing
-Marketing: Fixed: “…Sizes 1 to 8 years. Ships in 3 days.” @CEO ready for your sister to post.
+Marketing: Fixed: “…Sizes 1 to 8 years. Ships in 3 days.” @CEO ready to post.
 Waiting for the CEO.
 LLM writes: 9</pre></div>
       </div>
@@ -398,7 +398,7 @@ const BOTS = ["Marketing", "Production", "Operations", "Analyst"];
 
 // ---------- Part 1: fixed order wastes turns ----------
 AG.stepper({ tx: $("s1Tx"), say: $("s1Say"), next: $("s1Next"), back: $("s1Back"), again: $("s1Again"), steps: [
-  { add: [["ceo", "A customer asks: is the red frock in size 5?"]], say: "One question. Only Production has Amma's catalogue." },
+  { add: [["ceo", "A customer asks: is the red frock in size 5?"]], say: "One question. Only Production has the catalogue." },
   { add: [["marketing", "Nothing from me."]], say: "Turn 0: Marketing's turn. It has nothing to add, but it still had to write. 1 write." },
   { add: [["production", "Yes: size 5, 2 in stock, ₹1,450."]], say: "Turn 1: Production answers. The only write that was needed. 2 writes." },
   { add: [["operations", "Nothing to ship yet."]], say: "Turn 2: Operations. Another write, not needed. 3 writes." },

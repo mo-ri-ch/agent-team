@@ -25,7 +25,7 @@ def text_for(name):
 def fresh_replies():
     return {
         "Marketing": ["Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years. Ships in 2 days!” @Production please check.",
-                      "Fixed: “…Sizes 1 to 8 years. Ships in 3 days.” @CEO ready for your sister to post."],
+                      "Fixed: “…Sizes 1 to 8 years. Ships in 3 days.” @CEO ready to post."],
         "Production": ["Sizes are 1 to 8 years, not 12. @Operations please check the shipping."],
         "Operations": ["Shipping takes 3 days, not 2. @Marketing"],
     }

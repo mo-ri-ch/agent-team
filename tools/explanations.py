@@ -106,7 +106,7 @@ EXPLAIN = {
     'marketing = {"name": "Marketing",': "Make the Marketing bot: a dictionary with its name and its own instructions.",
     'production = {"name": "Production",': "Make the Production bot the same way, with different instructions. Same kind of bot, different role.",
     'marketing_replies = ["Draft: “Twirl-ready pastel frocks 💫 Sizes 1 to 12 years. DM to order!” Production, are the details right?",': "The fake Marketing bot's replies, written out by hand, in order.",
-    'production_replies = ["Sizes are 1 to 8 years, not 12. Price ₹1,450. Amma can sew 6 this week."]': "The fake Production bot's reply, written out by hand.",
+    'production_replies = ["Sizes are 1 to 8 years, not 12. Price ₹1,450. We can sew 6 this week."]': "The fake Production bot's reply, written out by hand.",
     "def fake_marketing(text):": "Define the fake LLM for Marketing. Like a real one, it takes the text and gives back a reply.",
     "return marketing_replies.pop(0)": "Take Marketing's next reply off its list and hand it back. It ignores the text.",
     "def fake_production(text):": "Define the fake LLM for Production.",

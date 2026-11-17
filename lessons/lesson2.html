@@ -260,7 +260,7 @@ def post(who, text):
 marketing = {"name": "Marketing",
              "instructions": "You plan Instagram posts for Amal Designers, a kids' dress brand. Write one caption, using only facts in the chat. When it is final, end with DONE."}
 production = {"name": "Production",
-              "instructions": "You run production at Amal Designers. Catalogue: pastel party frock, sizes 1 to 8 years, ₹1,450. Amma can sew 6 a week. Check every size and price."}
+              "instructions": "You run production at Amal Designers. Catalogue: pastel party frock, sizes 1 to 8 years, ₹1,450. We can sew 6 a week. Check every size and price."}
 
 <span class="c"># What a bot reads: its own instructions + the chat so far.</span>
 <span class="c"># The last line is its own name, so the LLM writes as that bot.</span>
@@ -274,7 +274,7 @@ def text_for(bot):
 <span class="c"># Fake LLMs: each bot's replies, written by hand, in order</span>
 marketing_replies = ["Draft: “Twirl-ready pastel frocks 💫 Sizes 1 to 12 years. DM to order!” Production, are the details right?",
                      "Final: “Twirl-ready pastel frocks 💫 Sizes 1 to 8 years, ₹1,450. Only 6 this week, DM to order!” DONE"]
-production_replies = ["Sizes are 1 to 8 years, not 12. Price ₹1,450. Amma can sew 6 this week."]
+production_replies = ["Sizes are 1 to 8 years, not 12. Price ₹1,450. We can sew 6 this week."]
 
 def fake_marketing(text):
     return marketing_replies.pop(0)
@@ -306,7 +306,7 @@ print(run_chat("Write a caption for the new pastel party frock.", [marketing, pr
 1
 CEO: Write a caption for the new pastel party frock.
 Marketing: Draft: “Twirl-ready pastel frocks 💫 Sizes 1 to 12 years. DM to order!” Production, are the details right?
-Production: Sizes are 1 to 8 years, not 12. Price ₹1,450. Amma can sew 6 this week.
+Production: Sizes are 1 to 8 years, not 12. Price ₹1,450. We can sew 6 this week.
 Marketing: Final: “Twirl-ready pastel frocks 💫 Sizes 1 to 8 years, ₹1,450. Only 6 this week, DM to order!” DONE
 Done after 3 turns.</pre></div>
       </div>
@@ -406,7 +406,7 @@ const $ = id => document.getElementById(id);
 const esc = AG.esc;
 const INSTR = {
   marketing: "You plan Instagram posts for Amal Designers, a kids' dress brand. Write one caption, using only facts in the chat. When it is final, end with DONE.",
-  production: "You run production at Amal Designers. Catalogue: pastel party frock, sizes 1 to 8 years, ₹1,450. Amma can sew 6 a week. Check every size and price.",
+  production: "You run production at Amal Designers. Catalogue: pastel party frock, sizes 1 to 8 years, ₹1,450. We can sew 6 a week. Check every size and price.",
 };
 const NAME = { marketing: "Marketing", production: "Production" };
 
@@ -479,7 +479,7 @@ const NAME = { marketing: "Marketing", production: "Production" };
   const DONE = [
     { add: [["ceo", "Write a caption for the new pastel party frock."]], say: "post(\"CEO\", task): the first message. Press Next turn." },
     { add: [["marketing", "Draft: “Twirl-ready pastel frocks 💫 Sizes 1 to 12 years. DM to order!” Production, are the details right?"]], say: "Turn 0: 0 % 2 = 0 → Marketing. A draft, no DONE, so go on." },
-    { add: [["production", "Sizes are 1 to 8 years, not 12. Price ₹1,450. Amma can sew 6 this week."]], say: "Turn 1: 1 % 2 = 1 → Production. It checks the catalogue. No DONE." },
+    { add: [["production", "Sizes are 1 to 8 years, not 12. Price ₹1,450. We can sew 6 this week."]], say: "Turn 1: 1 % 2 = 1 → Production. It checks the catalogue. No DONE." },
     { add: [["marketing", "Final: “Twirl-ready pastel frocks 💫 Sizes 1 to 8 years, ₹1,450. Only 6 this week, DM to order!” DONE"]], say: "Turn 2: 2 % 2 = 0 → Marketing writes DONE. The loop stops: “Done after 3 turns.” (turn 2 + 1)" },
   ];
   const NEVER = [DONE[0], DONE[1], DONE[2],

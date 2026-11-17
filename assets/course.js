@@ -64,8 +64,8 @@ const COURSE_LESSONS = [
 
 // ---------- The team: sticky notes with faces. <p class="bot-say" data-bot="marketing">Hi!</p> ----------
 // The running story: you are the CEO of Amal Designers (handmade dresses for kids under 10).
-// Each bot supports a real person: marketing (pink, a pencil) for the sister who posts on Instagram ·
-// production (orange, a needle) for Amma, who sews and sets prices · operations (green, a parcel): packing and courier ·
+// Each bot supports a real person: marketing (pink, a pencil) for the social media manager ·
+// production (orange, a needle) for the tailor, who sews and sets prices · operations (green, a parcel): packing and courier ·
 // analyst (blue, a chart) for the CEO · you (yellow)
 const BOT_LOOK = {
   marketing: { name: "Marketing", note: "var(--note-pink)", extra: '<path d="M54 46 L62 34" class="bot-tool"/><path d="M54 46 L53 49 L56 47" class="bot-tool"/>' },
