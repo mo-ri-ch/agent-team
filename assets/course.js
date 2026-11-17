@@ -24,7 +24,7 @@ const COURSE_LESSONS = [
   { n: 2, label: "2", step: "build it", title: "Two bots talk", file: "lesson2.html", ready: true, test: 10,
     summary: "Write two agents in plain Python that pass messages back and forth.",
     leaves: "Two bots take turns easily. With five, who speaks next?" },
-  { n: 3, label: "3", step: "who speaks", title: "Who speaks next", file: "lesson3.html", ready: false,
+  { n: 3, label: "3", step: "who speaks", title: "Who speaks next", file: "lesson3.html", ready: true, test: 11,
     summary: "@mentions, routing each message to the right bot, and a limit so the chat never goes round forever.",
     leaves: "The chat grows long. How does the team keep track of the work?" },
   { n: 4, label: "4", step: "handoffs", title: "Shared notes and handoffs", file: "lesson4.html", ready: false,

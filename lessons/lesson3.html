@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who speaks next</title>
+<meta name="description" content="Lesson 3 of Build an AI Team: who speaks next in a group chat of bots. @mentions, a coordinator, every bot deciding for itself, what each costs, and a round limit.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Kalam:wght@400&family=Patrick+Hand&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem("notebook-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
+<link rel="stylesheet" href="https://mo-ri-ch.github.io/study-notebook-design/v1/style.css">
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body data-pen="blue">
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← Build an AI Team</a>
+    <span class="where">Lesson 3 of 12</span>
+  </header>
+
+  <main data-paged>
+    <div class="paged-head">
+      <h1>Who speaks next</h1>
+      <div class="progress" aria-label="Lesson parts"></div>
+    </div>
+
+    <!-- 1 -->
+    <section class="part" data-title="Taking turns wastes turns">
+      <h2>Taking turns wastes turns</h2>
+      <p class="say">With bots taking turns in a fixed order, every bot writes after every message, even when it has nothing to add. Each of those writes is one more time an LLM runs: more waiting and more cost.</p>
+      <div class="activity">
+        <div class="do"><span data-peek="These messages are examples, written for this page.">Step through.</span> A customer question only Support can answer.</div>
+        <div class="tx" id="s1Tx" style="min-height:10em;align-content:start"></div>
+        <p class="count" id="s1Say" style="margin:8px 0 0"></p>
+        <div class="btnrow">
+          <button class="primary" id="s1Next">Next turn →</button>
+          <button id="s1Back" hidden>← Back</button>
+          <button id="s1Again" hidden>↺ Start again</button>
+        </div>
+      </div>
+      <p class="say">4 bots wrote, 1 was needed: 3 wasted writes.<br><b class="eqbox">fixed order: every bot writes, needed or not</b></p>
+      <p class="hook">What if the message itself said who should answer?</p>
+    </section>
+
+    <!-- 2 -->
+    <section class="part" data-title="Way 1: @mentions">
+      <h2>Way 1: @mentions</h2>
+      <p class="say">Whoever writes a message names who should answer, with <span class="at">@</span> and the name. The program reads the message, finds the names, and only those bots reply. If no bot is named, the chat waits for the CEO.<br><b class="eqbox">next = the bots @mentioned</b><br>Finding names is plain Python, so deciding costs no LLM writes.</p>
+      <div class="activity">
+        <div class="do">Write a message. See who replies next.</div>
+        <div class="tryrow"><input id="s2In" class="wide" type="text" value="@Support is size 5 in stock?" aria-label="A message"></div>
+        <div class="chips" id="s2Bots" aria-live="polite"></div>
+        <p class="count" id="s2Say" style="margin:4px 0 0"></p>
+        <div class="chips" id="s2Try"><span class="count" style="align-self:center">Try:</span></div>
+      </div>
+      <p class="hook">Easy for bots. But people in a group chat don't @mention all the time.</p>
+    </section>
+
+    <!-- 3 -->
+    <section class="part" data-title="Way 2: a coordinator">
+      <h2>Way 2: a coordinator</h2>
+      <p class="say">A <mark>coordinator</mark> is one more bot whose only job is to read the latest message and name who replies next, or <code>CEO</code> when it's done. Nobody has to @mention anyone. But the coordinator is an LLM too, so it writes once after every message.<br><b class="eqbox">coordinator writes = messages in the chat</b><br>5 messages (the task + 4 replies) → 5 coordinator writes. With the 4 replies: 9 LLM writes.</p>
+      <div class="activity">
+        <div class="do">Step through. No one uses @. Watch the count.</div>
+        <div class="tx" id="s3Tx" style="min-height:11em;align-content:start"></div>
+        <p class="count" id="s3Say" style="margin:8px 0 0"></p>
+        <div class="btnrow">
+          <button class="primary" id="s3Next">Next step →</button>
+          <button id="s3Play">▶ Play</button>
+          <button id="s3Back" hidden>← Back</button>
+          <button id="s3Again" hidden>↺ Start again</button>
+        </div>
+      </div>
+      <p class="hook">Count it on new chats.</p>
+    </section>
+
+    <section class="part" data-nonum data-title="✏️ Practice 3.1">
+      <h2>✏️ Practice 3.1</h2>
+      <p class="say">Remember:<br><b class="eqbox">fixed order: every bot writes, needed or not</b><br><b class="eqbox">next = the bots @mentioned</b> (no LLM writes to decide)<br><b class="eqbox">coordinator writes = messages in the chat</b></p>
+      <div class="activity">
+        <div class="do"><span data-peek="Take a pen and paper, or use the ✎ pen on this page. List the messages, one per line.">Work each one out.</span> Type the answer, press Check.</div>
+        <div class="pq" data-ans="2" data-tol="0.1" data-hint="Count the bots named with @." data-work="@Marketer and @Support are named. 2 bots reply.">
+          <div class="pq-q">The CEO writes: “New frock photos are up. @Marketer @Support take a look.” How many bots reply next?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="4" data-tol="0.1" data-hint="In a fixed order, all the bots write. How many were needed?" data-work="5 bots write, 1 was needed.<br>5 − 1 = 4 wasted writes.">
+          <div class="pq-q"><b>5</b> bots take turns in a fixed order. A message needs only the Researcher. How many writes are wasted?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="7" data-tol="0.1" data-hint="Count every message: the CEO's task, then each reply." data-work="The task + 6 replies = 7 messages.<br>7 coordinator writes.">
+          <div class="pq-q">With a coordinator, a job ends with the CEO's task and <b>6</b> bot replies in the chat. How many times did the coordinator write?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="7" data-tol="0.1" data-hint="Same job with @mentions: deciding is free. Only the replies are LLM writes. Compare with the coordinator's total." data-work="Coordinator: 6 replies + 7 coordinator writes = 13.<br>@mentions: 6 replies + 0 = 6.<br>13 − 6 = 7 more writes.">
+          <div class="pq-q">Same job. How many <b>more</b> LLM writes does the coordinator way take than @mentions?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+      </div>
+      <p class="hook">One more way: no coordinator, no @.</p>
+    </section>
+
+    <!-- 4 -->
+    <section class="part" data-title="Way 3: every bot decides">
+      <h2>Way 3: every bot decides</h2>
+      <p class="say">Like people in a real group chat: after each bot's message, every other bot reads it and asks itself “is this for me?”. Each of those questions is one LLM write.<br><b class="eqbox">deciding writes = bot messages × (bots − 1)</b><br>3 bots, one message → 1 × 2 = 2 deciding writes. And two bots can say yes at the same time.</p>
+      <div class="activity">
+        <div class="do">Step through one message.</div>
+        <div class="tx" id="s4Tx" style="min-height:9em;align-content:start"></div>
+        <p class="count" id="s4Say" style="margin:8px 0 0"></p>
+        <div class="btnrow">
+          <button class="primary" id="s4Next">Next step →</button>
+          <button id="s4Back" hidden>← Back</button>
+          <button id="s4Again" hidden>↺ Start again</button>
+        </div>
+      </div>
+      <p class="hook">Three ways. Which should a CEO pick?</p>
+    </section>
+
+    <!-- 5 -->
+    <section class="part" data-title="Which way?">
+      <h2>Which way?</h2>
+      <p class="say">The ways differ in how many LLM writes it takes just to decide who's next. The replies themselves cost the same in every way.</p>
+      <div class="activity">
+        <div class="do">Pick the team size and the chat length. Compare.</div>
+        <div class="tryrow"><label for="s5N">bots</label><input id="s5N" type="range" min="2" max="6" value="3" style="width:9em"><b id="s5NV"></b>
+          <label for="s5M" style="margin-left:12px">messages</label><input id="s5M" type="range" min="1" max="40" value="10" style="width:9em"><b id="s5MV"></b></div>
+        <div id="s5Bars"></div>
+      </div>
+      <p class="say">A good mix: @mention when you know who should answer (free). Let a coordinator decide when you don't. Save “every bot decides” for small teams.<button class="doubt" type="button" data-peek-from="hermesPeek" aria-label="What do real team apps do?">🤔</button></p>
+      <div hidden id="hermesPeek"><b>🤔 What do real team apps do?</b>
+        <div style="margin-top:6px">Mostly @mentions. In Hermes Agent's Bot Mode (which you set up in Lesson 7), when you @mention bots in a group chat, only those bots answer. It also limits how many rounds the bots go back and forth after each of your messages. Details change from version to version.</div>
+      </div>
+      <p class="hook">But what if two bots keep @mentioning each other?</p>
+    </section>
+
+    <!-- 6 -->
+    <section class="part" data-title="A round limit">
+      <h2>A round limit</h2>
+      <p class="say">Bots can be too polite: one thanks the other, the other says you're welcome, and so on, forever. So after the CEO's message, the program allows only a set number of rounds, the <mark>round limit</mark>. In each round, every bot named replies once.<br><b class="eqbox">stop when no one is named, or at the round limit</b></p>
+      <div class="activity">
+        <div class="do">Pick a round limit. Step through.</div>
+        <div class="chips" id="s6Lim"></div>
+        <div class="tx" id="s6Tx" style="min-height:10em;align-content:start"></div>
+        <p class="count" id="s6Say" style="margin:8px 0 0"></p>
+        <div class="btnrow">
+          <button class="primary" id="s6Next">Next round →</button>
+          <button id="s6Again" hidden>↺ Start again</button>
+        </div>
+      </div>
+      <p class="hook">Try it on new numbers.</p>
+    </section>
+
+    <section class="part" data-nonum data-title="✏️ Practice 3.2">
+      <h2>✏️ Practice 3.2</h2>
+      <p class="say">Remember:<br><b class="eqbox">coordinator writes = messages in the chat</b><br><b class="eqbox">deciding writes = bot messages × (bots − 1)</b><br><b class="eqbox">stop when no one is named, or at the round limit</b></p>
+      <div class="activity">
+        <div class="do"><span data-peek="Take a pen and paper, or use the ✎ pen on this page.">Work each one out.</span> Type the answer, press Check.</div>
+        <div class="pq" data-ans="15" data-tol="0.1" data-hint="Use the box: bot messages × (bots − 1)." data-work="4 bots → each message, 3 others decide.<br>5 × 3 = 15 deciding writes.">
+          <div class="pq-q">“Every bot decides”, with <b>4</b> bots. The bots post <b>5</b> messages. How many deciding writes?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="3" data-tol="0.1" data-hint="One bot is named each round. How many rounds run?" data-work="Round 1: Support thanks. Round 2: Marketer thanks back. Round 3: Support again.<br>The limit is 3, so 3 replies, then the chat waits for the CEO.">
+          <div class="pq-q">Two bots keep thanking each other, each @mentioning the other. Round limit <b>3</b>. How many thank-you replies are posted?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="20" data-tol="0.1" data-hint="Work out both: messages for the coordinator, bot messages × (bots − 1) for every bot deciding. Then subtract." data-work="Every bot decides: 10 × (3 − 1) = 20.<br>Coordinator: the task + 10 = 11 messages → 11.<br>@mentions: 0.<br>The most is 20.">
+          <div class="pq-q"><b>3</b> bots. The CEO's task, then <b>10</b> bot messages. Of the three ways, what is the <b>most</b> deciding writes any of them takes?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="5" data-tol="0.1" data-hint="Each round, one bot is named, so one reply. Count the CEO's message too." data-work="The CEO's message: 1.<br>Round limit 4, one reply per round: 4.<br>1 + 4 = 5 messages.">
+          <div class="pq-q">The CEO writes “@Researcher thanks!”. Then the Researcher and the Marketer keep thanking each other, each naming the other. Round limit <b>4</b>. How many messages are in the chat at the end, counting the CEO's?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+      </div>
+      <p class="hook">A real coordinator doesn't always answer neatly.</p>
+    </section>
+
+    <!-- 7 -->
+    <section class="part" data-title="A real coordinator">
+      <h2>A real coordinator</h2>
+      <p class="say">In Colab, the coordinator is a real LLM. It's told to reply with one name, but it may write a whole sentence. So the program goes through the team's names, in order, and takes the first one that appears in the answer, spelled exactly. No bot's name: wait for the CEO.<br><b class="eqbox">next = the first bot name found in its answer</b></p>
+      <div class="activity">
+        <div class="do">Example answers, made for this page. What does the program do with each?</div>
+        <div id="s7Rows"></div>
+        <p class="redcheck" id="s7Say" hidden></p>
+      </div>
+      <p class="hook">Here's all of it in Python.</p>
+    </section>
+
+    <!-- 8 -->
+    <section class="part" data-title="The code">
+      <h2>The code</h2>
+      <p class="say">The same job, run twice: with @mentions, then with a coordinator. Guess each <code>print</code>, then press <b>▶ Run</b>.</p>
+<pre><code><span class="c"># The shared chat, and a list of who the LLM wrote for.</span>
+<span class="c"># Every LLM write costs time and money, so we count them: len(calls).</span>
+chat = []
+calls = []
+
+def post(who, text):
+    chat.append({"who": who, "text": text})
+    print(f"{who}: {text}")
+
+BOTS = ["Researcher", "Marketer", "Support"]
+INSTRUCTIONS = {
+    "Researcher": "Find kids' fashion trends. Say where each fact came from.",
+    "Marketer": "Write Instagram captions from the facts in the chat.",
+    "Support": "Check sizes and prices against the catalogue.",
+}
+
+def text_for(name):
+    lines = [INSTRUCTIONS[name], "", "Chat so far:"]
+    for m in chat:
+        lines.append(m["who"] + ": " + m["text"])
+    lines.append(name + ":")
+    return "\n".join(lines)
+
+<span class="c"># Fake LLM replies for each bot, in order. A fresh copy for each run.</span>
+def fresh_replies():
+    return {
+        "Researcher": ["Pastel tulle frocks are big for birthdays (from 3 kids' shops). @Marketer"],
+        "Marketer": ["Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years.” @Support please check.",
+                     "Fixed: “…Sizes 1 to 8 years.” @CEO ready to post."],
+        "Support": ["The catalogue says sizes 1 to 8 years, not 12. @Marketer"],
+    }
+
+def fake_llm(name, text):
+    calls.append(name)
+    return replies[name].pop(0)
+
+<span class="c"># Way 1: @mentions. The bots named with @ reply next. No LLM write to decide.</span>
+def by_mentions(text):
+    names = []
+    for name in BOTS:
+        if "@" + name in text:
+            names.append(name)
+    return names
+
+print(by_mentions("@Support please check."))
+
+<span class="c"># Way 2: a coordinator reads the latest message and names who replies next.</span>
+<span class="c"># It is an LLM too, so it costs one write each time.</span>
+def by_coordinator(text):
+    calls.append("Coordinator")
+    name = coordinator_replies.pop(0)
+    if name in BOTS:
+        return [name]
+    return []   <span class="c"># not a bot's name: wait for the CEO</span>
+
+<span class="c"># The loop: after each message, ask the router who replies next.</span>
+<span class="c"># chat[-1] is the last message (-1 counts from the end).</span>
+def run_chat(task, router, round_limit=5):
+    post("CEO", task)
+    for i in range(round_limit):
+        names = router(chat[-1]["text"])
+        if names == []:
+            return "Waiting for the CEO."
+        for name in names:
+            post(name, fake_llm(name, text_for(name)))
+    return "Stopped: the round limit was reached."
+
+replies = fresh_replies()
+print(run_chat("Plan a post for the pastel frock. @Researcher", by_mentions))
+print("LLM writes:", len(calls))
+
+<span class="c"># The same job with a coordinator: start a fresh chat and count again</span>
+chat.clear()
+calls.clear()
+replies = fresh_replies()
+coordinator_replies = ["Researcher", "Marketer", "Support", "Marketer", "CEO"]
+print(run_chat("Plan a post for the pastel frock. @Researcher", by_coordinator))
+print("LLM writes:", len(calls))</code></pre>
+      <div class="run-area">
+        <button class="run-code" type="button" aria-expanded="false">▶ Run</button>
+        <div class="terminal" hidden><div class="term-bar">Terminal</div><pre class="term-out"><span class="prompt">$ python lesson3.py</span>
+['Support']
+CEO: Plan a post for the pastel frock. @Researcher
+Researcher: Pastel tulle frocks are big for birthdays (from 3 kids' shops). @Marketer
+Marketer: Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years.” @Support please check.
+Support: The catalogue says sizes 1 to 8 years, not 12. @Marketer
+Marketer: Fixed: “…Sizes 1 to 8 years.” @CEO ready to post.
+Waiting for the CEO.
+LLM writes: 4
+CEO: Plan a post for the pastel frock. @Researcher
+Researcher: Pastel tulle frocks are big for birthdays (from 3 kids' shops). @Marketer
+Marketer: Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years.” @Support please check.
+Support: The catalogue says sizes 1 to 8 years, not 12. @Marketer
+Marketer: Fixed: “…Sizes 1 to 8 years.” @CEO ready to post.
+Waiting for the CEO.
+LLM writes: 9</pre></div>
+      </div>
+      <p class="run-links">
+        <a class="btn primary" href="https://colab.research.google.com/github/mo-ri-ch/agent-team/blob/main/notebooks/lesson3.ipynb" target="_blank" rel="noopener">▶ Run it in Google Colab</a>
+      </p>
+      <p class="muted-note">The notebook has all of this, then a real coordinator and real bots. Its first run downloads the model (about 3 GB), so it takes a few minutes. You just need a Google account.</p>
+      <p class="hook">Quick check: did it all make sense?</p>
+    </section>
+
+    <!-- 9 -->
+    <section class="part" data-title="Lesson test">
+      <h2>Lesson 3 test</h2>
+      <p class="say">5 questions, one for each idea in this lesson. Answer them all right to pass. A wrong answer tells you why, and which page to look at again.</p>
+      <div class="test" data-test="3">
+        <div class="quiz" data-page="lesson3.html#2" data-topic="Way 1: @mentions" data-right="Right. Only Support is named, so only Support replies.">
+          <div class="q"><small>1. Predict</small>With @mentions, the Marketer writes: “Caption ready. @Support please check the sizes.” Who replies next?</div>
+          <div class="options">
+            <button data-why="With @mentions, only the bots named reply.">Every bot</button>
+            <button data-right>Only Support</button>
+            <button data-why="A bot is named, so the chat goes on. It waits for the CEO only when no bot is named.">No one: it waits for the CEO</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson3.html#3" data-topic="Way 2: a coordinator" data-right="Right. The coordinator writes once per message: 8.">
+          <div class="q"><small>2. Count</small>With a coordinator, the chat ends with <b>8</b> messages. How many times did the coordinator write?</div>
+          <div class="options">
+            <button data-why="It writes once after every message, including the CEO's task.">7</button>
+            <button data-right>8</button>
+            <button data-why="The coordinator's own answers aren't messages in the chat. It writes once per message.">16</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson3.html#5" data-topic="Way 3: every bot decides" data-right="Right. 4 × (5 − 1) = 16.">
+          <div class="q"><small>3. Work it out</small>“Every bot decides”, <b>5</b> bots, <b>4</b> bot messages. How many deciding writes?</div>
+          <div class="options">
+            <button data-why="The bot who wrote a message doesn't decide on it: bots − 1, not bots.">20</button>
+            <button data-right>16</button>
+            <button data-why="Each message, every other bot decides: 4 × (5 − 1).">4</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson3.html#7" data-topic="A round limit" data-right="Right. Without it, bots that keep naming each other would go on forever.">
+          <div class="q"><small>4. Why</small>Two bots keep @mentioning each other. What stops them?</div>
+          <div class="options">
+            <button data-why="They are named, so with @mentions they'd keep replying.">Nothing needed: @mentions stop by themselves</button>
+            <button data-right>The round limit</button>
+            <button data-why="Here no one waits for DONE: the round limit is what stops a chat where bots keep naming each other.">The CEO has to type STOP</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson3.html#9" data-topic="A real coordinator" data-right="Right. “support” is in small letters, so the exact name “Support” isn't found. No bot: wait for the CEO.">
+          <div class="q"><small>5. Predict</small>The real coordinator answers: <code>maybe support?</code> What does the program do?</div>
+          <div class="options">
+            <button data-why="The program looks for the name spelled exactly, with a capital S.">Support replies</button>
+            <button data-right>No bot is found, so it waits for the CEO</button>
+            <button data-why="It doesn't ask again. If no name is found, it waits for the CEO.">It asks the coordinator again</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+      <p class="hook">What the team still can't do.</p>
+    </section>
+
+    <!-- 10 -->
+    <section class="part" data-title="A long chat">
+      <h2>A long chat</h2>
+      <p class="say">Your bots now pass work to the right teammate. But every bot reads the whole chat before it writes, and after a week of jobs the chat is very long: slow, costly, and easy to get lost in.</p>
+      <p class="bot-say" data-bot="marketer">Wait, did anyone already post the red frock? I'd have to read 300 messages to find out.</p>
+      <div class="open-question">
+        <div>This leaves a question</div>
+        <div class="big">The chat grows long. How does the team keep track of the work?</div>
+        <div>Lesson 4 answers it. (Coming soon.)</div>
+      </div>
+      <div class="mybiz" data-key="l3">For your business: which way would you use to pick who speaks next, and why? Write one message you'd post, with the @mentions in it.</div>
+      <p><button class="done-toggle" data-done="3">Mark lesson as done</button></p>
+    </section>
+  </main>
+</div>
+
+<nav class="pagebar" aria-label="Move between parts">
+  <div class="inner">
+    <button data-page-back>← Previous</button>
+    <span data-page-label></span>
+    <button class="primary" data-page-next>Next →</button>
+  </div>
+</nav>
+
+<script src="../assets/course.js"></script>
+<script src="../assets/practice.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/common.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/pen.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/guide.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/codewalk.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = AG.esc;
+const withAt = t => esc(t).replace(/@(Researcher|Marketer|Support|Operations|CEO)/g, '<span class="at">@$1</span>');
+AG.WHO.operations = ["a-note", "Operations"];
+AG.WHO.coord = ["llm", "Coordinator"];
+AG.WHO.prog = ["prog", "program"];
+const BOTS = ["Researcher", "Marketer", "Support", "Operations"];
+
+// ---------- Part 1: fixed order wastes turns ----------
+AG.stepper({ tx: $("s1Tx"), say: $("s1Say"), next: $("s1Next"), back: $("s1Back"), again: $("s1Again"), steps: [
+  { add: [["ceo", "A customer asks: is the red frock in size 5?"]], say: "One question. Only Support has the catalogue." },
+  { add: [["researcher", "Nothing from me."]], say: "Turn 0: the Researcher's turn. It has nothing to add, but it still had to write. 1 write." },
+  { add: [["marketer", "Nothing from me either."]], say: "Turn 1: the Marketer. Another write, not needed. 2 writes." },
+  { add: [["support", "Yes: size 5, 2 in stock, ₹1,450."]], say: "Turn 2: Support answers. The only write that was needed. 3 writes." },
+  { add: [["operations", "Nothing to ship yet."]], say: "Turn 3: Operations. 4 writes, 1 needed, 3 wasted." },
+] });
+
+// ---------- Part 2: find the @mentions ----------
+(function mentions() {
+  const inp = $("s2In"), bots = $("s2Bots"), say = $("s2Say");
+  function draw() {
+    const t = inp.value, named = BOTS.filter(n => t.includes("@" + n));
+    bots.innerHTML = BOTS.map(n => `<span class="chip${named.includes(n) ? " on" : ""}">${n}</span>`).join("");
+    say.textContent = named.length ? `Next: ${named.join(" and ")}. 0 LLM writes to decide.` : "No bot is named, so the chat waits for the CEO.";
+  }
+  const TRY = ["@Support is size 5 in stock?", "@Researcher @Marketer plan Saturday's post", "Thanks, all done!", "@support lowercase?"];
+  TRY.forEach(t => { const b = document.createElement("button"); b.type = "button"; b.className = "chip"; b.textContent = t; b.onclick = () => { inp.value = t; draw(); }; $("s2Try").appendChild(b); });
+  inp.oninput = draw;
+  addReset(inp, () => { inp.value = TRY[0]; draw(); });
+  draw();
+})();
+
+// ---------- Part 3: a coordinator picks who's next ----------
+(function coordinator() {
+  const N = (k, m) => `Coordinator writes so far: ${k}. Replies: ${m}. Total LLM writes: ${k + m}.`;
+  AG.stepper({ tx: $("s3Tx"), say: $("s3Say"), next: $("s3Next"), back: $("s3Back"), again: $("s3Again"), play: $("s3Play"), steps: [
+    { add: [["ceo", "Plan a post for the pastel frock."]], say: "The task. No @ anywhere. " + N(0, 0) },
+    { add: [["coord", "→ Researcher"]], say: "The coordinator reads it and names the Researcher. " + N(1, 0) },
+    { add: [["researcher", "Pastel tulle frocks are big for birthdays (from 3 kids' shops)."]], say: N(1, 1) },
+    { add: [["coord", "→ Marketer"]], say: "Facts are in, so: the Marketer. " + N(2, 1) },
+    { add: [["marketer", "Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years.”"]], say: N(2, 2) },
+    { add: [["coord", "→ Support"]], say: "A caption with sizes: Support should check. " + N(3, 2) },
+    { add: [["support", "The catalogue says sizes 1 to 8 years, not 12."]], say: N(3, 3) },
+    { add: [["coord", "→ Marketer"]], say: "A fix is needed: back to the Marketer. " + N(4, 3) },
+    { add: [["marketer", "Fixed: “…Sizes 1 to 8 years.” Ready to post."]], say: N(4, 4) },
+    { add: [["coord", "→ CEO"]], say: "Done, so it names the CEO, and the chat waits. 5 messages → 5 coordinator writes. " + N(5, 4) },
+  ] });
+})();
+
+// ---------- Part 4: every bot decides ----------
+AG.stepper({ tx: $("s4Tx"), say: $("s4Say"), next: $("s4Next"), back: $("s4Back"), again: $("s4Again"), steps: [
+  { add: [["marketer", "What price should the caption say?"]], say: "One bot message. No @, no coordinator." },
+  { add: [["researcher", "(asks itself: is this for me?) → YES"]], say: "The Researcher reads it and decides: 1 deciding write." },
+  { add: [["support", "(asks itself: is this for me?) → YES"]], say: "Support decides too: 2 deciding writes. 1 message × (3 − 1) bots = 2." },
+  { add: [["researcher", "Similar frocks sell for ₹1,200 to ₹1,800."]], say: "Both said yes, so both answer…" },
+  { add: [["support", "Ours is ₹1,450, from the catalogue."]], say: "…at the same time. Two answers to one question: the Marketer must sort it out. Here Support's is the one to use." },
+] });
+
+// ---------- Part 5: compare the three ways ----------
+(function compare() {
+  const n = $("s5N"), m = $("s5M"), bars = $("s5Bars");
+  function draw() {
+    const N = +n.value, M = +m.value;
+    $("s5NV").textContent = N; $("s5MV").textContent = M;
+    const rows = [["@mentions", 0, "finding names is plain Python"], ["coordinator", M, `${M} messages → ${M}`], ["every bot decides", M * (N - 1), `${M} × (${N} − 1) = ${M * (N - 1)}`]];
+    const max = Math.max(1, ...rows.map(r => r[1]));
+    bars.innerHTML = rows.map(([k, v, w]) => `<div class="bar" style="grid-template-columns:10em 1fr 3em"><span>${k}</span><span class="track"><span class="fill" style="width:${v / max * 100}%"></span></span><span class="pct">${v}</span></div><p class="count" style="margin:-2px 0 6px 10.6em;font-size:.9rem">${w}</p>`).join("");
+  }
+  n.oninput = m.oninput = draw;
+  addReset(bars, () => { n.value = 3; m.value = 10; draw(); });
+  draw();
+})();
+
+// ---------- Part 6: a round limit stops a polite loop ----------
+(function roundLimit() {
+  const LOOP = [["support", "Happy to help! The caption was great, @Marketer!"], ["marketer", "You're welcome, @Support!"], ["support", "Thank you for saying that, @Marketer!"], ["marketer", "Anytime, @Support!"], ["support", "You're the best, @Marketer!"], ["marketer", "No, you are, @Support!"]];
+  let limit = 3, at = 0;
+  const tx = $("s6Tx"), say = $("s6Say"), next = $("s6Next"), again = $("s6Again");
+  function draw() {
+    let html = AG.line(["ceo", withAt("Caption's posted. @Support thanks for checking the sizes!")], { html: true });
+    LOOP.slice(0, at).forEach((l, i) => html += AG.line([l[0], withAt(l[1])], { html: true, isNew: i === at - 1 }));
+    const end = at >= limit;
+    if (end) html += AG.line(["prog", `Round limit ${limit} reached: stop and wait for the CEO.`], { isNew: true });
+    tx.innerHTML = html;
+    say.textContent = end ? `${limit} round${limit > 1 ? "s" : ""}, then stop. Without the limit, this would never end.` : `Rounds so far: ${at} of ${limit}. Someone is @mentioned, so the chat goes on.`;
+    next.hidden = end; again.hidden = !end;
+  }
+  const pick = AG.chips($("s6Lim"), ["limit 1", "limit 3", "limit 5"], i => { limit = [1, 3, 5][i]; at = 0; pick(i); draw(); });
+  next.onclick = () => { at++; draw(); };
+  again.onclick = () => { at = 0; draw(); };
+  addReset(tx, () => { limit = 3; at = 0; pick(1); draw(); });
+  pick(1); draw();
+})();
+
+// ---------- Part 7: what the program does with a real coordinator's answer ----------
+(function realAnswers() {
+  const TEAM = ["Researcher", "Marketer", "Support"];
+  const ANS = ["Marketer", "I think the Marketer should reply next.", "CEO", "the researcher, probably"];
+  const pickOf = a => TEAM.find(n => a.includes(n)) || "wait";
+  const rows = $("s7Rows"), say = $("s7Say");
+  let pick = {};
+  function draw() {
+    rows.innerHTML = ANS.map((a, i) => {
+      const right = pickOf(a), p = pick[i], cls = p ? (p === right ? " right" : " wrong") : "";
+      const why = right === "wait" ? (a === "CEO" ? "CEO isn't a bot: wait for the CEO." : "“researcher” is in small letters, so the exact name isn't found: wait for the CEO.") : `“${right}” appears in it, so ${right} replies.`;
+      return `<div class="sortrow${cls}" style="grid-template-columns:1fr auto"><code>${esc(a)}</code><span class="seg">${[...TEAM, "wait"].map(b =>
+        `<button type="button" data-i="${i}" data-b="${b}" class="${p === b ? "on" : ""}">${b === "wait" ? "Wait for CEO" : b}</button>`).join("")}</span>${p ? `<span class="why">${p === right ? "✓" : "✗"} ${why}</span>` : ""}</div>`;
+    }).join("");
+    rows.querySelectorAll("button").forEach(b => b.onclick = () => { pick[b.dataset.i] = b.dataset.b; draw(); });
+    const n = Object.keys(pick).length, ok = ANS.filter((a, i) => pick[i] === pickOf(a)).length;
+    say.hidden = n < ANS.length; say.classList.toggle("good", ok === ANS.length);
+    say.textContent = ok === ANS.length ? "✓ All 4 right. Exact names only: a sloppy answer means the CEO decides." : `${ok} of 4 right. Tap another choice to change one.`;
+  }
+  addReset(rows, () => { pick = {}; draw(); });
+  draw();
+})();
+</script>
+</body>
+</html>

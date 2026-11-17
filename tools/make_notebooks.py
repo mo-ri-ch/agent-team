@@ -10,7 +10,7 @@ import json
 import os
 import re
 
-TITLES = {2: "Two bots talk"}
+TITLES = {2: "Two bots talk", 3: "Who speaks next"}
 
 
 def cells_from(code):
