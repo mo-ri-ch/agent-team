@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hermes on your laptop</title>
+<meta name="description" content="Lesson 6 of Build an AI Team: install Hermes Agent on your own laptop, choose a model (free on your laptop with Ollama, or a cheap one online), and have your first chat.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Kalam:wght@400&family=Patrick+Hand&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem("notebook-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
+<link rel="stylesheet" href="https://mo-ri-ch.github.io/study-notebook-design/v1/style.css">
+<link rel="stylesheet" href="../assets/course.css">
+<style>
+  .term { font-family: var(--mono); font-size: 0.86rem; line-height: 1.5; background: #0f111a; color: #d7f5dd; border-radius: 8px; padding: 10px 12px; min-height: 7em; white-space: pre-wrap; word-break: break-word; }
+  .term .p { color: #7f88a8; }
+  .term .e { color: #ff9a8a; }
+  .term-in { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+  .term-in input { flex: 1; font: inherit; font-family: var(--mono); padding: 5px 8px; border: 2px solid var(--ink); border-radius: 8px; background: var(--paper); color: var(--ink); }
+  .cfg { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 640px) { .cfg { grid-template-columns: 1fr; } }
+  .cfg .lab { font-family: var(--hand); color: var(--pencil); margin: 0 0 2px; }
+  .cfg pre { margin: 0; font-size: .8rem; }
+  .checks label { display: flex; gap: 8px; align-items: baseline; padding: 4px 0; }
+  .checks input { transform: scale(1.2); }
+  .vnote { font-size: .9rem; color: var(--pencil); }
+</style>
+</head>
+<body data-pen="blue">
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← Build an AI Team</a>
+    <span class="where">Lesson 6 of 12</span>
+  </header>
+
+  <main data-paged>
+    <div class="paged-head">
+      <h1>Hermes on your laptop</h1>
+      <div class="progress" aria-label="Lesson parts"></div>
+    </div>
+
+    <!-- 1 -->
+    <section class="part" data-title="✏️ Quick basics: the terminal">
+      <h2>✏️ Quick basics: the terminal</h2>
+      <p class="bot-say" data-bot="operations">From here on, we live on your laptop, not in a browser. You'll set us up by typing a few commands.</p>
+      <p class="say">The <mark>terminal</mark> is a window where you type commands instead of clicking. You type (or paste) one line after the <code>$</code>, press Enter, and the computer prints its answer. Spelling matters: one wrong letter and it says <code>command not found</code>.</p>
+      <div class="activity">
+        <div class="do">Try it. Type a command, press Enter.</div>
+        <div class="term" id="s1Term" aria-live="polite"></div>
+        <div class="term-in"><span style="font-family:var(--mono)">$</span><input id="s1In" type="text" value="echo Hello, Amal Designers" aria-label="Command" autocomplete="off" spellcheck="false"><button class="primary" id="s1Run" type="button">Enter</button></div>
+        <div class="chips" id="s1Try" style="margin-top:8px"><span class="count" style="align-self:center">Try:</span></div>
+      </div>
+      <p class="say" style="position:relative">On a Mac, open the app called Terminal. On Windows, you'll get a Linux terminal on the next page.<button class="doubt" type="button" data-peek-from="safePeek" aria-label="Is it safe to paste commands?">🤔</button></p>
+      <div hidden id="safePeek"><b>🤔 Is it safe to paste commands?</b>
+        <div style="margin-top:6px">Only from places you trust, like the official Hermes docs or this course. A command can change anything on your laptop, so read it first, and never paste one from a stranger.</div>
+      </div>
+      <p class="hook">Now: what are we installing?</p>
+    </section>
+
+    <!-- 2 -->
+    <section class="part" data-title="What Hermes is">
+      <h2>What Hermes is</h2>
+      <p class="say"><mark data-peek="Made by Nous Research. Open source (MIT licence), so it's free to use and anyone can read its code.">Hermes Agent</mark> is a free, ready-made app that does everything you built by hand: the loop, tools, the chat, memory, MCP and A2A. It runs on your laptop and works with almost any LLM. It also adds what a real team needs every day: bots with their own roles, messages from your phone, and jobs on a schedule.<br><b class="eqbox">Hermes = the program around the LLM, already built</b></p>
+      <div class="activity">
+        <div class="do">Where does each idea you built live in Hermes?</div>
+        <div id="s2Rows"></div>
+        <p class="redcheck" id="s2Say" hidden></p>
+      </div>
+      <p class="hook">Let's install it.</p>
+    </section>
+
+    <!-- 3 -->
+    <section class="part" data-title="Install it">
+      <h2>Install it</h2>
+      <p class="say">One command downloads and installs Hermes and everything it needs. On Windows, you first add <mark data-peek="Windows Subsystem for Linux: a real Linux inside Windows, made by Microsoft. Hermes is built for Linux and macOS, so this is the smoothest way.">WSL2</mark>, then run the same command inside it. When it's done, open a new terminal and check the version.<br><b class="eqbox">install → open a new terminal → hermes --version</b></p>
+      <div class="activity">
+        <div class="do">Pick your laptop. Copy each line into your terminal, in order.</div>
+        <div class="modes" role="tablist" aria-label="Your laptop">
+          <button class="mode on" data-os="mac" role="tab" aria-selected="true">Mac or Linux</button>
+          <button class="mode" data-os="win" role="tab" aria-selected="false">Windows</button>
+        </div>
+        <div data-osp="mac">
+<pre><code>curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash</code></pre>
+          <p class="count" style="margin:6px 0">Then close the terminal, open a new one, and check:</p>
+<pre><code>hermes --version</code></pre>
+        </div>
+        <div data-osp="win" hidden>
+          <p class="count" style="margin:0 0 6px">1. In PowerShell, opened as administrator. Then restart the laptop.</p>
+<pre><code>wsl --install</code></pre>
+          <p class="count" style="margin:6px 0">2. Open the new “Ubuntu” app. Inside it:</p>
+<pre><code>curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash</code></pre>
+          <p class="count" style="margin:6px 0">3. Close Ubuntu, open it again, and check:</p>
+<pre><code>hermes --version</code></pre>
+        </div>
+      </div>
+      <p class="vnote">Checked against Hermes Agent v0.23 (November 2026). Hermes changes often: if a command doesn't work, see the <a href="https://hermes-agent.nousresearch.com/docs/" target="_blank" rel="noopener">Hermes docs</a>.<button class="doubt" type="button" data-peek-from="appPeek" aria-label="Isn't there a normal app to download?">🤔</button></p>
+      <div hidden id="appPeek"><b>🤔 Isn't there a normal app to download?</b>
+        <div style="margin-top:6px">Yes: Hermes Desktop, for Mac and Windows, from the Hermes website. You'll use it for Bot Mode in Lesson 7. The terminal install above is still worth doing: the later lessons (Telegram, schedules, Docker) use it.</div>
+      </div>
+      <p class="hook">Hermes is in. Now it needs a brain.</p>
+    </section>
+
+    <!-- 4 -->
+    <section class="part" data-title="Local or online?">
+      <h2>Local or online?</h2>
+      <p class="say">Hermes needs an LLM. A <mark>local model</mark> runs on your own laptop with <mark data-peek="A free app that downloads open models and runs them on your laptop. Get it from ollama.com.">Ollama</mark>: free and private, but it needs memory (about 8 GB for a small model, 16 GB for a medium one) and is weaker and slower. An <mark>online model</mark> is reached through a service like OpenRouter: stronger and faster, and you pay per use, usually a few dollars a month.</p>
+      <p class="say">Cost is counted in tokens (pieces of words), priced per million:<br><b class="eqbox">cost per month = million tokens per month × price per million</b><br>200,000 tokens a day × 30 = 6 million. At $0.50 per million: 6 × 0.50 = $3 a month.</p>
+      <div class="activity">
+        <div class="do">Try your own numbers.</div>
+        <div class="tryrow"><label for="s4T">tokens a day</label><input id="s4T" type="range" min="50000" max="2000000" step="50000" value="200000" style="width:10em"><b id="s4TV"></b>
+          <label for="s4P" style="margin-left:10px">$ per million</label><input id="s4P" type="range" min="0.05" max="3" step="0.05" value="0.5" style="width:8em"><b id="s4PV"></b></div>
+        <p class="qbig" id="s4Out" style="font-family:var(--mono)"></p>
+        <p class="count" style="margin:0">Local model: $0, but only if your laptop has the memory.</p>
+      </div>
+      <p class="say near" style="position:relative">Or both: a local model first, and an online one only when it fails. That's called a <mark>fallback</mark>.<button class="doubt" type="button" data-peek-from="whichPeek" aria-label="Which should I pick for a real business?">🤔</button></p>
+      <div hidden id="whichPeek"><b>🤔 Which should I pick for a real business?</b>
+        <div style="margin-top:6px">Start local and free while you learn. For a team you rely on every day, a cheap online model is usually more dependable: small local models often lose track in long agent tasks. Prices change fast, so check them when you choose.</div>
+      </div>
+      <p class="hook">Count it on new numbers.</p>
+    </section>
+
+    <section class="part" data-nonum data-title="✏️ Practice 6.1">
+      <h2>✏️ Practice 6.1</h2>
+      <p class="say">Remember:<br><b class="eqbox">cost per month = million tokens per month × price per million</b><br>A month is 30 days. A local model: about 8 GB of memory for a small one, 16 GB for a medium one.</p>
+      <div class="activity">
+        <div class="do"><span data-peek="Take a pen and paper, or use the ✎ pen on this page.">Work each one out.</span> Type the answer, press Check.</div>
+        <div class="pq" data-ans="9" data-tol="0.1" data-hint="Tokens a day × 30, in millions." data-work="300,000 × 30 = 9,000,000 = 9 million tokens.">
+          <div class="pq-q">Your team uses <b>300,000</b> tokens a day. How many <b>million</b> tokens is that a month?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="0.9" data-tol="0.01" data-hint="Million tokens × price per million." data-work="9 × $0.10 = $0.90 a month.">
+          <div class="pq-q">Same team, a model at <b>$0.10</b> per million tokens. What does it cost a month, in dollars?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="9" data-tol="0.01" data-hint="Same tokens, ten times the price." data-work="9 × $1.00 = $9 a month.">
+          <div class="pq-q">Same team, a stronger model at <b>$1.00</b> per million. What does it cost a month?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="1.8" data-tol="0.01" data-hint="With a fallback, only the share that goes online costs money. Work out that share of 9 million first." data-work="20% of 9 million = 1.8 million tokens go online.<br>1.8 × $1.00 = $1.80 a month. The local part is free.">
+          <div class="pq-q">Same team, a local model with the $1.00 model as fallback. <b>20%</b> of the tokens go to the fallback. What does it cost a month?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+      </div>
+      <p class="hook">Chosen? Let's connect it.</p>
+    </section>
+
+    <!-- 5 -->
+    <section class="part" data-title="Connect the model">
+      <h2>Connect the model</h2>
+      <p class="say">Run <code>hermes model</code> and answer its questions. Hermes saves your answers in two files. Settings go in <code>~/.hermes/config.yaml</code>. Secrets, like an API key (the password for an online model), go in <code>~/.hermes/.env</code>, kept apart so you can share settings without sharing secrets.<br><b class="eqbox">settings → config.yaml · secrets → .env</b></p>
+      <div class="activity">
+        <div class="do">Pick one. See what <code>hermes model</code> asks, and what it saves.</div>
+        <div class="modes" role="tablist" aria-label="Which model">
+          <button class="mode on" data-m="local" role="tab" aria-selected="true">Local (Ollama)</button>
+          <button class="mode" data-m="online" role="tab" aria-selected="false">Online (OpenRouter)</button>
+        </div>
+        <div id="s5Steps" class="count" style="margin:0 0 8px"></div>
+        <div class="cfg">
+          <div><p class="lab">~/.hermes/config.yaml</p><pre><code id="s5Cfg"></code></pre></div>
+          <div><p class="lab">~/.hermes/.env</p><pre><code id="s5Env"></code></pre></div>
+        </div>
+      </div>
+      <p class="say near" style="position:relative"><code>~</code> means your home folder. A name starting with a dot, like <code>.hermes</code>, is hidden in normal file windows.<button class="doubt" type="button" data-peek-from="ctxPeek" aria-label="My local model forgets things mid-task. Why?">🤔</button></p>
+      <div hidden id="ctxPeek"><b>🤔 My local model forgets things mid-task. Why?</b>
+        <div style="margin-top:6px">Ollama reads only a short text by default, and an agent's text is long. Hermes wants room for at least 64,000 tokens. Start Ollama with <code>OLLAMA_CONTEXT_LENGTH=64000 ollama serve</code>, or use an online model.</div>
+      </div>
+      <p class="hook">Now say hello.</p>
+    </section>
+
+    <!-- 6 -->
+    <section class="part" data-title="Your first chat">
+      <h2>Your first chat</h2>
+      <p class="say">Type <code>hermes</code> and press Enter. You're now chatting with an agent that runs the same loop you built: it thinks, uses a tool, looks at the result, and answers. One difference is big: its tools are real. It can read files and run commands on your laptop.</p>
+      <div class="activity">
+        <div class="do"><span data-peek="An example chat, written for this page. Your model's words will differ.">Step through a first chat.</span></div>
+        <div class="tx" id="s6Tx" style="min-height:10em;align-content:start"></div>
+        <p class="count" id="s6Say" style="margin:8px 0 0"></p>
+        <div class="btnrow">
+          <button class="primary" id="s6Next">Next step →</button>
+          <button id="s6Back" hidden>← Back</button>
+          <button id="s6Again" hidden>↺ Start again</button>
+        </div>
+      </div>
+      <p class="say">Real tools on your real laptop: that's why, before your bots work all day, each gets its own safe space (Lesson 8).<br><b class="eqbox">hermes → chat · /exit → leave</b></p>
+      <p class="hook">And when something doesn't work?</p>
+    </section>
+
+    <!-- 7 -->
+    <section class="part" data-title="When it goes wrong">
+      <h2>When it goes wrong</h2>
+      <p class="say">Most first-day problems are one of a few. Your first move is always <code>hermes doctor</code>: it checks your setup and says what's missing. The rest you fix by reading the error, slowly.</p>
+      <div class="activity">
+        <div class="do">Match each error to its fix.</div>
+        <div id="s7Rows"></div>
+        <p class="redcheck" id="s7Say" hidden></p>
+      </div>
+      <p class="hook">Quick check: did it all make sense?</p>
+    </section>
+
+    <!-- 8 -->
+    <section class="part" data-title="Lesson test">
+      <h2>Lesson 6 test</h2>
+      <p class="say">5 questions, one for each idea in this lesson. Answer them all right to pass. A wrong answer tells you why, and which page to look at again.</p>
+      <div class="test" data-test="6">
+        <div class="quiz" data-page="lesson6.html#2" data-topic="What Hermes is" data-right="Right. Hermes is the program around the LLM: the loop, tools, chat and more, already built.">
+          <div class="q"><small>1. Idea</small>What is Hermes Agent?</div>
+          <div class="options">
+            <button data-why="Hermes works with almost any LLM: it isn't one itself.">A new LLM</button>
+            <button data-right>A ready-made program around an LLM: loop, tools, chat, memory</button>
+            <button data-why="It runs on your own laptop, not only in a browser.">A website you chat with</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson6.html#3" data-topic="Install it" data-right="Right. On Windows, add WSL2 first, then run the same install inside Ubuntu.">
+          <div class="q"><small>2. Steps</small>You're on Windows. What comes first?</div>
+          <div class="options">
+            <button data-right><code>wsl --install</code>, then restart</button>
+            <button data-why="That's the install command, but on Windows it runs inside WSL2's Ubuntu, so WSL2 comes first.">The curl install command in PowerShell</button>
+            <button data-why="There's nothing to check yet: Hermes isn't installed.">hermes --version</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson6.html#4" data-topic="Local or online?" data-right="Right. 4 million × $0.25 = $1 a month.">
+          <div class="q"><small>3. Work it out</small>4 million tokens a month, at $0.25 per million. What does it cost?</div>
+          <div class="options">
+            <button data-why="Multiply: 4 × 0.25.">$4</button>
+            <button data-right>$1</button>
+            <button data-why="Online models cost money; only a local one is free.">$0</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson6.html#6" data-topic="Connect the model" data-right="Right. Secrets like API keys go in .env, kept apart from the settings.">
+          <div class="q"><small>4. Where</small>Where does Hermes keep your OpenRouter API key?</div>
+          <div class="options">
+            <button data-why="config.yaml holds settings. Secrets are kept apart.">~/.hermes/config.yaml</button>
+            <button data-right>~/.hermes/.env</button>
+            <button data-why="Never put a key in a chat: anything in the chat is sent to the model.">In the chat</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson6.html#8" data-topic="When it goes wrong" data-right="Right. The new install isn't on your terminal's list yet: open a new terminal (or reload it).">
+          <div class="q"><small>5. Fix it</small>Right after installing, you type <code>hermes</code> and get <code>command not found</code>. What do you do?</div>
+          <div class="options">
+            <button data-why="It's installed; the old terminal just doesn't know yet.">Install it again</button>
+            <button data-right>Open a new terminal and try again</button>
+            <button data-why="It isn't the model: the terminal can't find the hermes command yet.">Pick another model</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+      <p class="hook">What's next.</p>
+    </section>
+
+    <!-- 9 -->
+    <section class="part" data-title="One agent, not a team">
+      <h2>One agent, not a team</h2>
+      <p class="say">You have one agent on your laptop. Tick what you've really done:</p>
+      <div class="activity checks" id="s9Checks">
+        <label><input type="checkbox" data-k="install"> Installed Hermes</label>
+        <label><input type="checkbox" data-k="version"> <code>hermes --version</code> shows a version</label>
+        <label><input type="checkbox" data-k="model"> Picked a model with <code>hermes model</code></label>
+        <label><input type="checkbox" data-k="chat"> Had a first chat</label>
+      </div>
+      <p class="bot-say" data-bot="marketing">One agent doing everything? Where are the rest of us?</p>
+      <div class="open-question">
+        <div>This leaves a question</div>
+        <div class="big">One agent runs. How do you make it a team?</div>
+        <div>Lesson 7 answers it. (Coming soon.)</div>
+      </div>
+      <div class="mybiz" data-key="l6">For your business: which model will you start with, local or online, and why? Ask your agent one real question about your business, and note how good the answer was.</div>
+      <p><button class="done-toggle" data-done="6">Mark lesson as done</button></p>
+    </section>
+  </main>
+</div>
+
+<nav class="pagebar" aria-label="Move between parts">
+  <div class="inner">
+    <button data-page-back>← Previous</button>
+    <span data-page-label></span>
+    <button class="primary" data-page-next>Next →</button>
+  </div>
+</nav>
+
+<script src="../assets/course.js"></script>
+<script src="../assets/practice.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/common.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/pen.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/guide.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = AG.esc;
+AG.WHO.hermes = ["llm", "Hermes"];
+AG.WHO.tool = ["prog", "tool"];
+
+// ---------- Part 1: a tiny practice terminal ----------
+(function terminal() {
+  const term = $("s1Term"), inp = $("s1In");
+  const START = '<span class="p"># A practice terminal. Nothing here touches your laptop.</span>\n';
+  let out = START;
+  function run() {
+    const c = inp.value.trim(); if (!c) return;
+    let r;
+    if (c.startsWith("echo ")) r = esc(c.slice(5));
+    else if (c === "pwd") r = "/home/you";
+    else if (c === "whoami") r = "you";
+    else if (c === "clear") { out = ""; inp.value = ""; term.innerHTML = out; return; }
+    else r = `<span class="e">${esc(c.split(" ")[0])}: command not found</span>`;
+    out += `<span class="p">$</span> ${esc(c)}\n${r}\n`;
+    term.innerHTML = out; term.scrollTop = term.scrollHeight; inp.select();
+  }
+  ["echo Hello, Amal Designers", "pwd", "whoami", "ehco hi", "clear"].forEach(t => { const b = document.createElement("button"); b.type = "button"; b.className = "chip"; b.textContent = t; b.onclick = () => { inp.value = t; run(); }; $("s1Try").appendChild(b); });
+  $("s1Run").onclick = run; inp.onkeydown = e => { if (e.key === "Enter") run(); };
+  addReset(term, () => { out = START; inp.value = "echo Hello, Amal Designers"; term.innerHTML = out; });
+  term.innerHTML = out;
+})();
+
+// Sort rows: [label, right key, why]; opts: [[key, text]]
+function sortRows(rowsEl, sayEl, items, opts, allRight) {
+  let pick = {};
+  function draw() {
+    rowsEl.innerHTML = items.map(([l, right, why], i) => {
+      const p = pick[i], cls = p ? (p === right ? " right" : " wrong") : "";
+      return `<div class="sortrow${cls}" style="grid-template-columns:1fr"><span>${l}</span><span class="seg">${opts.map(([key, t]) =>
+        `<button type="button" data-i="${i}" data-b="${key}" class="${p === key ? "on" : ""}">${t}</button>`).join("")}</span>${p ? `<span class="why">${p === right ? "✓" : "✗"} ${why}</span>` : ""}</div>`;
+    }).join("");
+    rowsEl.querySelectorAll("button").forEach(b => b.onclick = () => { pick[b.dataset.i] = b.dataset.b; draw(); });
+    const n = Object.keys(pick).length, ok = items.filter((q, i) => pick[i] === q[1]).length;
+    sayEl.hidden = n < items.length; sayEl.classList.toggle("good", ok === items.length);
+    sayEl.textContent = ok === items.length ? allRight : `${ok} of ${items.length} right. Tap another choice to change one.`;
+  }
+  addReset(rowsEl, () => { pick = {}; draw(); });
+  draw();
+}
+
+// ---------- Part 2: what you built → where it is in Hermes ----------
+sortRows($("s2Rows"), $("s2Say"), [
+  ["Think, act, look, until an answer", "core", "The agent loop: Hermes runs it for every message."],
+  ["Each bot with its own role and instructions", "bots", "In Bot Mode, each bot has its own role, model and memory (Lesson 7)."],
+  ["Plugging in the order sheet as a tool", "mcp", "Hermes is an MCP client: you list MCP servers in its settings."],
+  ["Messaging the team while you're out", "gateway", "The gateway connects Hermes to Telegram, WhatsApp and more (Lesson 9)."],
+], [["core", "the core loop"], ["bots", "Bot Mode"], ["mcp", "MCP servers"], ["gateway", "the gateway"]], "✓ All 4 right. Everything you built is in there, ready to use.");
+
+// ---------- Part 3: Mac/Linux or Windows ----------
+(function os() {
+  const box = document.querySelector('[data-osp="mac"]').closest(".activity");
+  const show = v => box.querySelectorAll("[data-osp]").forEach(p => p.hidden = p.dataset.osp !== v);
+  const set = AG.modes(box, "os", show);
+  addReset(box.querySelector("[data-osp]"), () => { set("mac"); show("mac"); });
+})();
+
+// ---------- Part 4: cost per month ----------
+(function cost() {
+  const t = $("s4T"), p = $("s4P"), out = $("s4Out");
+  function draw() {
+    const T = +t.value, P = +p.value, m = T * 30 / 1e6;
+    $("s4TV").textContent = T.toLocaleString("en-US"); $("s4PV").textContent = "$" + P.toFixed(2);
+    out.innerHTML = `${T.toLocaleString("en-US")} × 30 = ${m.toLocaleString("en-US", { maximumFractionDigits: 2 })} million tokens<br>${m.toLocaleString("en-US", { maximumFractionDigits: 2 })} × $${P.toFixed(2)} = <b>$${(m * P).toFixed(2)} a month</b>`;
+  }
+  t.oninput = p.oninput = draw;
+  addReset(out, () => { t.value = 200000; p.value = 0.5; draw(); });
+  draw();
+})();
+
+// ---------- Part 5: what hermes model asks, and what it saves ----------
+(function connect() {
+  const steps = $("s5Steps"), cfg = $("s5Cfg"), env = $("s5Env");
+  const M = {
+    local: { steps: "First, in another terminal: <code>ollama pull qwen3:8b</code> (or any model your laptop can run).<br>In <code>hermes model</code>: choose <b>Custom endpoint</b> → URL <code>http://localhost:11434/v1</code> → no API key → model <code>qwen3:8b</code>.",
+      cfg: 'model:\n  provider: custom\n  base_url: http://localhost:11434/v1\n  default: qwen3:8b', env: "# nothing: a local model\n# needs no key" },
+    online: { steps: "First, make an account at openrouter.ai and create an API key.<br>In <code>hermes model</code>: choose <b>OpenRouter</b> → paste your key → pick a model.",
+      cfg: 'model:\n  provider: openrouter\n  default: (the model you picked)', env: "OPENROUTER_API_KEY=sk-or-…\n# never share this file" },
+  };
+  function show(k) { steps.innerHTML = M[k].steps; cfg.textContent = M[k].cfg; env.textContent = M[k].env; }
+  const set = AG.modes(steps.closest(".activity"), "m", show);
+  addReset(steps, () => { set("local"); show("local"); });
+  show("local");
+})();
+
+// ---------- Part 6: a first chat ----------
+AG.stepper({ tx: $("s6Tx"), say: $("s6Say"), next: $("s6Next"), back: $("s6Back"), again: $("s6Again"), steps: [
+  { add: [["you", "$ hermes"]], say: "Type hermes and press Enter. Hermes starts and waits for you." },
+  { add: [["you", "What files are in my Amal Designers folder?"]], say: "Ask something it has to find out." },
+  { add: [["tool", "💻 ran: ls ~/AmalDesigners"]], say: "It uses a real tool: it runs a command on your laptop, like you did in the practice terminal." },
+  { add: [["hermes", "3 files: catalogue.csv, orders.csv, and logo.png. Want me to read the catalogue?"]], say: "It looks at the result and answers. The same loop you built: think, act, look, answer." },
+  { add: [["you", "/exit"]], say: "/exit leaves the chat. Hermes remembers useful things for next time." },
+] });
+
+// ---------- Part 7: error → fix ----------
+sortRows($("s7Rows"), $("s7Say"), [
+  ["<code>hermes: command not found</code>, right after installing", "newterm", "The old terminal doesn't know about the new command yet."],
+  ["<code>bad interpreter</code> when running the install on Windows", "wsl", "You ran it in plain Windows. Run it inside WSL2's Ubuntu."],
+  ["<code>provider 'ollama' has no endpoint configured</code>", "url", "Hermes doesn't know where Ollama is: set the URL http://localhost:11434/v1 with hermes model."],
+  ["The online model says the API key is missing", "key", "Run hermes model again and paste the key, so it's saved in .env."],
+], [["newterm", "Open a new terminal"], ["wsl", "Use WSL2"], ["url", "Set the Ollama URL"], ["key", "Add the key again"]], "✓ All 4 right. And when unsure: hermes doctor.");
+
+// ---------- Part 9: what you've really done (saved in this browser) ----------
+(function checks() {
+  const key = `${COURSE.id}-l6-checks`;
+  let saved = {}; try { saved = JSON.parse(localStorage.getItem(key) || "{}"); } catch (e) {}
+  document.querySelectorAll("#s9Checks input").forEach(c => {
+    c.checked = !!saved[c.dataset.k];
+    c.onchange = () => { saved[c.dataset.k] = c.checked; try { localStorage.setItem(key, JSON.stringify(saved)); } catch (e) {} };
+  });
+})();
+</script>
+</body>
+</html>

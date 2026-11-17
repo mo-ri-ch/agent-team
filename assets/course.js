@@ -44,7 +44,7 @@ const COURSE_LESSONS = [
   { n: 5, label: "5", step: "standards", title: "MCP and A2A", file: "lesson5.html", ready: true, test: 11,
     summary: "The open standards: MCP plugs a bot into tools, A2A lets agents talk to each other.",
     leaves: "You know how it works inside. Time to set up a real one on your laptop." },
-  { n: 6, label: "6", step: "install", title: "Hermes on your laptop", file: "lesson6.html", ready: false,
+  { n: 6, label: "6", step: "install", title: "Hermes on your laptop", file: "lesson6.html", ready: true, test: 9,
     summary: "Install Hermes Agent and pick a model: free on your own laptop, or a cheap one online.",
     leaves: "One agent runs. How do you make it a team?" },
   { n: 7, label: "7", step: "your team", title: "Your team of bots", file: "lesson7.html", ready: false,

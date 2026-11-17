@@ -42,4 +42,8 @@
   are fine for simple jobs; for dependable daily use, a cheap paid model is often better. Teach both.
 - Hermes changes fast (releases every few weeks in 2026). Check every Hermes step against
   https://hermes-agent.nousresearch.com/docs/ before writing or updating Lessons 6–12, and say which version was used.
+- Lessons 6–12 have no code page or Colab notebook: students work on their own laptop. Lesson 6 was checked against
+  Hermes Agent v0.23 (Nov 2026); the docs site isn't reachable from Claude's sandbox, so facts came from search results.
+  Each Hermes lesson has a "When it goes wrong" page (common errors → fixes) and ends with a saved checklist of what
+  the student really did.
 - Check pages with `python3 ../build-an-llm-from-scratch/tools/check_pages.py` (run from this repo) before pushing.
