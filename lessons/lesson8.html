@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A computer for each bot</title>
+<meta name="description" content="Lesson 8 of Build an AI Team: give each bot its own sandbox with Docker, so it can't touch your files or the other bots'. Install Docker, switch a bot to its container, share one folder on purpose, and set limits.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Kalam:wght@400&family=Patrick+Hand&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem("notebook-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
+<link rel="stylesheet" href="https://mo-ri-ch.github.io/study-notebook-design/v1/style.css">
+<link rel="stylesheet" href="../assets/course.css">
+<style>
+  .boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 640px) { .boxes { grid-template-columns: 1fr; } }
+  .machine { border: 2px solid var(--ink); border-radius: 10px; padding: 8px 10px; background: var(--card); }
+  .machine h4 { font-family: var(--head); margin: 0 0 6px; font-size: 1.05rem; }
+  .machine.box { border-style: dashed; background: var(--note-green); color: var(--ink); }
+  .files { font-family: var(--mono); font-size: .84rem; line-height: 1.6; }
+  .files .gone { text-decoration: line-through; color: var(--redpen); }
+  .files .shared { background: var(--note-yellow); color: var(--ink); border-radius: 3px; padding: 0 3px; }
+  .cmd { font-family: var(--mono); font-size: .84rem; padding: 4px 8px; background: #0f111a; color: #d7f5dd; border-radius: 6px; margin: 6px 0; }
+  .brow { display: grid; grid-template-columns: 7em 1fr; gap: 10px; align-items: center; padding: 5px 0; border-bottom: 1px dashed var(--rule); font-size: .9rem; }
+  .brow .seg button { font-size: .82rem; padding: 3px 10px; }
+  .brow .seg button.on { background: var(--hl-yellow); color: var(--on-hl); }
+  .ram { display: flex; height: 26px; border: 2px solid var(--ink); border-radius: 6px; overflow: hidden; margin: 8px 0 4px; }
+  .ram span { display: block; height: 100%; font-family: var(--mono); font-size: .72rem; line-height: 22px; text-align: center; color: var(--ink); overflow: hidden; white-space: nowrap; }
+  .checks label { display: flex; gap: 8px; align-items: baseline; padding: 3px 0; }
+  .vnote { font-size: .9rem; color: var(--pencil); }
+</style>
+</head>
+<body data-pen="blue">
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← Build an AI Team</a>
+    <span class="where">Lesson 8 of 12</span>
+  </header>
+
+  <main data-paged>
+    <div class="paged-head">
+      <h1>A computer for each bot</h1>
+      <div class="progress" aria-label="Lesson parts"></div>
+    </div>
+
+    <!-- 1 -->
+    <section class="part" data-title="One laptop, one set of files">
+      <h2>One laptop, one set of files</h2>
+      <p class="say">Right now, when a bot runs a command, it runs on your laptop, with your files. Its own folder keeps its memory and keys apart, but its commands can reach everything you can. One wrong command from one bot can delete another bot's work, or yours.</p>
+      <div class="activity">
+        <div class="do"><span data-peek="An example, written for this page.">Step through.</span> Marketing is asked to “clean up old files”.</div>
+        <div class="tx" id="s1Tx" style="min-height:7em;align-content:start"></div>
+        <div class="files" id="s1Files" style="margin-top:8px"></div>
+        <p class="count" id="s1Say" style="margin:8px 0 0"></p>
+        <div class="btnrow">
+          <button class="primary" id="s1Next">Next step →</button>
+          <button id="s1Back" hidden>← Back</button>
+          <button id="s1Again" hidden>↺ Start again</button>
+        </div>
+      </div>
+      <p class="hook">What if each bot had a computer of its own?</p>
+    </section>
+
+    <!-- 2 -->
+    <section class="part" data-title="A computer inside your computer">
+      <h2>A computer inside your computer</h2>
+      <p class="say">A <mark>container</mark> is a small, separate computer that runs inside your laptop, made with a free tool called <mark>Docker</mark>. It has its own files. Commands run inside it can't see your laptop's files, and deleting something there deletes nothing of yours. Hermes calls this a <mark>sandbox</mark>.<br><b class="eqbox">what happens in the sandbox stays in the sandbox</b></p>
+      <div class="activity">
+        <div class="do">Run the same command in each place. Compare.</div>
+        <div class="cmd">$ rm *_old.csv</div>
+        <div class="boxes">
+          <div class="machine"><h4>your laptop</h4><div class="files" id="s2Lap"></div></div>
+          <div class="machine box"><h4>Marketing's sandbox</h4><div class="files" id="s2Box"></div></div>
+        </div>
+        <div class="btnrow">
+          <button class="primary" id="s2RunBox" type="button">Run it in the sandbox</button>
+          <button id="s2RunLap" type="button">Run it on the laptop</button>
+        </div>
+        <p class="count" id="s2Say" style="margin:6px 0 0"></p>
+      </div>
+      <p class="say near" style="position:relative">Hermes also locks the container down: no extra system powers, and a cap on how many programs it can start.<button class="doubt" type="button" data-peek-from="vmPeek" aria-label="Is it a real separate computer?">🤔</button></p>
+      <div hidden id="vmPeek"><b>🤔 Is it a real separate computer?</b>
+        <div style="margin-top:6px">Not quite: it shares your laptop's processor and memory, but it gets its own files, programs and settings. That's why it starts in seconds, and why you set limits on how much memory it can use (coming up).</div>
+      </div>
+      <p class="hook">First, Docker itself.</p>
+    </section>
+
+    <!-- 3 -->
+    <section class="part" data-title="Install Docker">
+      <h2>Install Docker</h2>
+      <p class="say">On a Mac or on Windows, install the free <b>Docker Desktop</b> app and start it. On Linux, or inside WSL2's Ubuntu, one command installs it. Then check with a tiny test container: if it prints a hello message, Docker works.<br><b class="eqbox">install Docker → docker run hello-world</b></p>
+      <div class="activity">
+        <div class="do">Pick your laptop.</div>
+        <div class="modes" role="tablist" aria-label="Your laptop">
+          <button class="mode on" data-os="app" role="tab" aria-selected="true">Mac or Windows</button>
+          <button class="mode" data-os="linux" role="tab" aria-selected="false">Linux or WSL2</button>
+        </div>
+        <div data-osp="app">
+          <ol style="margin:0;padding-left:1.3em;line-height:1.8">
+            <li>Download Docker Desktop from <b>docker.com</b> and install it.</li>
+            <li>Start it, and wait until it says it's running.</li>
+            <li>On Windows, in its settings, turn on WSL2 for your Ubuntu.</li>
+            <li>In your terminal (Ubuntu on Windows):</li>
+          </ol>
+<pre><code>docker run hello-world</code></pre>
+        </div>
+        <div data-osp="linux" hidden>
+<pre><code>curl -fsSL https://get.docker.com | sh
+sudo usermod -aG docker $USER</code></pre>
+          <p class="count" style="margin:6px 0">Log out and back in (or close and reopen Ubuntu), then:</p>
+<pre><code>docker run hello-world</code></pre>
+        </div>
+      </div>
+      <p class="say near" style="position:relative">The second Linux line lets you use Docker without typing <code>sudo</code> every time.<button class="doubt" type="button" data-peek-from="sudoPeek" aria-label="What is sudo?">🤔</button></p>
+      <div hidden id="sudoPeek"><b>🤔 What is sudo?</b>
+        <div style="margin-top:6px">“Do this as the administrator.” It asks for your password, because the command changes the system. Use it only for commands you trust, like these from Docker's own site.</div>
+      </div>
+      <p class="hook">Docker works. Now move a bot into it.</p>
+    </section>
+
+    <!-- 4 -->
+    <section class="part" data-title="Switch a bot to its sandbox">
+      <h2>Switch a bot to its sandbox</h2>
+      <p class="say">Where a bot runs its commands is one setting in its own <code>config.yaml</code>: <code>terminal.backend</code>. It starts as <code>local</code> (your laptop). Set it to <code>docker</code>, and Hermes starts a container for that bot the first time it needs one, and keeps it for next time. Each bot gets its own.<br><b class="eqbox">terminal.backend: local → docker</b></p>
+      <div class="activity">
+        <div class="do">Switch each bot. See its setting.</div>
+        <div id="s4Rows"></div>
+<pre><code id="s4Cmds"></code></pre>
+        <p class="count" id="s4Say" style="margin:6px 0 0"></p>
+      </div>
+      <p class="hook">But now the bots can't share files at all.</p>
+    </section>
+
+    <!-- 5 -->
+    <section class="part" data-title="Share one folder, on purpose">
+      <h2>Share one folder, on purpose</h2>
+      <p class="say">Some work has to pass between bots: Production writes the packing list, Operations reads it. So you <mark>mount</mark> one chosen folder into each container that needs it: the same folder, seen from inside. Everything else stays out of reach.<br><b class="eqbox">a bot sees only the folders you mount</b></p>
+      <div class="activity">
+        <div class="do">Mount folders into Operations' sandbox. See what it can reach.</div>
+        <div class="checks" id="s5Pick"></div>
+        <div class="boxes">
+          <div class="machine"><h4>your laptop</h4><div class="files" id="s5Lap"></div></div>
+          <div class="machine box"><h4>Operations' sandbox</h4><div class="files" id="s5Box"></div></div>
+        </div>
+<pre><code id="s5Cfg"></code></pre>
+      </div>
+      <p class="say">Files a bot makes anywhere else stay inside its container. To hand you a file, it must save it in a mounted folder.</p>
+      <p class="hook">One more thing: how big is each sandbox?</p>
+    </section>
+
+    <!-- 6 -->
+    <section class="part" data-title="Set its limits">
+      <h2>Set its limits</h2>
+      <p class="say">Containers share your laptop's memory. So give each one a cap with <code>container_memory</code>, in MB (1,024 MB = 1 GB), so one runaway bot can't freeze the laptop. Everything must fit together:<br><b class="eqbox">memory caps + local model + you ≤ laptop memory</b><br>4 bots × 1 GB + an 8 GB model + 3 GB for you = 15 GB: fits in 16 GB.</p>
+      <div class="activity">
+        <div class="do">Set the numbers. Does it fit?</div>
+        <div class="tryrow"><label for="s6L">laptop</label><select id="s6L"><option>8</option><option selected>16</option><option>32</option></select> GB
+          <label for="s6B" style="margin-left:8px">bots</label><input id="s6B" type="range" min="1" max="6" value="4" style="width:6em"><b id="s6BV"></b>
+          <label for="s6C" style="margin-left:8px">cap each</label><select id="s6C"><option value="0.5">512 MB</option><option value="1" selected>1 GB</option><option value="2">2 GB</option></select>
+          <label for="s6M" style="margin-left:8px">model</label><select id="s6M"><option value="0">online (0 GB)</option><option value="8" selected>local, 8 GB</option><option value="16">local, 16 GB</option></select></div>
+        <div class="ram" id="s6Ram"></div>
+        <p class="qbig" id="s6Say" style="font-family:var(--mono);margin:0"></p>
+      </div>
+      <p class="say">In <code>config.yaml</code>: <code>container_memory: 1024</code>. <code>container_cpu</code> and <code>container_disk</code> cap processor and space the same way.</p>
+      <p class="hook">Count it on new numbers.</p>
+    </section>
+
+    <section class="part" data-nonum data-title="✏️ Practice 8.1">
+      <h2>✏️ Practice 8.1</h2>
+      <p class="say">Remember:<br><b class="eqbox">memory caps + local model + you ≤ laptop memory</b><br>1,024 MB = 1 GB. Allow 3 GB for you and your apps.</p>
+      <div class="activity">
+        <div class="do"><span data-peek="Take a pen and paper, or use the ✎ pen on this page.">Work each one out.</span> Type the answer, press Check.</div>
+        <div class="pq" data-ans="4" data-tol="0.01" data-hint="Bots × cap, then turn MB into GB." data-work="4 × 1,024 MB = 4,096 MB = 4 GB.">
+          <div class="pq-q"><b>4</b> bots, each with <code>container_memory: 1024</code>. How many GB can the sandboxes use in total?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="1" data-tol="0.01" data-hint="Laptop − model − you − sandboxes = what's left." data-work="16 − 8 − 3 − 4 = 1 GB left.">
+          <div class="pq-q">Same bots, a <b>16 GB</b> laptop, a local model using <b>8 GB</b>, 3 GB for you. How many GB are left?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="-3" data-tol="0.01" data-hint="Same sum, with an 8 GB laptop. A negative answer means it doesn't fit." data-work="8 − 8 − 3 − 4 = −3 GB. It doesn't fit: use an online model, or smaller caps.">
+          <div class="pq-q">Same setup on an <b>8 GB</b> laptop. How many GB are left? (It can be below zero.)</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="512" data-tol="0.5" data-hint="First: 8 − 3 for you − 2 spare = GB left for the bots. Then try each cap × 4 bots." data-work="8 − 3 − 2 = 3 GB for the bots.<br>4 × 2,048 MB = 8 GB: too much. 4 × 1,024 MB = 4 GB: too much.<br>4 × 512 MB = 2 GB: fits. The answer is 512.">
+          <div class="pq-q">8 GB laptop, an <b>online</b> model (0 GB), 3 GB for you, 4 bots. You want at least <b>2 GB</b> spare. Which cap: 512, 1,024 or 2,048 MB? Type the biggest that fits.</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+      </div>
+      <p class="hook">And when the sandbox won't start?</p>
+    </section>
+
+    <!-- 7 -->
+    <section class="part" data-title="When it goes wrong">
+      <h2>When it goes wrong</h2>
+      <p class="say">Most sandbox problems are Docker not running, permissions, or a file in the wrong place. Read the error, then match it.</p>
+      <div class="activity">
+        <div class="do">Match each problem to its fix.</div>
+        <div id="s7Rows"></div>
+        <p class="redcheck" id="s7Say" hidden></p>
+      </div>
+      <p class="vnote">Checked against Hermes Agent v0.23 (November 2026). See the <a href="https://hermes-agent.nousresearch.com/docs/user-guide/docker" target="_blank" rel="noopener">Hermes Docker docs</a> if a setting has moved.</p>
+      <p class="hook">Quick check: did it all make sense?</p>
+    </section>
+
+    <!-- 8 -->
+    <section class="part" data-title="Lesson test">
+      <h2>Lesson 8 test</h2>
+      <p class="say">5 questions, one for each idea in this lesson. Answer them all right to pass. A wrong answer tells you why, and which page to look at again.</p>
+      <div class="test" data-test="8">
+        <div class="quiz" data-page="lesson8.html#1" data-topic="One laptop, one set of files" data-right="Right. A profile keeps memory and keys apart, but its commands still run on your laptop.">
+          <div class="q"><small>1. Why</small>Each bot already has its own profile folder. Why does it need a sandbox too?</div>
+          <div class="options">
+            <button data-why="Profiles keep memory apart. The risk is commands, not memory.">So it doesn't forget things</button>
+            <button data-right>Its commands still run on your laptop, with your files</button>
+            <button data-why="A sandbox doesn't make a model faster.">So its model is faster</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson8.html#2" data-topic="A computer inside your computer" data-right="Right. Inside the sandbox, only the sandbox's files are gone.">
+          <div class="q"><small>2. Predict</small>A sandboxed bot runs <code>rm *_old.csv</code>. What happens to your laptop's files?</div>
+          <div class="options">
+            <button data-why="The command runs inside the container, which can't see your files.">They're deleted too</button>
+            <button data-right>Nothing: only files inside the sandbox are deleted</button>
+            <button data-why="Docker doesn't stop commands; it just keeps them inside the container.">Docker refuses to run it</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson8.html#4" data-topic="Switch a bot to its sandbox" data-right="Right. One setting in that bot's config.yaml.">
+          <div class="q"><small>3. How</small>How do you move Production into a sandbox?</div>
+          <div class="options">
+            <button data-right>Set <code>terminal.backend: docker</code> in Production's config.yaml</button>
+            <button data-why="SOUL.md guides the model; it can't change where commands run.">Write “use Docker” in its SOUL.md</button>
+            <button data-why="Each bot has its own setting. Production's must change.">Change Marketing's config.yaml</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson8.html#5" data-topic="Share one folder, on purpose" data-right="Right. The file is inside Operations' container; only mounted folders reach your laptop.">
+          <div class="q"><small>4. Find it</small>Operations says it saved <code>labels.pdf</code>, but it isn't on your laptop. Why?</div>
+          <div class="options">
+            <button data-why="It probably did save it: inside its container.">It lied</button>
+            <button data-right>It saved it inside its container, not in a mounted folder</button>
+            <button data-why="Docker didn't delete it; it's just in the container's own files.">Docker deleted it</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson8.html#6" data-topic="Set its limits" data-right="Right. 6 × 2 + 8 + 3 = 23 GB: too much for 16 GB.">
+          <div class="q"><small>5. Fits?</small>16 GB laptop, local 8 GB model, 3 GB for you, 6 bots with 2 GB caps. Does it fit?</div>
+          <div class="options">
+            <button data-why="Add it up: 6 × 2 = 12, + 8 + 3 = 23 GB.">Yes</button>
+            <button data-right>No: it needs 23 GB</button>
+            <button data-why="The caps count: each sandbox can use up to its cap.">Yes: caps don't use memory</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+      <p class="hook">What's next.</p>
+    </section>
+
+    <!-- 9 -->
+    <section class="part" data-title="Out of the house">
+      <h2>Out of the house</h2>
+      <p class="say">Each bot now works in its own sandbox, sharing only the folders you chose. Tick what you've really done:</p>
+      <div class="activity checks" id="s9Checks">
+        <label><input type="checkbox" data-k="docker"> <code>docker run hello-world</code> works</label>
+        <label><input type="checkbox" data-k="backend"> Every bot has <code>terminal.backend: docker</code></label>
+        <label><input type="checkbox" data-k="shared"> Made one shared folder and mounted it</label>
+        <label><input type="checkbox" data-k="caps"> Set memory caps that fit my laptop</label>
+      </div>
+      <p class="bot-say" data-bot="production">An order just came in, and you're at the market. How do I tell you?</p>
+      <div class="open-question">
+        <div>This leaves a question</div>
+        <div class="big">Your team lives on your laptop. How do you reach it when you're out?</div>
+        <div>Lesson 9 answers it. (Coming soon.)</div>
+      </div>
+      <div class="mybiz" data-key="l8">For your business: which folders should each bot see? List them, and mark the ones two bots must share.</div>
+      <p><button class="done-toggle" data-done="8">Mark lesson as done</button></p>
+    </section>
+  </main>
+</div>
+
+<nav class="pagebar" aria-label="Move between parts">
+  <div class="inner">
+    <button data-page-back>← Previous</button>
+    <span data-page-label></span>
+    <button class="primary" data-page-next>Next →</button>
+  </div>
+</nav>
+
+<script src="../assets/course.js"></script>
+<script src="../assets/practice.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/common.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/pen.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/guide.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = AG.esc;
+AG.WHO.tool = ["prog", "tool"];
+
+// ---------- Part 1: one bad command on the shared laptop ----------
+(function sharedLaptop() {
+  const FILES = ["packing_list.csv  (Operations)", "packing_old.csv  (Operations)", "captions_old.txt  (Marketing)", "catalogue.csv  (Production)"];
+  const files = $("s1Files");
+  const draw = gone => files.innerHTML = "~/AmalDesigners/<br>" + FILES.map((f, i) => `&nbsp;&nbsp;${gone.includes(i) ? `<span class="gone">${esc(f)}</span>` : esc(f)}`).join("<br>");
+  AG.stepper({ tx: $("s1Tx"), say: $("s1Say"), next: $("s1Next"), back: $("s1Back"), again: $("s1Again"), steps: [
+    { g: [], add: [["ceo", "Marketing, please clean up your old caption files."]], say: "A harmless-sounding request." },
+    { g: [], add: [["marketing", "Removing old files…"]], say: "Marketing decides what “old” means. It doesn't check whose files they are." },
+    { g: [1, 2], add: [["tool", "💻 ran: rm *_old.*"]], say: "The command matched every file ending in _old, including Operations' packing file. Gone from your laptop." },
+    { g: [1, 2], add: [["operations", "Wait, where's last week's packing list?"]], say: "Nothing stopped it: the bots share one laptop and one set of files." },
+  ], onStep: (i, s) => draw(s.g) });
+})();
+
+// ---------- Part 2: same command, laptop vs sandbox ----------
+(function sandbox() {
+  const LAP = ["packing_list.csv", "packing_old.csv", "captions_old.txt", "catalogue.csv"];
+  const BOX = ["draft_1.txt", "trends_old.csv", "notes_old.txt"];
+  let gl = false, gb = false;
+  const lap = $("s2Lap"), box = $("s2Box"), say = $("s2Say");
+  const list = (arr, gone) => arr.map(f => gone && f.includes("_old") ? `<span class="gone">${f}</span>` : f).join("<br>");
+  function draw() { lap.innerHTML = list(LAP, gl); box.innerHTML = list(BOX, gb); }
+  $("s2RunBox").onclick = () => { gb = true; draw(); say.textContent = "Inside the sandbox: its own _old files are gone. Your laptop's files didn't change at all."; };
+  $("s2RunLap").onclick = () => { gl = true; draw(); say.textContent = "On the laptop (no sandbox): your _old files are gone, including Operations' packing file."; };
+  addReset(lap, () => { gl = gb = false; say.textContent = ""; draw(); });
+  draw();
+})();
+
+// ---------- Part 3: Mac/Windows or Linux ----------
+(function os() {
+  const box = document.querySelector('[data-osp="app"]').closest(".activity");
+  const show = v => box.querySelectorAll("[data-osp]").forEach(p => p.hidden = p.dataset.osp !== v);
+  const set = AG.modes(box, "os", show);
+  addReset(box.querySelector("[data-osp]"), () => { set("app"); show("app"); });
+})();
+
+// ---------- Part 4: switch each bot ----------
+(function switchBots() {
+  const BOTS = ["marketing", "production", "operations", "analyst"];
+  let mode = { marketing: "local", production: "local", operations: "local", analyst: "local" };
+  const rows = $("s4Rows"), cmds = $("s4Cmds"), say = $("s4Say");
+  function draw() {
+    rows.innerHTML = BOTS.map(b => `<div class="brow"><b>${b[0].toUpperCase() + b.slice(1)}</b><span class="seg">${["local", "docker"].map(m =>
+      `<button type="button" data-b="${b}" data-m="${m}" class="${mode[b] === m ? "on" : ""}">${m === "local" ? "your laptop" : "its sandbox"}</button>`).join(" ")}</span></div>`).join("");
+    rows.querySelectorAll("button").forEach(x => x.onclick = () => { mode[x.dataset.b] = x.dataset.m; draw(); });
+    const boxed = BOTS.filter(b => mode[b] === "docker");
+    cmds.textContent = boxed.length ? boxed.map(b => `${b} config set terminal.backend docker`).join("\n") : "# no bot is in a sandbox yet";
+    say.textContent = boxed.length === 4 ? "✓ All four in their own sandboxes: 4 separate containers." : `${4 - boxed.length} bot${4 - boxed.length > 1 ? "s" : ""} still run${4 - boxed.length > 1 ? "" : "s"} commands on your laptop.`;
+  }
+  addReset(rows, () => { BOTS.forEach(b => mode[b] = "local"); draw(); });
+  draw();
+})();
+
+// ---------- Part 5: mount folders on purpose ----------
+(function mounts() {
+  const FOLDERS = [["~/AmalDesigners/shared", "/workspace/shared", "packing_list.csv"], ["~/AmalDesigners/photos", "/workspace/photos", "frock_red.jpg"], ["~/Documents", "/workspace/documents", "bank_statement.pdf"]];
+  let on = [true, false, false];
+  const pick = $("s5Pick"), lap = $("s5Lap"), box = $("s5Box"), cfg = $("s5Cfg");
+  pick.innerHTML = FOLDERS.map(([h], i) => `<label><input type="checkbox" data-i="${i}"> mount <code>${h}</code></label>`).join("");
+  function draw() {
+    pick.querySelectorAll("input").forEach(c => c.checked = on[+c.dataset.i]);
+    lap.innerHTML = FOLDERS.map(([h, , f], i) => `${on[i] ? '<span class="shared">' : ""}${h}/<br>&nbsp;&nbsp;${f}${on[i] ? "</span>" : ""}`).join("<br>");
+    const seen = FOLDERS.filter((x, i) => on[i]);
+    box.innerHTML = (seen.length ? seen.map(([, c, f]) => `<span class="shared">${c}/<br>&nbsp;&nbsp;${f}</span>`).join("<br>") + "<br>" : "") + "(its own files)";
+    cfg.textContent = "# in operations' config.yaml\nterminal:\n  backend: docker\n  docker_volumes:" + (seen.length ? "\n" + seen.map(([h, c]) => `    - "${h}:${c}"`).join("\n") : " []");
+    const warn = on[2] ? "\n# ⚠ Documents holds private files Operations doesn't need" : "";
+    cfg.textContent += warn;
+  }
+  pick.querySelectorAll("input").forEach(c => c.onchange = () => { on[+c.dataset.i] = c.checked; draw(); });
+  addReset(lap, () => { on = [true, false, false]; draw(); });
+  draw();
+})();
+
+// ---------- Part 6: does it fit? ----------
+(function fit() {
+  const L = $("s6L"), B = $("s6B"), C = $("s6C"), M = $("s6M"), ram = $("s6Ram"), say = $("s6Say");
+  function draw() {
+    const lap = +L.value, n = +B.value, cap = +C.value, model = +M.value, you = 3;
+    $("s6BV").textContent = n;
+    const used = n * cap + model + you, max = Math.max(lap, used);
+    const seg = (gb, bg, label) => gb ? `<span style="width:${gb / max * 100}%;background:${bg}">${label}</span>` : "";
+    ram.innerHTML = seg(you, "var(--note-yellow)", "you 3") + seg(model, "var(--note-blue)", `model ${model}`) + seg(n * cap, "var(--note-green)", `bots ${n * cap}`) + seg(Math.max(0, lap - used), "var(--paper)", "free");
+    ram.style.borderColor = used > lap ? "var(--redpen)" : "var(--ink)";
+    say.innerHTML = `${n} × ${cap} + ${model} + 3 = ${+(used).toFixed(1)} GB of ${lap} GB → ${used <= lap ? '<span style="color:var(--good)">fits</span>' : '<span style="color:var(--redpen)">too much</span>'}`;
+  }
+  [L, B, C, M].forEach(x => x.oninput = x.onchange = draw);
+  addReset(ram, () => { L.value = "16"; B.value = 4; C.value = "1"; M.value = "8"; draw(); });
+  draw();
+})();
+
+// ---------- Part 7: problem → fix ----------
+(function wrong() {
+  const items = [
+    ["<code>Cannot connect to the Docker daemon</code>", "start", "Docker isn't running: start Docker Desktop (or the Docker service), then try again."],
+    ["<code>permission denied</code> when using docker on Linux", "group", "Add yourself to the docker group (sudo usermod -aG docker $USER), then log out and back in."],
+    ["A bot can't find the catalogue file", "mount", "Its sandbox can't see your laptop: mount the folder with docker_volumes."],
+    ["The very first command takes minutes", "wait", "Docker is downloading the container image, once. After that it starts in seconds."],
+  ];
+  const opts = [["start", "Start Docker"], ["group", "Fix permissions"], ["mount", "Mount the folder"], ["wait", "Just wait, once"]];
+  const rows = $("s7Rows"), say = $("s7Say");
+  let pick = {};
+  function draw() {
+    rows.innerHTML = items.map(([l, right, why], i) => {
+      const p = pick[i], cls = p ? (p === right ? " right" : " wrong") : "";
+      return `<div class="sortrow${cls}" style="grid-template-columns:1fr"><span>${l}</span><span class="seg">${opts.map(([k, t]) =>
+        `<button type="button" data-i="${i}" data-b="${k}" class="${p === k ? "on" : ""}">${t}</button>`).join("")}</span>${p ? `<span class="why">${p === right ? "✓" : "✗"} ${why}</span>` : ""}</div>`;
+    }).join("");
+    rows.querySelectorAll("button").forEach(b => b.onclick = () => { pick[b.dataset.i] = b.dataset.b; draw(); });
+    const n = Object.keys(pick).length, ok = items.filter((q, i) => pick[i] === q[1]).length;
+    say.hidden = n < items.length; say.classList.toggle("good", ok === items.length);
+    say.textContent = ok === items.length ? "✓ All 4 right." : `${ok} of 4 right. Tap another choice to change one.`;
+  }
+  addReset(rows, () => { pick = {}; draw(); });
+  draw();
+})();
+
+// ---------- Part 9: what you've really done ----------
+(function checks() {
+  const key = `${COURSE.id}-l8-checks`;
+  let saved = {}; try { saved = JSON.parse(localStorage.getItem(key) || "{}"); } catch (e) {}
+  document.querySelectorAll("#s9Checks input").forEach(c => {
+    c.checked = !!saved[c.dataset.k];
+    c.onchange = () => { saved[c.dataset.k] = c.checked; try { localStorage.setItem(key, JSON.stringify(saved)); } catch (e) {} };
+  });
+})();
+</script>
+</body>
+</html>

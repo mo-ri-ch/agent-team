@@ -50,7 +50,7 @@ const COURSE_LESSONS = [
   { n: 7, label: "7", step: "your team", title: "Your team of bots", file: "lesson7.html", ready: true, test: 9,
     summary: "Hire Amal Designers' team in Bot Mode: Marketing, Production, Operations and an Analyst, each with its own role, model, memory and skills.",
     leaves: "Your bots share one computer. What if one deletes another's files?" },
-  { n: 8, label: "8", step: "own computer", title: "A computer for each bot", file: "lesson8.html", ready: false,
+  { n: 8, label: "8", step: "own computer", title: "A computer for each bot", file: "lesson8.html", ready: true, test: 9,
     summary: "Each bot works in its own sandbox (a Docker container), so it can't touch your files or the others'.",
     leaves: "Your team lives on your laptop. How do you reach it when you're out?" },
   { n: 9, label: "9", step: "phone", title: "Reach it from your phone", file: "lesson9.html", ready: false,
