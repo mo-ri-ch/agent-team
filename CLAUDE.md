@@ -21,7 +21,7 @@
 - **Audience:** students and tech-comfortable small-business people. Lessons 2–5 need basic Python; readers may skip
   them and jump to Lesson 6, so Lesson 6 starts from zero (a quick basics page: what a terminal is, copy and paste a command).
 - **Roles, not family (Rishal, 17 Nov 2026):** on pages, in code and in notebooks, never write “Amma”, “Mom” or “my/your sister”.
-  Use general roles: the CEO, the social media manager, the tailor, or “we”. The notes here may name them; the course may not.
+  Use general roles: the CEO, the social media manager, the designer, or “we”. The notes here may name them; the course may not.
 - **The team (Rishal, 17 Nov 2026), used in every lesson:** each bot supports a real person. Marketing (pink; plans posts
   and captions for the social media manager, finds trends with search), Production (orange; the catalogue: sizes, stock, prices,
   sewing time), Operations (green; packing, courier, delivery times, tracking messages), Analyst (blue; weekly numbers
