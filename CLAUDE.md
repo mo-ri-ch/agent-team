@@ -12,6 +12,11 @@
 - Lesson numbers start at 1. Saved progress uses `n`; never change `n` or the id "agent-team".
 - Lesson 1: browser activities only. Code (Colab) starts in Lesson 2.
 - Messages shown before Lesson 2 are examples written for the page; say so (a peek or a note).
-- Tools change fast (Hermes Agent had releases every few weeks in 2026). Keep tool-specific steps in one lesson (6),
-  check them against the current docs before each update, and keep the other lessons tool-free.
+- **Goal (Rishal, 17 Nov 2026): production, not a classroom toy.** By the end, a student runs a team of assistants on
+  their own laptop every day: Hermes Agent with Bot Mode, a sandbox (Docker) per bot, Telegram from their phone,
+  scheduled jobs, approvals before risky actions, secret API keys, cost limits, restarts, logs and backups.
+- Lessons 1–5 are tool-free and from scratch (Python). Lessons 6–12 use Hermes Agent. Be honest: free local models
+  are fine for simple jobs; for dependable daily use, a cheap paid model is often better. Teach both.
+- Hermes changes fast (releases every few weeks in 2026). Check every Hermes step against
+  https://hermes-agent.nousresearch.com/docs/ before writing or updating Lessons 6–12, and say which version was used.
 - Check pages with `python3 ../build-an-llm-from-scratch/tools/check_pages.py` (run from this repo) before pushing.
