@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shared notes and handoffs</title>
+<meta name="description" content="Lesson 4 of Build an AI Team: a shared board of tasks, reading only the last few messages, and handoffs that move the work from one bot to the next.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Kalam:wght@400&family=Patrick+Hand&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem("notebook-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
+<link rel="stylesheet" href="https://mo-ri-ch.github.io/study-notebook-design/v1/style.css">
+<link rel="stylesheet" href="../assets/course.css">
+<style>
+  .board { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 0 0 10px; }
+  .board th, .board td { text-align: left; padding: 4px 8px; border-bottom: 1px dashed var(--rule); }
+  .board th { font-family: var(--hand); font-weight: 400; color: var(--pencil); }
+  .board .st { font-family: var(--mono); font-size: 0.82rem; padding: 1px 8px; border-radius: 10px; border: 1.5px solid var(--ink); background: var(--card); color: var(--ink); }
+  .board .st.doing { background: var(--note-yellow); }
+  .board .st.done { background: var(--note-green); }
+  .board tr.changed td { background: color-mix(in srgb, var(--hl-yellow) 35%, transparent); }
+</style>
+</head>
+<body data-pen="blue">
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← Build an AI Team</a>
+    <span class="where">Lesson 4 of 12</span>
+  </header>
+
+  <main data-paged>
+    <div class="paged-head">
+      <h1>Shared notes and handoffs</h1>
+      <div class="progress" aria-label="Lesson parts"></div>
+    </div>
+
+    <!-- 1 -->
+    <section class="part" data-title="The chat gets long">
+      <h2>The chat gets long</h2>
+      <p class="say">So far, a bot reads the whole chat before every reply. A week of jobs at Amal Designers can mean 300 messages. If a message is about 25 words, that's 300 × 25 = 7,500 words to read, for every single reply. That's slow, it costs money, and important details get lost in the middle.</p>
+      <div class="activity">
+        <div class="do">Make the chat longer. Watch what one reply costs.</div>
+        <div class="tryrow"><label for="s1M">messages in the chat</label><input id="s1M" type="range" min="10" max="300" step="10" value="30" style="width:12em"><b id="s1MV"></b></div>
+        <div id="s1Bars"></div>
+      </div>
+      <p class="say"><b class="eqbox">whole chat: every reply reads every message</b></p>
+      <p class="hook">What does a bot really need to know?</p>
+    </section>
+
+    <!-- 2 -->
+    <section class="part" data-title="A shared board">
+      <h2>A shared board</h2>
+      <p class="say">Mostly, a bot needs to know what the jobs are, who has each one, and how far along it is. So the team keeps a <mark>board</mark>, like a to-do list on a wall: one line per task, with its owner and its <mark>status</mark>: <code>todo</code> (not started), <code>doing</code>, or <code>done</code>.<br><b class="eqbox">board = one line per task: task · owner · status</b></p>
+      <div class="activity">
+        <div class="do">Tap a status to move a task along.</div>
+        <table class="board" id="s2Board"></table>
+        <p class="count" id="s2Say" style="margin:4px 0 0"></p>
+      </div>
+      <p class="hook">The board is short. Can a bot read it instead of the whole chat?</p>
+    </section>
+
+    <!-- 3 -->
+    <section class="part" data-title="Read less">
+      <h2>Read less</h2>
+      <p class="say">Now a bot reads its instructions, the board, and only the last few messages, however long the chat gets. How many is set by the <mark>window</mark>. With the headings, that's:<br><b class="eqbox">lines = tasks + window + 6</b><br>3 tasks, window 3 → 3 + 3 + 6 = 12 lines, even with 300 messages in the chat.</p>
+      <div class="activity">
+        <div class="do">Pick a window. See what the Marketer reads.</div>
+        <div class="chips" id="s3W"></div>
+        <div class="written" id="s3Text" style="font-size:.85rem"></div>
+        <p class="count" id="s3Say" style="margin:6px 0 0"></p>
+      </div>
+      <p class="say near" style="position:relative">Why 6? The instructions, an empty line, <code>Board:</code>, another empty line, <code>Last messages:</code>, and the bot's name.<button class="doubt" type="button" data-peek-from="oldPeek" aria-label="What if a bot needs something from long ago?">🤔</button></p>
+      <div hidden id="oldPeek"><b>🤔 What if a bot needs something from long ago?</b>
+        <div style="margin-top:6px">Then it should be on the board. If the Researcher found that pastel frocks are trending, the useful part goes in the task's handoff, coming next, so nobody has to dig through old messages.</div>
+      </div>
+      <p class="hook">Count it on new numbers.</p>
+    </section>
+
+    <section class="part" data-nonum data-title="✏️ Practice 4.1">
+      <h2>✏️ Practice 4.1</h2>
+      <p class="say">Remember:<br><b class="eqbox">whole chat: every reply reads every message</b><br><b class="eqbox">lines = tasks + window + 6</b></p>
+      <div class="activity">
+        <div class="do"><span data-peek="Take a pen and paper, or use the ✎ pen on this page.">Work each one out.</span> Type the answer, press Check.</div>
+        <div class="pq" data-ans="4000" data-tol="0.5" data-hint="Messages × words in each message." data-work="200 × 20 = 4,000 words.">
+          <div class="pq-q">A chat has <b>200</b> messages of about <b>20</b> words. How many words does one reply read, if the bot reads the whole chat?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="15" data-tol="0.1" data-hint="Use the box: tasks + window + 6." data-work="5 tasks + 4 + 6 = 15 lines.">
+          <div class="pq-q">The board has <b>5</b> tasks. The window is <b>4</b>. How many lines does a bot read?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="15" data-tol="0.1" data-hint="The chat's length doesn't matter any more: only the window does." data-work="Still 5 tasks + 4 + 6 = 15 lines. The 500 messages don't change it.">
+          <div class="pq-q">Same board and window, but now the chat has <b>500</b> messages. How many lines does a bot read?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="3" data-tol="0.1" data-hint="Work backwards: lines − 6 − tasks = window." data-work="13 − 6 − 4 = 3 messages.">
+          <div class="pq-q">A bot reads <b>13</b> lines. The board has <b>4</b> tasks. How big is the window?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+      </div>
+      <p class="hook">Who updates the board, and how?</p>
+    </section>
+
+    <!-- 4 -->
+    <section class="part" data-title="Handoffs">
+      <h2>Handoffs</h2>
+      <p class="say">When a bot finishes its part, it ends its reply with a <mark>handoff</mark> line, like <code>HANDOFF to Marketer: pastel tulle, birthdays</code>. The program reads that line and does three things: the bot's own task becomes <code>done</code>, the Marketer's next task becomes <code>doing</code>, and the Marketer writes next.<br><b class="eqbox">HANDOFF to X → my task done, X's task doing, X writes next</b></p>
+      <div class="activity">
+        <div class="do">Step through. Watch the board.</div>
+        <table class="board" id="s5Board"></table>
+        <div class="tx" id="s5Tx" style="min-height:4.5em;align-content:start"></div>
+        <p class="count" id="s5Say" style="margin:8px 0 0"></p>
+        <div class="btnrow">
+          <button class="primary" id="s5Next">Next step →</button>
+          <button id="s5Back" hidden>← Back</button>
+          <button id="s5Again" hidden>↺ Start again</button>
+        </div>
+      </div>
+      <p class="hook">Could one bot mark another bot's task done?</p>
+    </section>
+
+    <!-- 5 -->
+    <section class="part" data-title="Only your own task">
+      <h2>Only your own task</h2>
+      <p class="say">A handoff only ever closes the writer's own <code>doing</code> task. So a bot can't mark someone else's work as done. And when the handoff goes to <code>CEO</code>, or a reply has no handoff line at all, no bot is next: the chat waits for the CEO.<br><b class="eqbox">a bot can only close its own task</b></p>
+      <div class="activity">
+        <div class="do">The board, before. What happens after each reply? Pick one.</div>
+        <table class="board" id="s6Board"></table>
+        <div id="s6Rows"></div>
+        <p class="redcheck" id="s6Say" hidden></p>
+      </div>
+      <p class="hook">Try it on new boards.</p>
+    </section>
+
+    <section class="part" data-nonum data-title="✏️ Practice 4.2">
+      <h2>✏️ Practice 4.2</h2>
+      <p class="say">Remember:<br><b class="eqbox">HANDOFF to X → my task done, X's task doing, X writes next</b><br><b class="eqbox">a bot can only close its own task</b><br>Handed to the CEO, or no handoff line: wait for the CEO.</p>
+      <div class="activity">
+        <div class="do"><span data-peek="Take a pen and paper, or use the ✎ pen on this page. Draw the board, and change it after each reply.">Work each one out.</span> Type the answer, press Check.</div>
+        <div class="pq" data-ans="2" data-tol="0.1" data-hint="Each handoff closes the writer's own task. Who wrote a handoff, and who didn't?" data-work="Researcher → Marketer: task 1 done.<br>Marketer → Support: task 2 done.<br>Support forgot its HANDOFF line, so task 3 stays doing.<br>Done: 2.">
+          <div class="pq-q">3 tasks, all <code>todo</code>. The Researcher starts. It hands off to the Marketer, who hands off to Support. Support replies but <b>forgets</b> its HANDOFF line. How many tasks are <code>done</code>?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="1" data-tol="0.1" data-hint="Only one task can be doing after a handoff: the new owner's next task." data-work="Support's task is still doing. The others are done.<br>1 task is doing.">
+          <div class="pq-q">Same run. How many tasks are <code>doing</code> at the end?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="0" data-tol="0.1" data-hint="The Marketer's task is still todo: a handoff only closes the writer's own doing task." data-work="The Researcher's line closes the Researcher's task, not the Marketer's.<br>The Marketer's task goes from todo to doing, not to done.<br>0 Marketer tasks are done.">
+          <div class="pq-q">The Researcher writes <code>HANDOFF to Marketer: done with your caption too!</code>. How many of the Marketer's tasks are <code>done</code> after this?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="4" data-tol="0.1" data-hint="Each bot writes once, and the last handoff goes to the CEO." data-work="Researcher, Marketer, Support, Operations: 4 replies.<br>Operations hands to the CEO: no bot is next, so it stops.">
+          <div class="pq-q">4 bots, one task each, in a chain: Researcher → Marketer → Support → Operations → CEO. Every handoff works. How many bot replies are posted?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+      </div>
+      <p class="hook">Real LLMs don't always write the line just right.</p>
+    </section>
+
+    <!-- 6 -->
+    <section class="part" data-title="A real LLM">
+      <h2>A real LLM</h2>
+      <p class="say">In Colab, real bots write their own handoffs. The program only accepts a line that starts with exactly <code>HANDOFF to </code> and a bot's name. Anything else isn't a handoff: the chat waits for the CEO, and the board shows where the work stopped.<br><b class="eqbox">no exact HANDOFF line → wait for the CEO</b></p>
+      <div class="activity">
+        <div class="do">The Marketer's last line, in example replies made for this page. Does the work move on?</div>
+        <div id="s8Rows"></div>
+        <p class="redcheck" id="s8Say" hidden></p>
+      </div>
+      <p class="say">That's useful, not just strict: a task stuck at <code>doing</code> tells the CEO exactly which bot to check.</p>
+      <p class="hook">Here's all of it in Python.</p>
+    </section>
+
+    <!-- 7 -->
+    <section class="part" data-title="The code">
+      <h2>The code</h2>
+      <p class="say">Guess what each <code>print</code> shows. Then press <b>▶ Run</b>.</p>
+<pre><code><span class="c"># The board: one dictionary per task. What, who owns it, and its status.</span>
+board = []
+
+def add_task(task, owner):
+    board.append({"id": len(board) + 1, "task": task, "owner": owner, "status": "todo"})
+
+def show_board():
+    lines = []
+    for t in board:
+        lines.append(f'{t["id"]}. {t["task"]} | {t["owner"]} | {t["status"]}')
+    return "\n".join(lines)
+
+add_task("Find this week's trend", "Researcher")
+add_task("Write the caption", "Marketer")
+add_task("Check sizes and price", "Support")
+print(show_board())
+
+<span class="c"># The chat, as before</span>
+chat = []
+
+def post(who, text):
+    chat.append({"who": who, "text": text})
+    print(f"{who}: {text}")
+
+BOTS = ["Researcher", "Marketer", "Support"]
+INSTRUCTIONS = {
+    "Researcher": "Find kids' fashion trends. When done, write: HANDOFF to Marketer: what you found",
+    "Marketer": "Write the caption. When done, write: HANDOFF to Support: what to check",
+    "Support": "Check sizes and prices. When done, write: HANDOFF to CEO: your answer",
+}
+
+<span class="c"># What a bot reads now: its instructions, the board, and only the last few messages</span>
+WINDOW = 3
+
+def text_for(name):
+    lines = [INSTRUCTIONS[name], "", "Board:", show_board(), "", "Last messages:"]
+    for m in chat[-WINDOW:]:   <span class="c"># chat[-3:] is the last 3 messages</span>
+        lines.append(m["who"] + ": " + m["text"])
+    lines.append(name + ":")
+    return "\n".join(lines)
+
+<span class="c"># Find a bot's task with a given status, or None if it has none</span>
+def task_of(name, status):
+    for t in board:
+        if t["owner"] == name and t["status"] == status:
+            return t
+    return None
+
+<span class="c"># A handoff line moves the work on: my task is done, the next bot's task starts</span>
+def handoff(name, reply):
+    for line in reply.split("\n"):
+        if line.startswith("HANDOFF to "):
+            to = line.split(":")[0].replace("HANDOFF to ", "")
+            mine = task_of(name, "doing")
+            if mine is not None:
+                mine["status"] = "done"
+            if to in BOTS:
+                nxt = task_of(to, "todo")
+                if nxt is not None:
+                    nxt["status"] = "doing"
+                return to
+            return None   <span class="c"># handed to the CEO: wait</span>
+    return None           <span class="c"># no handoff line: wait for the CEO</span>
+
+<span class="c"># Fake LLM replies</span>
+replies = {
+    "Researcher": ["Pastel tulle frocks are big for birthdays (from 3 kids' shops).\nHANDOFF to Marketer: pastel tulle, birthdays"],
+    "Marketer": ["Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 8 years.”\nHANDOFF to Support: check sizes 1 to 8"],
+    "Support": ["The catalogue says sizes 1 to 8 years, ₹1,450. All correct.\nHANDOFF to CEO: ready to post"],
+}
+
+def fake_llm(name, text):
+    return replies[name].pop(0)
+
+<span class="c"># The loop: whoever got the handoff writes next</span>
+def run(first, turn_limit=6):
+    name = first
+    task_of(name, "todo")["status"] = "doing"
+    for i in range(turn_limit):
+        reply = fake_llm(name, text_for(name))
+        post(name, reply)
+        name = handoff(name, reply)
+        if name is None:
+            return "Waiting for the CEO."
+    return "Stopped: the turn limit was reached."
+
+print(run("Researcher"))
+print(show_board())</code></pre>
+      <div class="run-area">
+        <button class="run-code" type="button" aria-expanded="false">▶ Run</button>
+        <div class="terminal" hidden><div class="term-bar">Terminal</div><pre class="term-out"><span class="prompt">$ python lesson4.py</span>
+1. Find this week's trend | Researcher | todo
+2. Write the caption | Marketer | todo
+3. Check sizes and price | Support | todo
+Researcher: Pastel tulle frocks are big for birthdays (from 3 kids' shops).
+HANDOFF to Marketer: pastel tulle, birthdays
+Marketer: Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 8 years.”
+HANDOFF to Support: check sizes 1 to 8
+Support: The catalogue says sizes 1 to 8 years, ₹1,450. All correct.
+HANDOFF to CEO: ready to post
+Waiting for the CEO.
+1. Find this week's trend | Researcher | done
+2. Write the caption | Marketer | done
+3. Check sizes and price | Support | done</pre></div>
+      </div>
+      <p class="run-links">
+        <a class="btn primary" href="https://colab.research.google.com/github/mo-ri-ch/agent-team/blob/main/notebooks/lesson4.ipynb" target="_blank" rel="noopener">▶ Run it in Google Colab</a>
+      </p>
+      <p class="muted-note">The notebook has all of this, then real bots writing their own handoffs. Its first run downloads the model (about 3 GB), so it takes a few minutes. You just need a Google account.</p>
+      <p class="hook">Quick check: did it all make sense?</p>
+    </section>
+
+    <!-- 8 -->
+    <section class="part" data-title="Lesson test">
+      <h2>Lesson 4 test</h2>
+      <p class="say">5 questions, one for each idea in this lesson. Answer them all right to pass. A wrong answer tells you why, and which page to look at again.</p>
+      <div class="test" data-test="4">
+        <div class="quiz" data-page="lesson4.html#1" data-topic="The chat gets long" data-right="Right. Reading the whole chat, every reply costs more as the chat grows.">
+          <div class="q"><small>1. Why</small>Why not let every bot read the whole chat?</div>
+          <div class="options">
+            <button data-why="Bots can read old messages. The problem is that every reply reads all of them.">Bots can't read old messages</button>
+            <button data-right>Every reply reads every message, so a long chat is slow and costly</button>
+            <button data-why="The chat isn't deleted. Bots just read less of it.">The chat is deleted every day</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson4.html#3" data-topic="Read less" data-right="Right. 6 + 2 + 6 = 14, however long the chat is.">
+          <div class="q"><small>2. Count</small>6 tasks, a window of 2, and 400 messages in the chat. How many lines does a bot read?</div>
+          <div class="options">
+            <button data-right>14</button>
+            <button data-why="With a window, the chat's length doesn't count: only the last 2 messages.">408</button>
+            <button data-why="Add the 6 heading lines: instructions, empty lines, Board:, Last messages:, and the name.">8</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson4.html#5" data-topic="Handoffs" data-right="Right. Its own task is done, Support's task starts, and Support writes next.">
+          <div class="q"><small>3. Predict</small>The Marketer writes <code>HANDOFF to Support: check sizes</code>. What happens?</div>
+          <div class="options">
+            <button data-why="The handoff also starts Support's task and makes Support write next.">Only the Marketer's task becomes done</button>
+            <button data-right>Marketer's task done, Support's task doing, Support writes next</button>
+            <button data-why="Support's task starts (doing). It's only done when Support hands off.">All tasks become done</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson4.html#6" data-topic="Only your own task" data-right="Right. A handoff only closes the writer's own doing task.">
+          <div class="q"><small>4. Spot the mistake</small>A friend says: “Support can mark the Marketer's task done by writing a handoff.” What's wrong?</div>
+          <div class="options">
+            <button data-right>A handoff only closes the writer's own task</button>
+            <button data-why="Support can write handoffs. It just can't close anyone else's task with one.">Support can't write handoffs</button>
+            <button data-why="Bots can change the board, but only through a handoff, and only their own task.">Nothing is wrong</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson4.html#8" data-topic="A real LLM" data-right="Right. It isn't an exact HANDOFF line, so the chat waits, and the board shows the Marketer's task still doing.">
+          <div class="q"><small>5. Predict</small>A real Marketer ends with: <code>Passing this to Support now.</code> What happens?</div>
+          <div class="options">
+            <button data-why="The program only understands a line that starts with HANDOFF to and a name.">Support writes next</button>
+            <button data-right>The chat waits for the CEO; the Marketer's task stays doing</button>
+            <button data-why="It isn't a handoff, so nothing on the board changes.">The Marketer's task becomes done</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+      <p class="hook">What the team still can't do.</p>
+    </section>
+
+    <!-- 9 -->
+    <section class="part" data-title="Tools from outside">
+      <h2>Tools from outside</h2>
+      <p class="say">Your team now keeps track of its work. But each bot only has the tools you wrote yourself. Amal Designers also lives in Instagram, WhatsApp, a spreadsheet of orders and a courier's website. Writing a tool for each one, for every bot, would never end.</p>
+      <p class="bot-say" data-bot="support">I'd love to read the real order sheet. Do you have to write that tool from scratch?</p>
+      <div class="open-question">
+        <div>This leaves a question</div>
+        <div class="big">Your bots only use tools you wrote. How do they plug into everything else?</div>
+        <div>Lesson 5 answers it. (Coming soon.)</div>
+      </div>
+      <div class="mybiz" data-key="l4">For your business: write the board for one real job. 3 to 5 tasks, each with its owner bot. Then write the first handoff line.</div>
+      <p><button class="done-toggle" data-done="4">Mark lesson as done</button></p>
+    </section>
+  </main>
+</div>
+
+<nav class="pagebar" aria-label="Move between parts">
+  <div class="inner">
+    <button data-page-back>← Previous</button>
+    <span data-page-label></span>
+    <button class="primary" data-page-next>Next →</button>
+  </div>
+</nav>
+
+<script src="../assets/course.js"></script>
+<script src="../assets/practice.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/common.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/pen.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/guide.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/codewalk.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = AG.esc;
+const TASKS = [["Find this week's trend", "Researcher"], ["Write the caption", "Marketer"], ["Check sizes and price", "Support"]];
+const ST = ["todo", "doing", "done"];
+// Draw a board: rows = [[task, owner, status], …]; changed = row indexes to highlight; onTap(i) makes statuses buttons
+function drawBoard(el, rows, changed = [], onTap) {
+  el.innerHTML = `<tr><th>#</th><th>task</th><th>owner</th><th>status</th></tr>` + rows.map(([t, o, s], i) =>
+    `<tr class="${changed.includes(i) ? "changed" : ""}"><td>${i + 1}</td><td>${esc(t)}</td><td>${o}</td><td>${onTap ? `<button type="button" class="st ${s}" data-i="${i}">${s}</button>` : `<span class="st ${s}">${s}</span>`}</td></tr>`).join("");
+  if (onTap) el.querySelectorAll("button.st").forEach(b => b.onclick = () => onTap(+b.dataset.i));
+}
+
+// ---------- Part 1: the cost of reading the whole chat ----------
+(function longChat() {
+  const m = $("s1M"), bars = $("s1Bars");
+  function draw() {
+    const M = +m.value; $("s1MV").textContent = M;
+    const words = M * 25, max = 300 * 25;
+    bars.innerHTML = `<div class="bar" style="grid-template-columns:10em 1fr 5em"><span>words read</span><span class="track"><span class="fill" style="width:${words / max * 100}%"></span></span><span class="pct">${words.toLocaleString("en-IN")}</span></div>
+      <p class="count" style="margin:2px 0 0">${M} messages × 25 words = ${words.toLocaleString("en-IN")} words, for one reply. A team of 3, each replying once: ${(3 * words).toLocaleString("en-IN")}.</p>`;
+  }
+  m.oninput = draw;
+  addReset(bars, () => { m.value = 30; draw(); });
+  draw();
+})();
+
+// ---------- Part 2: a board you can move along ----------
+(function board() {
+  let rows = TASKS.map(([t, o]) => [t, o, "todo"]);
+  const el = $("s2Board"), say = $("s2Say");
+  const tap = i => { rows[i][2] = ST[(ST.indexOf(rows[i][2]) + 1) % 3]; draw([i]); };
+  function draw(changed = []) {
+    drawBoard(el, rows, changed, tap);
+    const n = s => rows.filter(r => r[2] === s).length;
+    say.textContent = `${n("todo")} todo · ${n("doing")} doing · ${n("done")} done. ${rows.length} lines tell the whole team where things stand.`;
+  }
+  addReset(el, () => { rows = TASKS.map(([t, o]) => [t, o, "todo"]); draw(); });
+  draw();
+})();
+
+// ---------- Part 3: board + the last few messages ----------
+(function window_() {
+  const CHAT = [["CEO", "Good morning, team!"], ["Support", "2 orders came in overnight."], ["CEO", "Great. Today: a post for the pastel frock."], ["Researcher", "On it."], ["Researcher", "Pastel tulle frocks are big for birthdays (from 3 kids' shops)."], ["Researcher", "HANDOFF to Marketer: pastel tulle, birthdays"]];
+  let w = 3;
+  const out = $("s3Text"), say = $("s3Say");
+  function draw() {
+    const board = TASKS.map(([t, o], i) => `${i + 1}. ${t} | ${o} | ${["done", "doing", "todo"][i]}`);
+    const lines = [["Write the caption. When done, write: HANDOFF to Support: what to check", 1], ["", 0], ["Board:", 0], ...board.map(b => [b, 1]), ["", 0], ["Last messages:", 0], ...CHAT.slice(-w).map(([a, b]) => [`${a}: ${b}`, 1]), ["Marketer:", 0]];
+    out.innerHTML = lines.map(([t, k], i) => `<span style="user-select:none;color:var(--pencil)">${String(i + 1).padStart(2)}  </span>${k ? esc(t) : `<span style="color:var(--pencil)">${esc(t)}</span>`}`).join("\n");
+    say.textContent = `${TASKS.length} tasks + ${w} + 6 = ${lines.length} lines. The ${CHAT.length - w > 0 ? CHAT.length - w + " older message" + (CHAT.length - w > 1 ? "s are" : " is") : "chat has no older messages"} ${CHAT.length - w > 0 ? "left out" : ""}, and so would 300 more.`;
+  }
+  const pick = AG.chips($("s3W"), ["window 1", "window 3", "window 6"], i => { w = [1, 3, 6][i]; pick(i); draw(); });
+  addReset(out, () => { w = 3; pick(1); draw(); });
+  pick(1); draw();
+})();
+
+// ---------- Part 4: handoffs move the work along ----------
+(function handoffs() {
+  const S = [
+    { st: ["doing", "todo", "todo"], ch: [0], add: [["ceo", "Today: a post for the pastel frock. Researcher, you start."]], say: "The Researcher's task starts: todo → doing." },
+    { st: ["done", "doing", "todo"], ch: [0, 1], add: [["researcher", "Pastel tulle frocks are big for birthdays.\nHANDOFF to Marketer: pastel tulle, birthdays"]], say: "HANDOFF to Marketer: task 1 done, task 2 doing, and the Marketer writes next." },
+    { st: ["done", "done", "doing"], ch: [1, 2], add: [["marketer", "Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 8 years.”\nHANDOFF to Support: check sizes 1 to 8"]], say: "HANDOFF to Support: task 2 done, task 3 doing." },
+    { st: ["done", "done", "done"], ch: [2], add: [["support", "Sizes 1 to 8, ₹1,450. All correct.\nHANDOFF to CEO: ready to post"]], say: "HANDOFF to CEO: task 3 done. The CEO isn't a bot, so no one is next: the chat waits for you." },
+  ];
+  const board = $("s5Board");
+  AG.stepper({ tx: $("s5Tx"), say: $("s5Say"), next: $("s5Next"), back: $("s5Back"), again: $("s5Again"),
+    steps: S.map(s => ({ ...s, add: s.add.map(([w, t]) => [w, esc(t).replace(/\n/g, "<br>").replace(/(HANDOFF to \w+)/, "<b>$1</b>")]) })), html: true,
+    onStep: (i, s) => { drawBoard(board, TASKS.map(([t, o], k) => [t, o, s.st[k]]), s.ch); } });
+})();
+
+// ---------- Part 5: what each reply changes ----------
+(function ownTask() {
+  drawBoard($("s6Board"), [["Find this week's trend", "Researcher", "done"], ["Write the caption", "Marketer", "doing"], ["Check sizes and price", "Support", "todo"]]);
+  const Q = [ // [who writes, last line, answer key, why]
+    ["Marketer", "HANDOFF to Support: check sizes", "next", "Its own task 2 is done, Support's task 3 starts, and Support writes next."],
+    ["Marketer", "Here's the caption. Over to you, Support!", "none", "No HANDOFF line: the board doesn't change, and the chat waits for the CEO."],
+    ["Marketer", "HANDOFF to CEO: caption ready, please look", "ceo", "Its own task 2 is done. The CEO isn't a bot, so no one is next: wait."],
+    ["Support", "HANDOFF to CEO: task 2 is done", "none", "Support has no doing task, so nothing closes. It can't close the Marketer's task 2. Handed to the CEO: wait."],
+  ];
+  const OPTS = [["next", "Task 2 done, Support next"], ["ceo", "Task 2 done, wait for CEO"], ["none", "No change, wait for CEO"]];
+  const rows = $("s6Rows"), say = $("s6Say");
+  let pick = {};
+  function draw() {
+    rows.innerHTML = Q.map(([w, l, right, why], i) => {
+      const p = pick[i], cls = p ? (p === right ? " right" : " wrong") : "";
+      return `<div class="sortrow${cls}" style="grid-template-columns:1fr"><span><b>${w}</b> writes: <code>${esc(l)}</code></span><span class="seg">${OPTS.map(([k, t]) =>
+        `<button type="button" data-i="${i}" data-b="${k}" class="${p === k ? "on" : ""}">${t}</button>`).join("")}</span>${p ? `<span class="why">${p === right ? "✓" : "✗"} ${why}</span>` : ""}</div>`;
+    }).join("");
+    rows.querySelectorAll("button").forEach(b => b.onclick = () => { pick[b.dataset.i] = b.dataset.b; draw(); });
+    const n = Object.keys(pick).length, ok = Q.filter((q, i) => pick[i] === q[2]).length;
+    say.hidden = n < Q.length; say.classList.toggle("good", ok === Q.length);
+    say.textContent = ok === Q.length ? "✓ All 4 right. Each bot can only close its own task." : `${ok} of 4 right. Tap another choice to change one.`;
+  }
+  addReset(rows, () => { pick = {}; draw(); });
+  draw();
+})();
+
+// ---------- Part 6: which real handoff lines work? ----------
+(function realLines() {
+  const L = [["HANDOFF to Support: check sizes 1 to 8", "yes", "Starts with HANDOFF to, then a bot's name. Support writes next."],
+    ["Handoff to Support: check sizes", "no", "“Handoff” isn't “HANDOFF”: the start must match exactly. The chat waits; task 2 stays doing."],
+    ["I'll pass this to Support now.", "no", "No HANDOFF line at all. The chat waits, and the board shows the Marketer's task still doing."],
+    ["HANDOFF to Supprt: check sizes", "no", "A HANDOFF line, but “Supprt” isn't a bot: no one is next. Task 2 is done, and the chat waits."]];
+  const rows = $("s8Rows"), say = $("s8Say");
+  let pick = {};
+  function draw() {
+    rows.innerHTML = L.map(([l, right, why], i) => {
+      const p = pick[i], cls = p ? (p === right ? " right" : " wrong") : "";
+      return `<div class="sortrow${cls}" style="grid-template-columns:1fr auto"><code>${esc(l)}</code><span class="seg">${[["yes", "Moves on"], ["no", "Waits"]].map(([k, t]) =>
+        `<button type="button" data-i="${i}" data-b="${k}" class="${p === k ? "on" : ""}">${t}</button>`).join("")}</span>${p ? `<span class="why">${p === right ? "✓" : "✗"} ${why}</span>` : ""}</div>`;
+    }).join("");
+    rows.querySelectorAll("button").forEach(b => b.onclick = () => { pick[b.dataset.i] = b.dataset.b; draw(); });
+    const n = Object.keys(pick).length, ok = L.filter((q, i) => pick[i] === q[1]).length;
+    say.hidden = n < L.length; say.classList.toggle("good", ok === L.length);
+    say.textContent = ok === L.length ? "✓ All 4 right. Only an exact HANDOFF line to a real bot moves the work on." : `${ok} of 4 right. Tap the other choice to change one.`;
+  }
+  addReset(rows, () => { pick = {}; draw(); });
+  draw();
+})();
+</script>
+</body>
+</html>

@@ -12,6 +12,12 @@ window.PYWORDS_EXTRA = {
   "pop": { what: "Takes an item out of a list and gives it back. pop(0) takes the first one.", ex: "replies = [\"one\", \"two\"]\nprint(replies.pop(0))\nprint(replies)", out: "one\n['two']" },
   "split": { what: "Cuts text into a list of pieces, at every place the given text appears. split(\":\", 1) cuts only at the first one.", ex: "print(\"CEO: hi: there\".split(\":\", 1))", out: "['CEO', ' hi: there']" },
   "strip": { what: "Takes spaces off both ends of the text.", ex: "print(\"  hi  \".strip() + \"!\")", out: "hi!" },
+  "None": { what: "Python's word for \"nothing here\". task_of gives None when it finds no task.", ex: "x = None\nprint(x)", out: "None" },
+  "is": { what: "Checks if two things are the very same thing. Mostly used as is None, or is not None.", ex: "x = None\nprint(x is None)\nprint(5 is not None)", out: "True\nTrue" },
+  "not": { what: "Flips True and False. is not None asks: is there something here?", ex: "print(not True)", out: "False" },
+  "and": { what: "True only when both sides are True.", ex: "owner = \"Support\"\nstatus = \"todo\"\nprint(owner == \"Support\" and status == \"todo\")", out: "True" },
+  "startswith": { what: "True if the text begins with the given text.", ex: "print(\"HANDOFF to CEO: ok\".startswith(\"HANDOFF to \"))", out: "True" },
+  "replace": { what: "Gives the text with every copy of the first text swapped for the second.", ex: "print(\"HANDOFF to Support\".replace(\"HANDOFF to \", \"\"))", out: "Support" },
   "clear": { what: "Empties a list: every item is taken out.", ex: "chat = [1, 2]\nchat.clear()\nprint(chat)", out: "[]" },
 };
 
@@ -27,7 +33,7 @@ const COURSE_LESSONS = [
   { n: 3, label: "3", step: "who speaks", title: "Who speaks next", file: "lesson3.html", ready: true, test: 11,
     summary: "@mentions, routing each message to the right bot, and a limit so the chat never goes round forever.",
     leaves: "The chat grows long. How does the team keep track of the work?" },
-  { n: 4, label: "4", step: "handoffs", title: "Shared notes and handoffs", file: "lesson4.html", ready: false,
+  { n: 4, label: "4", step: "handoffs", title: "Shared notes and handoffs", file: "lesson4.html", ready: true, test: 10,
     summary: "A shared board of tasks, and clean handoffs from one bot to the next.",
     leaves: "Your bots only use tools you wrote. How do they plug into everything else?" },
   { n: 5, label: "5", step: "standards", title: "MCP and A2A", file: "lesson5.html", ready: false,
