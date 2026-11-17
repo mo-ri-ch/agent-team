@@ -208,3 +208,9 @@ pre.mapcode code .cl.dim { opacity: 0.45; }
 .story { font-size: 0.95rem; color: var(--pencil); margin: 6px 0 0; }
 .tools-line { font-size: 0.95rem; margin: 12px 0 0; }
 .tools-line code { font-size: 0.85em; }
+
+/* Amal Designers, the brand in the story */
+.story { display: flex; gap: 10px; align-items: center; }
+.brand-logo { flex: 0 0 auto; width: 56px; height: auto; transform: rotate(-3deg); }
+.brand-logo.big { float: right; width: 84px; margin: -8px 0 8px 14px; }
+@media (max-width: 520px) { .brand-logo.big { width: 64px; } }

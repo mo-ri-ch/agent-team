@@ -39,7 +39,7 @@ const COURSE_LESSONS = [
     summary: "Approval before anything risky, API keys kept secret, and a limit on what it can spend.",
     leaves: "It's safe. Will it still be running next week?" },
   { n: 12, label: "12", step: "for real", title: "Run it every day", file: "lesson12.html", ready: false,
-    summary: "Keeps running after a restart, logs, backups and updates. Then set up a team for your own business.",
+    summary: "Keeps running after a restart, with logs, backups and updates. Final project: the full Amal Designers team, or one for your own business.",
     leaves: null },
 ];
 

@@ -11,6 +11,15 @@
 - **The story (Rishal, 17 Nov 2026):** the reader is the CEO of Amal Designers, a real family brand of handmade dresses
   for kids under 10 (Instagram + WhatsApp; Rishal runs the tech, his sister does the Instagram posts). Bots help the
   people, never replace their final say. Never show real customers: names, numbers and chats are made up, and so are prices.
+- **The real company (Rishal, 17 Nov 2026):** Rishal guides the bots as CEO. His sister runs marketing (Instagram) and
+  needs direction; his mom makes the dresses, sets prices, and packs and ships from home. Final project (Lesson 12):
+  the full team: a Marketing Lead that gives his sister daily, scheduled tasks and checks what got done; Production
+  (orders, due dates, prices, warns when orders outgrow sewing time); Operations (what to pack, courier pickup, tracking
+  messages, late deliveries); an Analyst (weekly numbers and 1/2/3-year projections at the current pace, labelled as
+  projections). Bots plan and draft; people sew, pack, post and approve. Keep the lessons general: Amal Designers is the
+  example, and the skills fit any small business.
+- **Audience:** students and tech-comfortable small-business people. Lessons 2–5 need basic Python; readers may skip
+  them and jump to Lesson 6, so Lesson 6 starts from zero (a quick basics page: what a terminal is, copy and paste a command).
 - The team so far: Researcher (orange, search), Marketer (pink), Support (green, catalogue). `<p class="bot-say" data-bot="marketer">…</p>`.
 - Lesson numbers start at 1. Saved progress uses `n`; never change `n` or the id "agent-team".
 - Lesson 1: browser activities only. Code (Colab) starts in Lesson 2.
