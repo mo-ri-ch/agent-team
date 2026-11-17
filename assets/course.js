@@ -6,7 +6,7 @@ const COURSE_LESSONS = [
   // n: lesson number used for saved progress (never change it) · label: the number students see
   // Lessons 1–5: how a team works, built from scratch. Lessons 6–12: a real team on your own laptop (Hermes Agent).
   { n: 1, label: "1", step: "roles", title: "Why a team?", file: "lesson1.html", ready: true, test: 7,
-    summary: "Several agents, one role each, talking in one group chat.",
+    summary: "You're the CEO. Your AI employees each have one role and talk in one group chat.",
     leaves: "You've watched a team chat. Can you build two bots that talk, yourself?" },
   { n: 2, label: "2", step: "build it", title: "Two bots talk", file: "lesson2.html", ready: false,
     summary: "Write two agents in plain Python that pass messages back and forth.",
@@ -24,7 +24,7 @@ const COURSE_LESSONS = [
     summary: "Install Hermes Agent and pick a model: free on your own laptop, or a cheap one online.",
     leaves: "One agent runs. How do you make it a team?" },
   { n: 7, label: "7", step: "your team", title: "Your team of bots", file: "lesson7.html", ready: false,
-    summary: "Bot Mode: named bots, each with its own role, model, memory and skills.",
+    summary: "Hire Amal Designers' team in Bot Mode: named bots, each with its own role, model, memory and skills.",
     leaves: "Your bots share one computer. What if one deletes another's files?" },
   { n: 8, label: "8", step: "own computer", title: "A computer for each bot", file: "lesson8.html", ready: false,
     summary: "Each bot works in its own sandbox (a Docker container), so it can't touch your files or the others'.",
@@ -33,22 +33,23 @@ const COURSE_LESSONS = [
     summary: "Connect your team to Telegram, so only you can message it from anywhere.",
     leaves: "It answers when you ask. Can it start work on its own?" },
   { n: 10, label: "10", step: "schedules", title: "Jobs on a schedule", file: "lesson10.html", ready: false,
-    summary: "A morning briefing, a weekly report: jobs that run by themselves and send you the result.",
+    summary: "Every morning, today's post idea and caption, sent to your phone. Jobs that run by themselves.",
     leaves: "Your team now acts on its own. How do you keep it safe?" },
   { n: 11, label: "11", step: "safety", title: "Safe by default", file: "lesson11.html", ready: false,
     summary: "Approval before anything risky, API keys kept secret, and a limit on what it can spend.",
     leaves: "It's safe. Will it still be running next week?" },
   { n: 12, label: "12", step: "for real", title: "Run it every day", file: "lesson12.html", ready: false,
-    summary: "Keeps running after a restart, logs, backups and updates. Then set up your own assistant team.",
+    summary: "Keeps running after a restart, logs, backups and updates. Then set up a team for your own business.",
     leaves: null },
 ];
 
-// ---------- The team: sticky notes with faces. <p class="bot-say" data-bot="writer">Hi!</p> ----------
-// researcher (orange, a magnifying glass) · writer (pink, a pencil) · checker (green, a tick) · you (yellow)
+// ---------- The team: sticky notes with faces. <p class="bot-say" data-bot="marketer">Hi!</p> ----------
+// The running story: you are the CEO of Amal Designers (handmade dresses for kids under 10).
+// researcher (orange, a magnifying glass) · marketer (pink, a pencil) · support (green, a chat bubble) · you (yellow)
 const BOT_LOOK = {
   researcher: { name: "Researcher", note: "var(--note-orange)", extra: '<circle cx="56" cy="38" r="4.5" class="bot-tool"/><path d="M59.5 41.5 L63 45" class="bot-tool"/>' },
-  writer: { name: "Writer", note: "var(--note-pink)", extra: '<path d="M54 46 L62 34" class="bot-tool"/><path d="M54 46 L53 49 L56 47" class="bot-tool"/>' },
-  checker: { name: "Checker", note: "var(--note-green)", extra: '<path d="M53 38 L57 42 L63 33" class="bot-tool"/>' },
+  marketer: { name: "Marketer", note: "var(--note-pink)", extra: '<path d="M54 46 L62 34" class="bot-tool"/><path d="M54 46 L53 49 L56 47" class="bot-tool"/>' },
+  support: { name: "Support", note: "var(--note-green)", extra: '<path d="M53 33 H64 V41 H58 L55 44 V41 H53 Z" class="bot-tool"/>' },
   you: { name: "You", note: "var(--note-yellow)", extra: "" },
 };
 function botSvg(kind) {
@@ -82,7 +83,7 @@ window.AG = (function () {
   // Who wrote a line: the tag's colour class and its label
   const WHO = {
     you: ["you", "you"], llm: ["llm", "LLM"], prog: ["prog", "program"], human: ["you", "person"],
-    researcher: ["a-orange", "Researcher"], writer: ["a-pink", "Writer"], checker: ["a-green", "Checker"],
+    ceo: ["you", "you (CEO)"], researcher: ["a-orange", "Researcher"], marketer: ["a-pink", "Marketer"], support: ["a-green", "Support"],
     instr: ["a-note", "instructions"],
     round: ["round", "round"],
   };

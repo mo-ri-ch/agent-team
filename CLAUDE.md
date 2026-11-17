@@ -8,7 +8,10 @@
   It follows on naturally from Build an AI Agent (gradlabs.in/learn/agents), but never requires it; links are optional extras.
   Don't repeat that course's "Teams of agents" lesson (manager / checker / cost): this course is about the group chat,
   @mentions, who speaks next, shared notes, handoffs, MCP / A2A, and a real free tool.
-- The team: Researcher (orange, search), Writer (pink), Checker (green). `<p class="bot-say" data-bot="writer">…</p>`.
+- **The story (Rishal, 17 Nov 2026):** the reader is the CEO of Amal Designers, a real family brand of handmade dresses
+  for kids under 10 (Instagram + WhatsApp; Rishal runs the tech, his sister does the Instagram posts). Bots help the
+  people, never replace their final say. Never show real customers: names, numbers and chats are made up, and so are prices.
+- The team so far: Researcher (orange, search), Marketer (pink), Support (green, catalogue). `<p class="bot-say" data-bot="marketer">…</p>`.
 - Lesson numbers start at 1. Saved progress uses `n`; never change `n` or the id "agent-team".
 - Lesson 1: browser activities only. Code (Colab) starts in Lesson 2.
 - Messages shown before Lesson 2 are examples written for the page; say so (a peek or a note).
