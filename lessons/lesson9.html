@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reach it from your phone</title>
+<meta name="description" content="Lesson 9 of Build an AI Team: connect your bots to Telegram so you can reach them from your phone. The gateway, BotFather tokens, allowed users, one group for the team, and keeping it running.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Kalam:wght@400&family=Patrick+Hand&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem("notebook-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
+<link rel="stylesheet" href="https://mo-ri-ch.github.io/study-notebook-design/v1/style.css">
+<link rel="stylesheet" href="../assets/course.css">
+<style>
+  .path { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin: 4px 0 10px; }
+  .path .n { font-family: var(--head); padding: 6px 12px; border: 2px solid var(--ink); border-radius: 10px; background: var(--card); }
+  .path .n.on { background: var(--hl-yellow); color: var(--on-hl); }
+  .path .a { color: var(--pencil); font-size: 1.2rem; }
+  .people { display: grid; gap: 6px; }
+  .person { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 5px 0; border-bottom: 1px dashed var(--rule); font-size: .92rem; }
+  .person code { font-size: .82rem; }
+  .verdict { font-family: var(--hand); font-size: 1rem; }
+  .verdict.ok { color: var(--good); } .verdict.no { color: var(--redpen); }
+  .checks label { display: flex; gap: 8px; align-items: baseline; padding: 3px 0; }
+  .vnote { font-size: .9rem; color: var(--pencil); }
+  .sw { display: flex; gap: 14px; flex-wrap: wrap; margin: 0 0 8px; }
+  .sw label { display: flex; gap: 6px; align-items: center; font-family: var(--mono); font-size: .85rem; }
+</style>
+</head>
+<body data-pen="blue">
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← Build an AI Team</a>
+    <span class="where">Lesson 9 of 12</span>
+  </header>
+
+  <main data-paged>
+    <div class="paged-head">
+      <h1>Reach it from your phone</h1>
+      <div class="progress" aria-label="Lesson parts"></div>
+    </div>
+
+    <!-- 1 -->
+    <section class="part" data-title="The gateway">
+      <h2>The gateway</h2>
+      <p class="say">Your bots live on your laptop. To reach them from your phone, Hermes runs a <mark>gateway</mark>: a program that stays on in the background, connects to a messaging app like Telegram, passes your messages to the bot, and sends its replies back.<br><b class="eqbox">phone → Telegram → gateway → bot → back to your phone</b></p>
+      <div class="activity">
+        <div class="do">Step through one message.</div>
+        <div class="path" id="s1Path"></div>
+        <div class="tx" id="s1Tx" style="min-height:6em;align-content:start"></div>
+        <p class="count" id="s1Say" style="margin:8px 0 0"></p>
+        <div class="btnrow">
+          <button class="primary" id="s1Next">Next step →</button>
+          <button id="s1Back" hidden>← Back</button>
+          <button id="s1Again" hidden>↺ Start again</button>
+        </div>
+      </div>
+      <p class="say near" style="position:relative">Telegram is free and easy for bots, so we use it here. The gateway also speaks WhatsApp, Slack, Discord and more.<button class="doubt" type="button" data-peek-from="onPeek" aria-label="Does my laptop have to stay on?">🤔</button></p>
+      <div hidden id="onPeek"><b>🤔 Does my laptop have to stay on?</b>
+        <div style="margin-top:6px">Yes: the gateway runs on your laptop. If it sleeps, the bots can't answer until it wakes. Lesson 12 shows how to move the team to a small server that's always on.</div>
+      </div>
+      <p class="hook">First, Telegram needs a bot account.</p>
+    </section>
+
+    <!-- 2 -->
+    <section class="part" data-title="Make a Telegram bot">
+      <h2>Make a Telegram bot</h2>
+      <p class="say">In Telegram, chat with <b>@BotFather</b>, Telegram's own bot for making bots. Send <code>/newbot</code>, choose a name, and a username ending in <code>bot</code>. It gives you a <mark>token</mark>: the password the gateway uses to speak as that bot. Each of your bots needs its own.<br><b class="eqbox">one Hermes bot → one Telegram bot → one token</b></p>
+      <div class="activity">
+        <div class="do"><span data-peek="An example chat. Your token will be different, and you must never show it to anyone.">Step through BotFather.</span></div>
+        <div class="tx" id="s2Tx" style="min-height:9em;align-content:start"></div>
+        <p class="count" id="s2Say" style="margin:8px 0 0"></p>
+        <div class="btnrow">
+          <button class="primary" id="s2Next">Next step →</button>
+          <button id="s2Back" hidden>← Back</button>
+          <button id="s2Again" hidden>↺ Start again</button>
+        </div>
+      </div>
+      <p class="say">Anyone with the token can control your bot. If it ever leaks, send <code>/revoke</code> to BotFather for a new one.</p>
+      <p class="hook">Now: who is allowed to talk to it?</p>
+    </section>
+
+    <!-- 3 -->
+    <section class="part" data-title="Only your people">
+      <h2>Only your people</h2>
+      <p class="say">Anyone can find a Telegram bot. So Hermes answers only the people on a list: <code>TELEGRAM_ALLOWED_USERS</code>, in the bot's <code>.env</code>. The list holds numeric user IDs (your username can change; the number can't). Message <b>@userinfobot</b> to get yours. With no list at all, Hermes answers no one.<br><b class="eqbox">allowed users = numeric IDs · everyone else is ignored</b></p>
+      <div class="activity">
+        <div class="do">Edit the list. Who gets an answer?</div>
+        <div class="tryrow"><label for="s3List"><code>TELEGRAM_ALLOWED_USERS=</code></label><input id="s3List" class="wide" type="text" value="111111111" aria-label="Allowed user IDs" spellcheck="false"></div>
+        <div class="people" id="s3People"></div>
+        <div class="chips" id="s3Try" style="margin-top:8px"><span class="count" style="align-self:center">Try:</span></div>
+      </div>
+      <p class="hook">The bot and the list are ready. Switch it on.</p>
+    </section>
+
+    <!-- 4 -->
+    <section class="part" data-title="Start the gateway">
+      <h2>Start the gateway</h2>
+      <p class="say">Each bot runs its own gateway, with its own token. First, <code>gateway setup</code> asks for the token and the allowed IDs, and saves them in the bot's <code>.env</code>. Then test it in the open terminal. When it works, install it as a <mark>service</mark>: a program your laptop starts by itself, even after a restart.<br><b class="eqbox">setup → test → install as a service</b></p>
+      <div class="activity">
+        <div class="do">For Marketing. Then the same for each bot.</div>
+        <div class="modes" role="tablist" aria-label="Step">
+          <button class="mode on" data-st="setup" role="tab" aria-selected="true">1. Setup</button>
+          <button class="mode" data-st="test" role="tab" aria-selected="false">2. Test</button>
+          <button class="mode" data-st="keep" role="tab" aria-selected="false">3. Keep it running</button>
+        </div>
+        <div data-stp="setup">
+<pre><code>marketing gateway setup</code></pre>
+          <p class="count" style="margin:6px 0 0">Choose Telegram, paste Marketing's token, type the allowed IDs.</p>
+        </div>
+        <div data-stp="test" hidden>
+<pre><code>marketing gateway</code></pre>
+          <p class="count" style="margin:6px 0 0">Message the bot from your phone. If it replies, it works. Press Ctrl+C to stop.</p>
+        </div>
+        <div data-stp="keep" hidden>
+<pre><code>marketing gateway install
+marketing gateway status</code></pre>
+          <p class="count" style="margin:6px 0 0">Now it starts by itself, even after a restart. <code>status</code> shows whether it's running.</p>
+        </div>
+      </div>
+      <p class="vnote">Checked against Hermes Agent v0.23 (November 2026). See the <a href="https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram" target="_blank" rel="noopener">Telegram docs</a> if a step looks different.</p>
+      <p class="hook">Count it on new numbers.</p>
+    </section>
+
+    <section class="part" data-nonum data-title="✏️ Practice 9.1">
+      <h2>✏️ Practice 9.1</h2>
+      <p class="say">Remember:<br><b class="eqbox">one Hermes bot → one Telegram bot → one token</b><br><b class="eqbox">allowed users = numeric IDs · everyone else is ignored</b><br>Each bot runs its own gateway.</p>
+      <div class="activity">
+        <div class="do"><span data-peek="Take a pen and paper, or use the ✎ pen on this page.">Work each one out.</span> Type the answer, press Check.</div>
+        <div class="pq" data-ans="4" data-tol="0.1" data-hint="One token per bot." data-work="Marketing, Production, Operations, Analyst: 4 bots → 4 tokens from BotFather.">
+          <div class="pq-q">You connect all <b>4</b> bots to Telegram. How many tokens do you need from BotFather?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="3" data-tol="0.1" data-hint="Count the people on the list, not the bots." data-work="The CEO, the social media manager and the designer: 3 IDs.">
+          <div class="pq-q">The CEO, the social media manager and the designer should all reach Marketing. How many IDs go in Marketing's <code>TELEGRAM_ALLOWED_USERS</code>?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="0" data-tol="0.1" data-hint="Is a customer on the list?" data-work="A customer's ID isn't on the list, so the bot ignores them: 0 replies.">
+          <div class="pq-q">A customer finds your bot and sends it <b>5</b> messages. How many replies do they get?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="4" data-tol="0.1" data-hint="Each bot runs its own gateway." data-work="4 bots → 4 gateways, each with its own token, each installed as a service.">
+          <div class="pq-q">All 4 bots are on Telegram. How many gateway services run on your laptop?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+      </div>
+      <p class="hook">Four bots in four chats? One group is better.</p>
+    </section>
+
+    <!-- 5 -->
+    <section class="part" data-title="The team in one group">
+      <h2>The team in one group</h2>
+      <p class="say">Make a Telegram group, say “Amal Designers HQ”, add your people and all four bots. Then, in each bot's <code>config.yaml</code>, set two things: <code>require_mention: true</code> (answer only when tagged) and <code>exclusive_bot_mentions: true</code> (stay quiet when another bot is tagged). Without them, bots can chat to each other all night.<br><b class="eqbox">in a group: require_mention + exclusive_bot_mentions</b></p>
+      <div class="activity">
+        <div class="do">Flip the settings. Who replies to “<span class="at">@Production</span> is size 5 in stock?”</div>
+        <div class="sw"><label><input type="checkbox" id="s5Req"> require_mention</label><label><input type="checkbox" id="s5Ex"> exclusive_bot_mentions</label></div>
+        <div class="tx" id="s5Tx" style="min-height:7em;align-content:start"></div>
+        <p class="count" id="s5Say" style="margin:8px 0 0"></p>
+<pre><code><span class="c"># in each bot's config.yaml</span>
+telegram:
+  require_mention: true
+  exclusive_bot_mentions: true</code></pre>
+      </div>
+      <p class="hook">And when it doesn't answer at all?</p>
+    </section>
+
+    <!-- 6 -->
+    <section class="part" data-title="When it goes wrong">
+      <h2>When it goes wrong</h2>
+      <p class="say">Most Telegram problems are a token, the allowed list, or the gateway not running. <code>gateway status</code> and the gateway's log tell you which.</p>
+      <div class="activity">
+        <div class="do">Match each problem to its fix.</div>
+        <div id="s6Rows"></div>
+        <p class="redcheck" id="s6Say" hidden></p>
+      </div>
+      <p class="hook">Quick check: did it all make sense?</p>
+    </section>
+
+    <!-- 7 -->
+    <section class="part" data-title="Lesson test">
+      <h2>Lesson 9 test</h2>
+      <p class="say">5 questions, one for each idea in this lesson. Answer them all right to pass. A wrong answer tells you why, and which page to look at again.</p>
+      <div class="test" data-test="9">
+        <div class="quiz" data-page="lesson9.html#1" data-topic="The gateway" data-right="Right. The gateway runs on your laptop and passes messages between Telegram and the bot.">
+          <div class="q"><small>1. Idea</small>What does the gateway do?</div>
+          <div class="options">
+            <button data-why="Telegram's servers carry the messages; the gateway runs on your laptop.">It's part of Telegram's servers</button>
+            <button data-right>It passes messages between Telegram and your bot, on your laptop</button>
+            <button data-why="The model writes replies; the gateway only carries messages.">It writes the replies</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson9.html#2" data-topic="Make a Telegram bot" data-right="Right. Revoke it in BotFather, and put the new one in the bot's .env.">
+          <div class="q"><small>2. Act</small>Marketing's token appeared in a screenshot you posted. What do you do?</div>
+          <div class="options">
+            <button data-why="Anyone who saw it can still control the bot.">Nothing: it's only a screenshot</button>
+            <button data-right>Send /revoke to BotFather and use the new token</button>
+            <button data-why="The old token would still work for whoever saw it.">Rename the bot</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson9.html#3" data-topic="Only your people" data-right="Right. With no list, Hermes answers no one.">
+          <div class="q"><small>3. Predict</small>You leave <code>TELEGRAM_ALLOWED_USERS</code> empty. Who can use the bot?</div>
+          <div class="options">
+            <button data-why="Hermes is safe by default: no list means no one, not everyone.">Everyone</button>
+            <button data-right>No one</button>
+            <button data-why="Even the person who made it must be on the list.">Only you</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson9.html#4" data-topic="Start the gateway" data-right="Right. install makes it a service that starts by itself.">
+          <div class="q"><small>4. Keep it</small>The bot works while the terminal is open, but stops when you close it. What's missing?</div>
+          <div class="options">
+            <button data-right><code>marketing gateway install</code></button>
+            <button data-why="The token is fine: it works while the terminal is open.">A new token</button>
+            <button data-why="The list is fine: you got answers.">More allowed users</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson9.html#6" data-topic="The team in one group" data-right="Right. Only Production is tagged, and the others stay quiet.">
+          <div class="q"><small>5. Predict</small>Both settings are on. In the group you write “<span class="at">@Production</span> how many red frocks?”. Who replies?</div>
+          <div class="options">
+            <button data-why="require_mention means untagged bots stay quiet.">All four bots</button>
+            <button data-right>Only Production</button>
+            <button data-why="Production is tagged, so it answers.">No one</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+      <p class="hook">What's next.</p>
+    </section>
+
+    <!-- 8 -->
+    <section class="part" data-title="Only when asked">
+      <h2>Only when asked</h2>
+      <p class="say">Your team now answers from anywhere, but only when someone writes first. Tick what you've really done:</p>
+      <div class="activity" id="s8Checks"><div class="checks">
+        <label><input type="checkbox" data-k="botfather"> Made a Telegram bot for each Hermes bot</label>
+        <label><input type="checkbox" data-k="allow"> Set <code>TELEGRAM_ALLOWED_USERS</code> for each</label>
+        <label><input type="checkbox" data-k="test"> Got a reply on my phone</label>
+        <label><input type="checkbox" data-k="install"> Installed every gateway as a service</label>
+        <label><input type="checkbox" data-k="group"> Made the team group, with both mention settings on</label>
+        </div>
+      </div>
+      <p class="bot-say" data-bot="marketing">The social media manager needs today's post idea at 9 AM. Do I have to wait to be asked every day?</p>
+      <div class="open-question">
+        <div>This leaves a question</div>
+        <div class="big">It answers when you ask. Can it start work on its own?</div>
+        <div>Lesson 10 answers it. (Coming soon.)</div>
+      </div>
+      <div class="mybiz" data-key="l9">For your business: who should be allowed to message each bot? Write each bot's list of people, and the name of your team group.</div>
+      <p><button class="done-toggle" data-done="9">Mark lesson as done</button></p>
+    </section>
+  </main>
+</div>
+
+<nav class="pagebar" aria-label="Move between parts">
+  <div class="inner">
+    <button data-page-back>← Previous</button>
+    <span data-page-label></span>
+    <button class="primary" data-page-next>Next →</button>
+  </div>
+</nav>
+
+<script src="../assets/course.js"></script>
+<script src="../assets/practice.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/common.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/pen.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/guide.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = AG.esc;
+const at = t => esc(t).replace(/@(Marketing|Production|Operations|Analyst)/g, '<span class="at">@$1</span>');
+AG.WHO.bf = ["llm", "BotFather"];
+AG.WHO.gw = ["prog", "gateway"];
+
+// ---------- Part 1: one message's trip ----------
+(function trip() {
+  const NODES = ["your phone", "Telegram", "gateway (laptop)", "Production"];
+  const path = $("s1Path");
+  const draw = i => path.innerHTML = NODES.map((n, k) => `<span class="n${k === i ? " on" : ""}">${n}</span>`).join('<span class="a">→</span>');
+  AG.stepper({ tx: $("s1Tx"), say: $("s1Say"), next: $("s1Next"), back: $("s1Back"), again: $("s1Again"), steps: [
+    { at: 0, add: [["ceo", "Is the red frock in size 5?"]], say: "You type on your phone, at the market." },
+    { at: 1, add: [], say: "Telegram carries it, like any message." },
+    { at: 2, add: [["gw", "message from an allowed user → Production"]], say: "The gateway on your laptop picks it up, checks who sent it, and hands it to the bot." },
+    { at: 3, add: [["production", "Yes: 2 in stock, ₹1,450."]], say: "Production answers, using its tools as usual." },
+    { at: 0, add: [], say: "The gateway sends the reply back through Telegram. It's on your phone in seconds." },
+  ], onStep: (i, s) => draw(s.at) });
+})();
+
+// ---------- Part 2: BotFather ----------
+AG.stepper({ tx: $("s2Tx"), say: $("s2Say"), next: $("s2Next"), back: $("s2Back"), again: $("s2Again"), steps: [
+  { add: [["ceo", "/newbot"]], say: "In Telegram, open @BotFather and send /newbot." },
+  { add: [["bf", "Alright, a new bot. How are we going to call it?"], ["ceo", "Amal Marketing"]], say: "The name people see." },
+  { add: [["bf", "Now choose a username. It must end in 'bot'."], ["ceo", "amal_marketing_bot"]], say: "A username that ends in bot. It has to be one nobody else has taken." },
+  { add: [["bf", "Done! Use this token to access the HTTP API: 7123456789:AAH••••••••••••••"]], say: "The token. Copy it straight into the gateway setup, and nowhere else." },
+] });
+
+// ---------- Part 3: who gets an answer ----------
+(function allow() {
+  const PEOPLE = [["You (CEO)", "111111111"], ["Social media manager", "222222222"], ["Designer", "333333333"], ["A stranger who found the bot", "999999999"]];
+  const inp = $("s3List"), box = $("s3People");
+  function draw() {
+    const ids = inp.value.split(",").map(x => x.trim()).filter(Boolean);
+    box.innerHTML = PEOPLE.map(([n, id]) => { const ok = ids.includes(id); return `<div class="person"><span>${n}</span><code>${id}</code><span class="verdict ${ok ? "ok" : "no"}">${ok ? "✓ answered" : "✗ ignored"}</span></div>`; }).join("") +
+      (ids.length ? "" : '<p class="redcheck" style="margin:6px 0 0">Empty list: Hermes answers no one. Safe, but not useful yet.</p>');
+  }
+  [["just you", "111111111"], ["the family team", "111111111,222222222,333333333"], ["empty", ""]].forEach(([t, v]) => { const b = document.createElement("button"); b.type = "button"; b.className = "chip"; b.textContent = t; b.onclick = () => { inp.value = v; draw(); }; $("s3Try").appendChild(b); });
+  inp.oninput = draw;
+  addReset(box, () => { inp.value = "111111111"; draw(); });
+  draw();
+})();
+
+// ---------- Part 4: setup, test, keep ----------
+(function steps() {
+  const box = document.querySelector('[data-stp="setup"]').closest(".activity");
+  const show = v => box.querySelectorAll("[data-stp]").forEach(p => p.hidden = p.dataset.stp !== v);
+  const set = AG.modes(box, "st", show);
+  addReset(box.querySelector("[data-stp]"), () => { set("setup"); show("setup"); });
+})();
+
+// ---------- Part 5: who replies in the group ----------
+(function group() {
+  const req = $("s5Req"), ex = $("s5Ex"), tx = $("s5Tx"), say = $("s5Say");
+  function draw() {
+    let lines = [AG.line(["ceo", at("@Production is size 5 in stock?")], { html: true })];
+    let msg;
+    if (!req.checked) {
+      lines.push(AG.line(["marketing", "Ooh, size 5! Shall I make a post about it?"]), AG.line(["production", "Yes: 2 in stock."]), AG.line(["operations", "I can ship it today."]), AG.line(["analyst", "Size 5 is our best seller this month."]));
+      msg = "Without require_mention, every bot answers every message. Four replies, four lots of tokens, and they may keep going.";
+    } else if (!ex.checked) {
+      lines.push(AG.line(["production", "Yes: 2 in stock."]), AG.line(["marketing", "(reads it quietly, ready to chip in)"]));
+      msg = "Only the tagged bot answers. Without exclusive_bot_mentions, the others may still treat it as their business.";
+    } else {
+      lines.push(AG.line(["production", "Yes: 2 in stock."]));
+      msg = "✓ Only Production answers. The others stay out of it, until they're tagged.";
+    }
+    tx.innerHTML = lines.join(""); say.textContent = msg;
+  }
+  req.onchange = ex.onchange = draw;
+  addReset(tx, () => { req.checked = false; ex.checked = false; draw(); });
+  draw();
+})();
+
+// ---------- Part 6: problem → fix ----------
+(function wrong() {
+  const items = [
+    ["<code>409 Conflict</code> when starting a gateway", "token", "Two gateways are using the same token. Give each bot its own."],
+    ["The bot never answers, and the log says “unauthorized user”", "list", "Your numeric ID isn't in TELEGRAM_ALLOWED_USERS. Add it, then restart the gateway."],
+    ["It answered yesterday, but not since the laptop slept", "service", "The gateway stops while the laptop sleeps. Check gateway status; keep the laptop awake, or move to a server (Lesson 12)."],
+    ["In the group, a bot ignores your message", "mention", "With require_mention on, @mention it (or reply to one of its messages)."],
+  ];
+  const opts = [["token", "One token per bot"], ["list", "Fix the allowed list"], ["service", "Check the service"], ["mention", "@mention it"]];
+  const rows = $("s6Rows"), say = $("s6Say");
+  let pick = {};
+  function draw() {
+    rows.innerHTML = items.map(([l, right, why], i) => {
+      const p = pick[i], cls = p ? (p === right ? " right" : " wrong") : "";
+      return `<div class="sortrow${cls}" style="grid-template-columns:1fr"><span>${l}</span><span class="seg">${opts.map(([k, t]) =>
+        `<button type="button" data-i="${i}" data-b="${k}" class="${p === k ? "on" : ""}">${t}</button>`).join("")}</span>${p ? `<span class="why">${p === right ? "✓" : "✗"} ${why}</span>` : ""}</div>`;
+    }).join("");
+    rows.querySelectorAll("button").forEach(b => b.onclick = () => { pick[b.dataset.i] = b.dataset.b; draw(); });
+    const n = Object.keys(pick).length, ok = items.filter((q, i) => pick[i] === q[1]).length;
+    say.hidden = n < items.length; say.classList.toggle("good", ok === items.length);
+    say.textContent = ok === items.length ? "✓ All 4 right." : `${ok} of 4 right. Tap another choice to change one.`;
+  }
+  addReset(rows, () => { pick = {}; draw(); });
+  draw();
+})();
+
+// ---------- Part 8: what you've really done ----------
+(function checks() {
+  const key = `${COURSE.id}-l9-checks`;
+  let saved = {}; try { saved = JSON.parse(localStorage.getItem(key) || "{}"); } catch (e) {}
+  document.querySelectorAll("#s8Checks input").forEach(c => {
+    c.checked = !!saved[c.dataset.k];
+    c.onchange = () => { saved[c.dataset.k] = c.checked; try { localStorage.setItem(key, JSON.stringify(saved)); } catch (e) {} };
+  });
+})();
+</script>
+</body>
+</html>

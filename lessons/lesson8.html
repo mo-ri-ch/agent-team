@@ -265,17 +265,18 @@ sudo usermod -aG docker $USER</code></pre>
     <section class="part" data-title="Out of the house">
       <h2>Out of the house</h2>
       <p class="say">Each bot now works in its own sandbox, sharing only the folders you chose. Tick what you've really done:</p>
-      <div class="activity checks" id="s9Checks">
+      <div class="activity" id="s9Checks"><div class="checks">
         <label><input type="checkbox" data-k="docker"> <code>docker run hello-world</code> works</label>
         <label><input type="checkbox" data-k="backend"> Every bot has <code>terminal.backend: docker</code></label>
         <label><input type="checkbox" data-k="shared"> Made one shared folder and mounted it</label>
         <label><input type="checkbox" data-k="caps"> Set memory caps that fit my laptop</label>
+        </div>
       </div>
       <p class="bot-say" data-bot="production">An order just came in, and you're at the market. How do I tell you?</p>
       <div class="open-question">
         <div>This leaves a question</div>
         <div class="big">Your team lives on your laptop. How do you reach it when you're out?</div>
-        <div>Lesson 9 answers it. (Coming soon.)</div>
+        <div><a href="lesson9.html">Lesson 9 answers it.</a></div>
       </div>
       <div class="mybiz" data-key="l8">For your business: which folders should each bot see? List them, and mark the ones two bots must share.</div>
       <p><button class="done-toggle" data-done="8">Mark lesson as done</button></p>

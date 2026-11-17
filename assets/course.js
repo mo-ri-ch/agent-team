@@ -53,7 +53,7 @@ const COURSE_LESSONS = [
   { n: 8, label: "8", step: "own computer", title: "A computer for each bot", file: "lesson8.html", ready: true, test: 9,
     summary: "Each bot works in its own sandbox (a Docker container), so it can't touch your files or the others'.",
     leaves: "Your team lives on your laptop. How do you reach it when you're out?" },
-  { n: 9, label: "9", step: "phone", title: "Reach it from your phone", file: "lesson9.html", ready: false,
+  { n: 9, label: "9", step: "phone", title: "Reach it from your phone", file: "lesson9.html", ready: true, test: 8,
     summary: "Connect your team to Telegram, so only you can message it from anywhere.",
     leaves: "It answers when you ask. Can it start work on its own?" },
   { n: 10, label: "10", step: "schedules", title: "Jobs on a schedule", file: "lesson10.html", ready: false,
