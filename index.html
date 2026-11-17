@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build an AI Team</title>
+<meta name="description" content="Build a team of AI agents that work together in one group chat, like a tiny company. Interactive lessons for beginners and teachers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Kalam:wght@400&family=Patrick+Hand&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem("notebook-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
+<link rel="stylesheet" href="https://mo-ri-ch.github.io/study-notebook-design/v1/style.css">
+<link rel="stylesheet" href="https://mo-ri-ch.github.io/study-notebook-design/v1/home.css">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+  .demo { margin-top: 18px; }
+  .demo .tx { min-height: 15.5em; align-content: start; }
+  .demo-why { margin-top: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="./">Build an AI Team</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <h1>Build your own <span class="swash">AI team</span>.</h1>
+        <p class="say">One agent does one thing at a time. A team of agents <b>splits the work, talks in one group chat and checks each other</b>, like a tiny company. You'll build one, free.</p>
+        <div class="actions">
+          <a class="btn primary" href="lessons/lesson1.html">Start Lesson 1</a>
+          <button data-note="needNote" aria-expanded="false" aria-controls="needNote">What you need</button>
+          <button data-note="howNote" aria-expanded="false" aria-controls="howNote">How to use</button>
+        </div>
+        <div class="need" id="needNote" hidden>
+          <button class="close" aria-label="Close">×</button>
+          <div class="cols">
+            <div>
+              <h3>Helps to know</h3>
+              <ul>
+                <li><span class="yes">✓</span> Basic Python: lists, loops, <code>if</code>, functions (from Lesson 2)</li>
+                <li><span class="yes">✓</span> A Google account, to run the code free in Colab</li>
+              </ul>
+            </div>
+            <div>
+              <h3>You don't need</h3>
+              <ul>
+                <li><span class="no">✗</span> Any money: every tool here is free</li>
+                <li><span class="no">✗</span> Any other course first. Lesson 1 starts with the basics.</li>
+                <li><span class="no">✗</span> A GPU</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="need blue" id="howNote" hidden>
+          <button class="close" aria-label="Close">×</button>
+          <div class="cols">
+            <div>
+              <h3>Learning</h3>
+              <ul>
+                <li><span class="yes">1</span> Go in order.</li>
+                <li><span class="yes">2</span> Guess before you click.</li>
+                <li><span class="yes">3</span> Play with every demo.</li>
+                <li><span class="yes">4</span> Take your own notes with the pen (P).</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Shortcuts</h3>
+              <ul>
+                <li><span class="yes">G</span> Guide me</li>
+                <li><span class="yes">P</span> Pen for notes</li>
+                <li><span class="yes">← →</span> Back / next</li>
+                <li><span class="yes">T</span> Big text</li>
+                <li><span class="yes">Esc</span> Stop pen / guide</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-side">
+        <p class="bot-say" data-bot="researcher" id="botLine">We're a team of three bots. Give us a job and watch us work it out in our group chat.</p>
+        <div class="activity demo" id="demo">
+          <div class="chips" id="jobs" role="group" aria-label="Pick a job"></div>
+          <div class="tx" id="chat" aria-live="polite"></div>
+          <p class="count" id="say" style="margin:8px 0 0"></p>
+          <div class="btnrow">
+            <button class="primary" id="next">Next message →</button>
+            <button id="play">▶ Play</button>
+            <button id="back" hidden>← Back</button>
+            <button id="again" hidden>↺ Start again</button>
+          </div>
+        </div>
+        <p class="note demo-why">These messages are examples, written for you. Later in the course you build bots that write their own.</p>
+      </div>
+    </section>
+
+    <h2 id="path">The path</h2>
+    <p class="path-intro">Each lesson ends with a question. The next lesson answers it.</p>
+    <ol class="path" id="pathList"></ol>
+  </main>
+  <footer class="site">Your progress is saved in this browser only.</footer>
+</div>
+
+<script src="assets/course.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/common.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/pen.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/home.js"></script>
+<script>
+// ---------- Watch the team work: a job goes into the group chat, the bots @mention each other ----------
+(function demo() {
+  const at = t => AG.esc(t).replace(/@(Researcher|Writer|Checker|You)/g, '<span class="at">@$1</span>');
+  const JOBS = [
+    { label: "A reel about a new app", steps: [
+      { add: [["you", "Make a 30-second reel about NoteNest, a new note-taking app. @Researcher start us off."]], say: "You post the job in the group chat and @mention the Researcher." },
+      { add: [["researcher", "Found 3 facts on NoteNest's site: notes turn into to-do lists, it works offline, ₹199 a month. @Writer over to you."]], say: "Only the Researcher can search the web. It posts the facts and hands over." },
+      { add: [["writer", "Script: “Messy notes? NoteNest turns them into to-do lists, even offline. Free to try!” @Checker please check."]], say: "The Writer turns the facts into a script, then asks the Checker." },
+      { add: [["checker", "“Free to try” isn't in the facts: it's ₹199 a month. @Writer please fix that line."]], say: "The Checker compares the script with the facts and finds a line that isn't true." },
+      { add: [["writer", "Fixed: “…even offline. Just ₹199 a month.” @You ready for you!"]], say: "The Writer fixes it and hands the reel script back to you. Three bots, one job, one mistake caught." },
+    ] },
+    { label: "A launch post", steps: [
+      { add: [["you", "We launch our free AI course on Monday. Write a LinkedIn post. @Writer go ahead."]], say: "This time you start with the Writer." },
+      { add: [["writer", "@Researcher what's in the course, and who is it for?"]], say: "The Writer needs facts first, so it asks the Researcher instead of guessing." },
+      { add: [["researcher", "From the course page: 7 lessons, for beginners, build a team of AI agents, free. @Writer"]], say: "The Researcher answers with facts from the course page." },
+      { add: [["writer", "Draft: “Free on Monday: 7 short lessons to build your own AI team. No experience needed.” @Checker"]], say: "The Writer drafts the post and passes it on." },
+      { add: [["checker", "Matches the facts: 7 lessons, free, for beginners. Looks good. @You it's ready."]], say: "Nothing to fix this time. The Checker passes it back to you." },
+    ] },
+  ];
+  const tx = document.getElementById("chat"), say = document.getElementById("say");
+  const btn = id => document.getElementById(id);
+  const steps = [];   // one step-through; picking a job swaps its steps in
+  const load = j => steps.splice(0, steps.length, ...JOBS[j].steps.map(s => ({ ...s, add: s.add.map(([w, t]) => [w, at(t)]) })));
+  load(0);
+  const ctl = AG.stepper({ tx, say, next: btn("next"), back: btn("back"), again: btn("again"), play: btn("play"), steps, html: true });
+  const pick = AG.chips(document.getElementById("jobs"), JOBS.map(j => j.label), i => { pick(i); load(i); ctl.restart(); });
+  pick(0);
+})();
+</script>
+</body>
+</html>

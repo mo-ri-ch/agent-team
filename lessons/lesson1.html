@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why a team?</title>
+<meta name="description" content="Lesson 1 of Build an AI Team: several agents, one role each, talking in one group chat. What a role is, what each bot reads, and when a team is worth it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Kalam:wght@400&family=Patrick+Hand&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem("notebook-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
+<link rel="stylesheet" href="https://mo-ri-ch.github.io/study-notebook-design/v1/style.css">
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body data-pen="blue">
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← Build an AI Team</a>
+    <span class="where">Lesson 1 of 7</span>
+  </header>
+
+  <main data-paged>
+    <div class="paged-head">
+      <h1>Why a team?</h1>
+      <div class="progress" aria-label="Lesson parts"></div>
+    </div>
+
+    <!-- 1 -->
+    <section class="part" data-title="✏️ Quick basics: an agent">
+      <h2>✏️ Quick basics: an agent</h2>
+      <p class="say">An <mark data-peek="LLM stands for large language model: a program trained on lots of text to guess the next word.">LLM</mark> can only write text. To make it <b>do</b> things, a small program reads what it writes. When the LLM writes <code>ACT:</code> and a request, the program does it and writes the result back into the text, on a <code>LOOK:</code> line. The LLM reads that and carries on.</p>
+      <div class="activity">
+        <div class="do"><span data-peek="These lines are written out for you, so you can step through them.">Step through it.</span> Watch who writes each line.</div>
+        <div class="tx" id="s1Tx"></div>
+        <p class="count" id="s1Say" style="margin:8px 0 0"></p>
+        <div class="btnrow">
+          <button class="primary" id="s1Next">Next step →</button>
+          <button id="s1Back" hidden>← Back</button>
+          <button id="s1Again" hidden>↺ Start again</button>
+        </div>
+      </div>
+      <p class="say">The LLM and the program together are an <mark>agent</mark>.<br><b class="eqbox">agent = LLM + a program that does what it asks</b></p>
+      <p class="hook">One agent can do a lot. Can it do a whole job alone?</p>
+    </section>
+
+    <!-- 2 -->
+    <section class="part" data-title="A company in a chat">
+      <h2>A company in a chat</h2>
+      <p class="say">Think of a small company. Each person has one role, and they all talk in one group chat. You can do the same with agents. Here we call each agent in the chat a <mark>bot</mark>. Writing <span class="at">@</span> and a bot's name asks that bot to reply next.</p>
+      <div class="activity">
+        <div class="do"><span data-peek="These messages are examples, written for this page. Later in the course you build bots that write their own.">Step through the chat.</span> Watch who does what.</div>
+        <div class="tx" id="s2Tx"></div>
+        <p class="count" id="s2Say" style="margin:8px 0 0"></p>
+        <div class="btnrow">
+          <button class="primary" id="s2Next">Next message →</button>
+          <button id="s2Play">▶ Play</button>
+          <button id="s2Back" hidden>← Back</button>
+          <button id="s2Again" hidden>↺ Start again</button>
+        </div>
+      </div>
+      <p class="say">Three bots, each doing one part, in one shared chat. That's a <mark>team</mark>.<br><b class="eqbox">team = bots with one role each + one shared chat</b></p>
+      <p class="hook">All three are the same kind of agent. So what makes the Writer a writer?</p>
+    </section>
+
+    <!-- 3 -->
+    <section class="part" data-title="What makes a role">
+      <h2>What makes a role</h2>
+      <p class="say">Each bot gets its own <mark>instructions</mark>: text, placed before the chat, that says what its job is. Each also gets its own <mark>tools</mark>: the things its program can do when asked. Only the Researcher has <code>search</code>, so only it can look things up.<br><b class="eqbox">role = instructions + tools</b></p>
+      <div class="activity">
+        <div class="roles">
+          <div class="role researcher"><h4>Researcher</h4><span class="k">instructions</span>Find facts. Always say where each fact came from.<span class="k">tools</span><code>search</code></div>
+          <div class="role writer"><h4>Writer</h4><span class="k">instructions</span>Write short reel scripts. Use only the facts in the chat.<span class="k">tools</span>none</div>
+          <div class="role checker"><h4>Checker</h4><span class="k">instructions</span>Compare the script with the facts. Point out every mismatch.<span class="k">tools</span>none</div>
+        </div>
+        <div class="do">Who should get each job?</div>
+        <div id="s3Rows"></div>
+        <p class="redcheck" id="s3Say" hidden></p>
+      </div>
+      <p class="hook">Every bot reads the chat. But does each one see the same thing?</p>
+    </section>
+
+    <!-- 4 -->
+    <section class="part" data-title="What each bot reads">
+      <h2>What each bot reads</h2>
+      <p class="say">Before a bot writes, it reads two things: its own instructions, which only it sees, and the whole chat so far.<br><b class="eqbox">a bot reads = its own instructions + the chat so far</b><br>The Writer replies third, so it reads its instructions and 2 messages: yours and the Researcher's.</p>
+      <div class="activity">
+        <div class="do">Pick a bot. See what it reads just before it writes.</div>
+        <div class="modes" role="tablist" aria-label="Which bot">
+          <button class="mode on" data-bot="researcher" role="tab" aria-selected="true">Researcher</button>
+          <button class="mode" data-bot="writer" role="tab" aria-selected="false">Writer</button>
+          <button class="mode" data-bot="checker" role="tab" aria-selected="false">Checker</button>
+        </div>
+        <div class="reads">
+          <div class="own" id="s4Own"></div>
+          <p class="shared-k">the shared chat</p>
+          <div class="tx" id="s4Tx"></div>
+        </div>
+        <p class="count" id="s4Say" style="margin:8px 0 0"></p>
+      </div>
+      <p class="hook">Count it on new chats.</p>
+    </section>
+
+    <section class="part" data-nonum data-title="✏️ Practice 1.1">
+      <h2>✏️ Practice 1.1</h2>
+      <p class="say">Remember:<br><b class="eqbox">a bot reads = its own instructions + the chat so far</b><br>Only a bot itself sees its instructions. Everyone sees every message.</p>
+      <div class="activity">
+        <div class="do"><span data-peek="Take a pen and paper, or use the ✎ pen on this page. Draw the chat as a list, one message per line.">Work each one out.</span> Type the answer, press Check.</div>
+        <div class="pq" data-ans="4" data-tol="0.1" data-hint="Count your message, then one reply from each bot." data-work="Your message: 1.<br>One reply from each of the 3 bots: 3.<br>1 + 3 = 4 messages.">
+          <div class="pq-q">A chat has you and <b>3 bots</b>. You post one message. Then each bot replies once, one after another. How many messages are in the chat now?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="3" data-tol="0.1" data-hint="The last bot reads everything posted before its turn. Its own reply isn't written yet." data-work="Before the 3rd bot's turn: your message, then the 1st and 2nd bots' replies.<br>3 messages.">
+          <div class="pq-q">Same chat. How many messages does the <b>3rd bot</b> read before it writes?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="350" data-tol="0.5" data-hint="Add the 3rd bot's own instructions to the 3 messages it reads. Not the other bots' instructions: it can't see those." data-work="Its own instructions: 50 words.<br>3 messages × 100 words = 300 words.<br>50 + 300 = 350 words.">
+          <div class="pq-q">Same chat. The instructions are <b>40</b>, <b>60</b> and <b>50</b> words long, for the 1st, 2nd and 3rd bot. Every message is <b>100</b> words. How many words does the 3rd bot read before it writes?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="6" data-tol="0.1" data-hint="Write the chat out in order: you, bot 1, bot 2, bot 3, you again, bot 1 again… Stop just before bot 2's second reply." data-work="You, bot 1, bot 2, bot 3: 4 messages.<br>You again, bot 1 again: 2 more.<br>4 + 2 = 6 messages before bot 2 writes again.">
+          <div class="pq-q">Same chat. Now you post a <b>second</b> message, and the bots reply again in the same order. How many messages does the <b>2nd bot</b> read before its second reply?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+      </div>
+      <p class="hook">More bots, more messages. Is a team always better?</p>
+    </section>
+
+    <!-- 5 -->
+    <section class="part" data-title="Team or solo?">
+      <h2>Team or solo?</h2>
+      <p class="say">Every reply from a bot is one more time the LLM writes, so it costs time and money. One agent answering a question writes once. A team of 3, each replying once, writes 3 times: about 3 times as long.</p>
+      <p class="say">A team is worth it when a job has parts that need different instructions or tools, or when one bot should check another's work. For a small, one-step job, one agent is better.</p>
+      <div class="activity">
+        <div class="do">Team or solo? Pick for each job.</div>
+        <div id="s5Rows"></div>
+        <p class="redcheck" id="s5Say" hidden></p>
+      </div>
+      <p class="hook">Quick check: did it all make sense?</p>
+    </section>
+
+    <!-- 6 -->
+    <section class="part" data-title="Lesson test">
+      <h2>Lesson 1 test</h2>
+      <p class="say">5 questions, one for each idea in this lesson. Answer them all right to pass. A wrong answer tells you why, and which page to look at again.</p>
+      <div class="test" data-test="1">
+        <div class="quiz" data-page="lesson1.html#1" data-topic="Quick basics: an agent" data-right="Right. The LLM only writes the request. The program does it and writes the result on a LOOK: line.">
+          <div class="q"><small>1. Predict</small>The LLM writes <code>ACT: search(NoteNest price)</code>. What happens next?</div>
+          <div class="options">
+            <button data-why="The LLM can only write text. Someone else has to do the search.">The LLM searches the web itself</button>
+            <button data-right>The program does the search and writes the result back</button>
+            <button data-why="An agent has a program that reads every ACT: line and does what it asks.">Nothing. It's only text.</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson1.html#3" data-topic="What makes a role" data-right="Right. A role is instructions + tools. A new job means new instructions, and here a new tool.">
+          <div class="q"><small>2. Apply</small>You want a new bot that makes thumbnail pictures for each reel. What do you give it?</div>
+          <div class="options">
+            <button data-right>Its own instructions, and a tool that makes pictures</button>
+            <button data-why="Its role comes from its instructions and tools. Without a picture tool, it can only write text about pictures.">Only a new name</button>
+            <button data-why="The other bots don't need anything new. The new bot needs its own instructions and tools.">New instructions for the Writer</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson1.html#4" data-topic="What each bot reads" data-right="Right. Your message and the first 3 bots' replies: 4 messages.">
+          <div class="q"><small>3. Count</small>You and <b>4 bots</b>. You post, then each bot replies once, in turn. How many messages does the <b>4th bot</b> read before it writes?</div>
+          <div class="options">
+            <button data-why="Don't forget your own message at the start.">3</button>
+            <button data-right>4</button>
+            <button data-why="Its own reply isn't written yet, so it can't read it.">5</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson1.html#4" data-topic="What each bot reads" data-right="Right. A bot never sees another bot's instructions. Only what is written in the chat is shared.">
+          <div class="q"><small>4. Spot the mistake</small>A friend says: “The Writer followed the Checker's instructions.” What's wrong?</div>
+          <div class="options">
+            <button data-why="Bots do read the whole chat. But instructions aren't in the chat.">Nothing. Every bot reads everything.</button>
+            <button data-right>The Writer can't see the Checker's instructions, only the chat</button>
+            <button data-why="The Checker does have instructions: they say what its job is. Only the Checker sees them.">The Checker has no instructions</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson1.html#6" data-topic="Team or solo?" data-right="Right. One step, no checking needed: one agent writes once and is done.">
+          <div class="q"><small>5. Decide</small>“Turn 5 km into miles.” Team or solo?</div>
+          <div class="options">
+            <button data-right>Solo: one small step</button>
+            <button data-why="A team means more writes, so more time and cost, with no parts to split.">A team of 3, to be safe</button>
+            <button data-why="It doesn't need research, writing and checking. It's one calculation.">A team: a researcher, a writer and a checker</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+      <p class="hook">What you still can't do.</p>
+    </section>
+
+    <!-- 7 -->
+    <section class="part" data-title="Your turn to build">
+      <h2>Your turn to build</h2>
+      <p class="say">So far, the messages were written for you. Next, you write the bots yourself, in Python, and make two of them talk.</p>
+      <p class="bot-say" data-bot="writer">I'd love to meet the Researcher properly. Can you build us?</p>
+      <div class="open-question">
+        <div>This leaves a question</div>
+        <div class="big">You've watched a team chat. Can you build two bots that talk, yourself?</div>
+        <div>Lesson 2 answers it. (Coming soon.)</div>
+      </div>
+      <p><button class="done-toggle" data-done="1">Mark lesson as done</button></p>
+    </section>
+  </main>
+</div>
+
+<nav class="pagebar" aria-label="Move between parts">
+  <div class="inner">
+    <button data-page-back>← Previous</button>
+    <span data-page-label></span>
+    <button class="primary" data-page-next>Next →</button>
+  </div>
+</nav>
+
+<script src="../assets/course.js"></script>
+<script src="../assets/practice.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/common.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/pen.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/guide.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const withAt = t => AG.esc(t).replace(/@(Researcher|Writer|Checker|You)/g, '<span class="at">@$1</span>');
+
+// ---------- Part 1: one agent, one round ----------
+AG.stepper({ tx: $("s1Tx"), say: $("s1Say"), next: $("s1Next"), back: $("s1Back"), again: $("s1Again"), steps: [
+  { add: [["you", "How much do 3 NoteNest plans cost a month?"]], say: "Your question. Press Next step." },
+  { add: [["llm", "ACT: search(NoteNest price)"]], say: "The LLM can't know the price, so it writes a request and stops." },
+  { add: [["prog", "LOOK: ₹199 a month"]], say: "The program does the search and writes the result back into the text." },
+  { add: [["llm", "ANSWER: 3 × ₹199 = ₹597 a month."]], say: "The LLM reads the result and answers. The search really happened: the program did it." },
+] });
+
+// ---------- Part 2: a team in a group chat ----------
+const CHAT = [
+  { add: [["you", withAt("Make this week's AI news reel. @Researcher start us off.")]], say: "You post the job and ask the Researcher to start." },
+  { add: [["researcher", withAt("Top story, from City News: Pune's buses now use an AI timetable. Waits are 14% shorter. @Writer")]], say: "The Researcher looks it up, posts the fact with its source, and asks the Writer to go next." },
+  { add: [["writer", withAt("Script: “Pune's buses got an AI timetable, and waits are 40% shorter!” @Checker")]], say: "The Writer turns the fact into a script, then asks the Checker." },
+  { add: [["checker", withAt("The script says 40%. The source says 14%. @Writer please fix it.")]], say: "The Checker compares the script with the fact and finds a wrong number." },
+  { add: [["writer", withAt("Fixed: “…and waits are 14% shorter!” @You ready.")]], say: "The Writer fixes it and hands it back to you. Each bot did one part of the job." },
+];
+AG.stepper({ tx: $("s2Tx"), say: $("s2Say"), next: $("s2Next"), back: $("s2Back"), again: $("s2Again"), play: $("s2Play"), steps: CHAT, html: true });
+
+// ---------- Part 3: who gets each job? ----------
+(function whoGetsIt() {
+  const BOTS = ["researcher", "writer", "checker"], NAME = { researcher: "Researcher", writer: "Writer", checker: "Checker" };
+  const JOBS = [   // [job, right bot, why]
+    ["Find out what people say about our app online", "researcher", "it needs to look things up, and only the Researcher has search."],
+    ["Turn 5 facts into a 30-second script", "writer", "writing scripts from the facts is the Writer's job."],
+    ["Make sure every number in the script matches the facts", "checker", "comparing the script with the facts is the Checker's job."],
+    ["Look up the app's price today", "researcher", "a fresh price needs a search, and only the Researcher has that tool."],
+    ["Make the script sound friendlier", "writer", "rewriting the script is writing, so it's the Writer's job."],
+  ];
+  const rows = $("s3Rows"), say = $("s3Say");
+  let pick = {};
+  function draw() {
+    rows.innerHTML = JOBS.map(([job, right, why], i) => {
+      const p = pick[i], cls = p ? (p === right ? " right" : " wrong") : "";
+      return `<div class="sortrow${cls}" style="grid-template-columns:1fr auto"><span>${job}</span><span class="seg">${BOTS.map(b =>
+        `<button type="button" data-i="${i}" data-b="${b}" class="${p === b ? "on" : ""}">${NAME[b]}</button>`).join("")}</span>${
+        p && p !== right ? `<span class="why">✗ The ${NAME[right]}: ${why}</span>` : p ? `<span class="why">✓ ${why[0].toUpperCase() + why.slice(1)}</span>` : ""}</div>`;
+    }).join("");
+    rows.querySelectorAll("button").forEach(b => b.onclick = () => { pick[b.dataset.i] = b.dataset.b; draw(); });
+    const n = Object.keys(pick).length, ok = JOBS.filter(([, r], i) => pick[i] === r).length;
+    say.hidden = n < JOBS.length;
+    say.classList.toggle("good", ok === JOBS.length);
+    say.textContent = ok === JOBS.length ? "✓ All 5 right. Search jobs go to the Researcher, because only it has the tool." : `${ok} of 5 right. Tap another name to change a pick.`;
+  }
+  addReset(rows, () => { pick = {}; draw(); });
+  draw();
+})();
+
+// ---------- Part 4: what each bot reads ----------
+(function whatItReads() {
+  const OWN = {
+    researcher: ["var(--note-orange)", "Find facts. Always say where each fact came from."],
+    writer: ["var(--note-pink)", "Write short reel scripts. Use only the facts in the chat."],
+    checker: ["var(--note-green)", "Compare the script with the facts. Point out every mismatch."],
+  };
+  const TURN = { researcher: 1, writer: 2, checker: 3 };   // how many messages are in the chat at its turn
+  const NAME = { researcher: "Researcher", writer: "Writer", checker: "Checker" };
+  const MSGS = CHAT.slice(0, 3).map(s => s.add[0]);
+  const own = $("s4Own"), tx = $("s4Tx"), say = $("s4Say");
+  function show(bot) {
+    own.style.background = OWN[bot][0];
+    own.innerHTML = `<span class="k">${NAME[bot]}'s own instructions (only it sees these)</span>${OWN[bot][1]}`;
+    const n = TURN[bot];
+    tx.innerHTML = MSGS.slice(0, n).map(l => AG.line(l, { html: true })).join("") +
+      `<div class="ln"><span class="who ${AG.WHO[bot][0]}">${NAME[bot]}</span><span class="txt count">✍️ writes next…</span></div>`;
+    const others = Object.keys(NAME).filter(b => b !== bot).map(b => NAME[b]).join(" and ");
+    say.textContent = `The ${NAME[bot]} reads its own instructions + ${n} message${n > 1 ? "s" : ""}. It never sees the ${others}'s instructions.`;
+  }
+  const set = AG.modes(document.querySelector("#s4Own").closest(".activity"), "bot", show);
+  addReset(own, () => { set("researcher"); show("researcher"); });
+  show("researcher");
+})();
+
+// ---------- Part 5: team or solo? ----------
+(function teamOrSolo() {
+  const JOBS = [   // [job, answer, why]
+    ["What's 18% of ₹2,400?", "solo", "one calculation: one agent writes once and is done."],
+    ["Research, write and fact-check a weekly AI news reel", "team", "three parts that need different instructions, and one checks another."],
+    ["Translate one caption into Hindi", "solo", "one small step. A team would only add more writes."],
+    ["Build a landing page: write the words, write the code, review both", "team", "different parts, and a reviewer should check the work."],
+    ["Reply “Thank you!” to a comment", "solo", "one tiny step, nothing to split or check."],
+  ];
+  const rows = $("s5Rows"), say = $("s5Say");
+  let pick = {};
+  function draw() {
+    rows.innerHTML = JOBS.map(([job, right, why], i) => {
+      const p = pick[i], cls = p ? (p === right ? " right" : " wrong") : "";
+      return `<div class="sortrow${cls}" style="grid-template-columns:1fr auto"><span>${job}</span><span class="seg">${["solo", "team"].map(b =>
+        `<button type="button" data-i="${i}" data-b="${b}" class="${p === b ? "on" : ""}">${b === "solo" ? "Solo" : "Team"}</button>`).join("")}</span>${
+        p ? `<span class="why">${p === right ? "✓" : "✗ " + (right === "solo" ? "Solo" : "Team") + ":"} ${why}</span>` : ""}</div>`;
+    }).join("");
+    rows.querySelectorAll("button").forEach(b => b.onclick = () => { pick[b.dataset.i] = b.dataset.b; draw(); });
+    const n = Object.keys(pick).length, ok = JOBS.filter(([, r], i) => pick[i] === r).length;
+    say.hidden = n < JOBS.length;
+    say.classList.toggle("good", ok === JOBS.length);
+    say.textContent = ok === JOBS.length ? "✓ All 5 right. Teams for jobs with different parts; solo for one quick step." : `${ok} of 5 right. Tap the other choice to change a pick.`;
+  }
+  addReset(rows, () => { pick = {}; draw(); });
+  draw();
+})();
+</script>
+</body>
+</html>

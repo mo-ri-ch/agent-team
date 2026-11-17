@@ -1,0 +1,207 @@
+/* course.css — small styles used only by this course (the notebook look comes from study-notebook-design). */
+
+
+/* Word choices */
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 12px; }
+.chip { font-family: var(--mono); font-weight: 600; padding: 4px 12px; border-radius: 20px; border-width: 1.5px; }
+.chip.on { background: var(--hl-yellow); color: var(--on-hl); }
+
+/* The text being written */
+.written {
+  font-family: var(--mono); font-size: 1.02rem; line-height: 1.5; min-height: 3.2em;
+  white-space: pre-wrap; word-break: break-word;
+  padding: 8px 12px; background: var(--paper); border: 2px solid var(--ink); border-radius: 8px;
+}
+.written .prompt { color: var(--pencil); }
+.written .new { background: var(--hl-yellow); color: var(--on-hl); border-radius: 3px; }
+.written .blank { display: inline-block; min-width: 3.5em; border-bottom: 2px dashed var(--ink); }
+.btnrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
+.count { font-family: var(--hand); color: var(--pencil); font-size: 1.05rem; }
+
+/* Red-pen check under an answer */
+.redcheck { font-family: var(--hand); color: var(--redpen); font-size: 1.12rem; line-height: 1.4; margin: 10px 0 0; }
+.redcheck b { color: var(--redpen); }
+
+/* Agent steps: think, act, look, answer */
+.steps { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 6px; }
+.steps li { display: grid; grid-template-columns: 5.6em 1fr; gap: 8px; align-items: baseline; font-size: 0.95rem; }
+.steps .k { font-family: var(--head); font-size: 1.05rem; }
+.steps .v { font-family: var(--mono); font-size: 0.88rem; word-break: break-word; }
+.steps li.new .v { background: var(--hl-yellow); color: var(--on-hl); border-radius: 3px; padding: 0 4px; }
+.redcheck.good, .redcheck.good b { color: var(--good); }
+
+/* A transcript: what the LLM, the program and you wrote, one line each */
+.tx { font-family: var(--mono); font-size: 0.9rem; line-height: 1.45; padding: 8px 10px; background: var(--paper); border: 2px solid var(--ink); border-radius: 8px; display: grid; gap: 4px; }
+.tx .ln { display: grid; grid-template-columns: 4.6em 1fr; gap: 8px; align-items: baseline; padding: 2px 4px; border-radius: 4px; word-break: break-word; }
+.tx .ln.new .txt { background: var(--hl-yellow); color: var(--on-hl); border-radius: 3px; padding: 0 3px; }
+.tx button.ln { font: inherit; text-align: left; background: none; border: 1.5px dashed transparent; color: var(--ink); cursor: pointer; }
+.tx button.ln:hover { border-color: var(--pencil); background: none; }
+.tx button.ln.picked { border-color: var(--ink); border-style: solid; }
+.tx button.ln.right { border-color: var(--good); border-style: solid; }
+.tx button.ln.wrong { border-color: var(--redpen); border-style: solid; }
+.who { font-family: var(--hand); font-size: 0.85rem; text-align: center; border-radius: 10px; padding: 0 4px; color: var(--ink); }
+.who.you { background: var(--note-yellow); }
+.who.llm { background: var(--note-blue); }
+.who.prog { background: var(--note-green); }
+.who.hide { background: none; border: 1px dashed var(--rule); color: var(--pencil); }
+.tool-run { font-family: var(--mono); font-size: 0.9rem; margin: 10px 0 0; padding: 6px 10px; border-left: 4px solid var(--good); background: var(--card); }
+
+/* The loop picture: Think → Act → Look, and the way out to Answer */
+.loopwrap { display: grid; grid-template-columns: 250px 1fr; gap: 16px; align-items: start; }
+@media (max-width: 640px) { .loopwrap { grid-template-columns: 1fr; } .loopwrap svg { max-width: 240px; margin: 0 auto; display: block; } }
+.loop svg { width: 100%; height: auto; overflow: visible; }
+.loop .node rect { fill: var(--card); stroke: var(--ink); stroke-width: 2; }
+.loop .node text { font-family: var(--head); font-size: 15px; fill: var(--ink); text-anchor: middle; dominant-baseline: middle; }
+.loop .node.on rect { fill: var(--hl-yellow); }
+.loop .node.on text { fill: var(--on-hl); }
+.loop .arr { fill: none; stroke: var(--pencil); stroke-width: 2; }
+.loop .arr.out { stroke-dasharray: 5 4; }
+.loop .round { font-family: var(--hand); font-size: 14px; fill: var(--redpen); text-anchor: middle; }
+
+/* Two-way switch (e.g. tool list off / on) */
+.modes { display: flex; margin: 0 0 14px; border: 2px solid var(--ink); border-radius: 10px; overflow: hidden; width: fit-content; max-width: 100%; }
+.mode { border: 0; border-radius: 0; padding: 6px 14px; font-size: 0.85rem; background: var(--card); }
+.mode + .mode { border-left: 2px solid var(--ink); }
+.mode.on { background: var(--ink); color: var(--paper); }
+.mode:hover:not(.on) { background: var(--hl-yellow); }
+
+/* A tool list, as the LLM sees it */
+.tools { font-family: var(--mono); font-size: 0.86rem; line-height: 1.45; padding: 8px 12px; margin: 0 0 10px; background: var(--note-green); color: var(--ink); border-radius: 4px 4px 8px 4px; }
+.tools .t-head { font-family: var(--hand); font-size: 1rem; margin-bottom: 2px; }
+.tools .t { display: block; }
+.tools .t b { font-weight: 600; }
+.tools .t-how { display: block; margin-top: 4px; color: var(--ink); opacity: 0.8; }
+.tx .ln.block .txt { white-space: pre-line; }
+
+/* Pick or sort buttons */
+.picks { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 0; }
+.picks button { font-family: var(--mono); font-size: 0.88rem; }
+.picks button.right { border-color: var(--good); background: var(--note-green); color: var(--ink); }
+.picks button.wrong { border-color: var(--redpen); }
+.qbig { font-size: 1.1rem; margin: 4px 0 0; }
+.sortrow { display: grid; grid-template-columns: 9em 1fr; gap: 10px; align-items: center; padding: 6px 0; border-bottom: 1px dashed var(--rule); }
+.sortrow code { font-size: 0.9rem; }
+.sortrow .seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.sortrow .seg button { font-size: 0.82rem; padding: 4px 10px; }
+.sortrow .seg button.on { background: var(--hl-yellow); color: var(--on-hl); }
+.sortrow.right .seg button.on { background: var(--note-green); color: var(--ink); border-color: var(--good); }
+.sortrow.wrong .seg button.on { border-color: var(--redpen); }
+.sortrow .why { grid-column: 1 / -1; font-size: 0.85rem; color: var(--pencil); }
+@media (max-width: 520px) { .sortrow { grid-template-columns: 8.2em 1fr; gap: 6px; padding: 4px 0; } .sortrow code { font-size: 0.78rem; } .sortrow .seg { flex-wrap: nowrap; } .sortrow .seg button { padding: 3px 8px; font-size: 0.78rem; } }
+.tx .ln.block .t-head, .tx .ln.block .t, .tx .ln.block .t-how { display: block; }
+.tx .ln.block .t-head { font-family: var(--hand); }
+
+/* Code with lines that light up (e.g. which lines are Think / Act / Look) */
+pre.mapcode code .cl { display: block; border-radius: 3px; padding: 0 4px; margin: 0 -4px; transition: background .2s; }
+pre.mapcode code .cl.on { background: color-mix(in srgb, var(--hl-yellow) 45%, transparent); }
+pre.mapcode code .cl.dim { opacity: 0.45; }
+@media (prefers-reduced-motion: reduce) { pre.mapcode code .cl { transition: none; } }
+.tryrow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-family: var(--mono); font-size: 0.92rem; margin: 6px 0; }
+.tryrow input { font: inherit; width: 11em; padding: 4px 8px; border: 2px solid var(--ink); border-radius: var(--radius, 8px); background: var(--paper); color: var(--ink); }
+.tryrow input.wide { width: min(100%, 24em); }
+.tx .ln.cut .txt { text-decoration: line-through; opacity: 0.5; }
+.who.a-orange { background: var(--note-orange); }
+.who.a-pink { background: var(--note-pink); }
+.checklist { list-style: none; padding: 0; margin: 0 0 10px; display: grid; gap: 4px; font-size: 0.95rem; }
+.checklist li { display: grid; grid-template-columns: 1.6em 1fr; align-items: baseline; }
+.checklist li.done { color: var(--pencil); text-decoration: line-through; }
+.checklist li.now { font-weight: 700; }
+.checklist li.changed:not(.done) { color: var(--redpen); }
+.meter { display: grid; grid-template-columns: 5em 1fr 7.5em; gap: 10px; align-items: center; font-size: 0.92rem; margin: 4px 0; }
+.meter .track { height: 16px; border: 1px solid var(--rule); border-radius: 3px; background: var(--paper); overflow: hidden; }
+.meter .fill { display: block; height: 100%; background: var(--hl-yellow); transition: width .3s; }
+.meter .fill.over { background: var(--hl-pink); }
+.meter .v { text-align: right; font-family: var(--mono); font-size: 0.85rem; }
+@media (prefers-reduced-motion: reduce) { .meter .fill { transition: none; } }
+.ask-box { margin: 10px 0 0; padding: 10px 12px; border: 2px dashed var(--ink); border-radius: 8px; background: var(--card); }
+.ask-box .q { font-family: var(--mono); font-size: 0.9rem; margin-bottom: 8px; }
+.tx .ln.faded { opacity: 0.3; }
+.tx .ln.danger .txt { background: color-mix(in srgb, var(--hl-pink) 55%, transparent); border-radius: 3px; padding: 0 3px; }
+.sortrow.two { grid-template-columns: 1fr auto; }
+@media (max-width: 520px) { .sortrow.two { grid-template-columns: 1fr; } }
+.tool-run.bad { border-left-color: var(--redpen); }
+.loop .arr.on { stroke: var(--pen); stroke-width: 3; }
+.loop-dot { fill: var(--pen); stroke: var(--paper); stroke-width: 2; }
+
+/* Gentle motion: new lines slide in, ticks pop, cut lines fade. Off for reduced motion. */
+@keyframes ln-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@keyframes tick-pop { 0% { transform: scale(0.4); } 70% { transform: scale(1.25); } 100% { transform: scale(1); } }
+.tx .ln.new { animation: ln-in .35s ease-out; }
+.checklist li.done span:first-child { display: inline-block; animation: tick-pop .35s ease-out; color: var(--good); }
+.tx .ln { transition: opacity .35s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .tx .ln.new, .checklist li.done span:first-child { animation: none; }
+  .tx .ln { transition: none; }
+}
+
+/* Team picture: a manager and three workers, with a dot carrying the work */
+.team svg { width: 100%; height: auto; overflow: visible; }
+.team .node rect { fill: var(--card); stroke: var(--ink); stroke-width: 2; }
+.team .node text { font-family: var(--head); font-size: 14px; fill: var(--ink); text-anchor: middle; dominant-baseline: middle; }
+.team .node.on rect { fill: var(--hl-yellow); }
+.team .node.on text { fill: var(--on-hl); }
+.team .arr { fill: none; stroke: var(--pencil); stroke-width: 2; stroke-dasharray: 4 4; }
+.team .arr.on { stroke: var(--pen); stroke-width: 3; stroke-dasharray: none; }
+@keyframes cut-fade { from { opacity: 1; } to { opacity: 0.3; } }
+@keyframes fold-away { to { opacity: 0; transform: scaleY(0.6); max-height: 0; } }
+.tx .ln.just-cut { animation: cut-fade .45s ease-out; }
+.tx .ln.folding { animation: fold-away .45s ease-in forwards; transform-origin: top; overflow: hidden; max-height: 3em; }
+@media (prefers-reduced-motion: reduce) { .tx .ln.just-cut, .tx .ln.folding { animation: none; } }
+@keyframes word-in { from { opacity: 0; } to { opacity: 1; } }
+.written .new, .steps li.new { animation: word-in .35s ease-out; }
+@media (prefers-reduced-motion: reduce) { .written .new, .steps li.new { animation: none; } }
+
+/* Lesson 3: the two blanks a pattern fills in */
+.g1, .g2 { color: var(--on-hl); border-radius: 3px; padding: 0 2px; }
+.g1 { background: var(--hl-blue); }
+.g2 { background: var(--hl-pink); }
+.gn { font-size: 0.75em; color: var(--code-comment); vertical-align: super; margin-left: 1px; }
+@media (max-width: 480px) { .gc { display: none; } }
+/* Numbered blanks ① ②: small round badges, so they read the same in every font */
+.gb { display: inline-block; min-width: 1.35em; height: 1.35em; line-height: 1.35em; border-radius: 50%; padding: 0;
+      text-align: center; font-family: var(--body); font-size: 0.72em; font-weight: 700; vertical-align: 0.15em; margin: 0 1px; }
+/* Lesson 3: which fake replies have been used */
+.rep { display: inline-block; border: 1px solid var(--pencil); border-radius: 999px; padding: 0 8px; font-size: 0.85em; margin-right: 2px; }
+.rep.done { background: var(--hl-blue); color: var(--on-hl); border-color: transparent; }
+.tx .ln.waiting { opacity: 0.4; }
+/* Phones: a little smaller, so conversation lines wrap less */
+@media (max-width: 600px) { .tx { font-size: 0.82rem; padding: 6px 6px; } .tx .ln { grid-template-columns: 4.4em 1fr; gap: 6px; } }
+/* A whole round (LLM's THINK and ACT, and the program's LOOK) */
+.who.round { background: none; border: 1px solid var(--pencil); color: var(--pencil); }
+.keep-tag { font-family: var(--body); font-size: 0.75em; color: var(--good); margin-left: 6px; white-space: nowrap; }
+.keep-tag.no { color: var(--pencil); }
+
+/* The team */
+.bot-face .bot-tool { stroke: var(--pen); }
+.who.a-green { background: var(--note-green); }
+.who.a-note { background: none; border: 1px dashed var(--pencil); }
+.tx .ln.instr .txt { font-style: italic; color: var(--pencil); }
+.tx .ln.dim { opacity: 0.4; }
+.at { font-weight: 700; color: var(--pen); }
+
+/* Role cards: name, instructions, tools */
+.roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 0 12px; }
+@media (max-width: 640px) { .roles { grid-template-columns: 1fr; } }
+.role { padding: 8px 10px; border-radius: 4px 4px 10px 4px; color: var(--ink); font-size: 0.88rem; line-height: 1.4; }
+.role.researcher { background: var(--note-orange); } .role.writer { background: var(--note-pink); } .role.checker { background: var(--note-green); }
+.role h4 { font-family: var(--head); font-size: 1.1rem; margin: 0 0 4px; }
+.role .k { font-family: var(--hand); display: block; margin-top: 4px; }
+.role code { font-size: 0.85em; }
+
+/* What one bot reads: its own note, then the shared chat */
+.reads { display: grid; gap: 8px; }
+.reads .own { font-family: var(--mono); font-size: 0.86rem; padding: 6px 10px; border-radius: 4px; color: var(--ink); }
+.reads .own .k { font-family: var(--hand); display: block; font-size: 0.95rem; }
+.reads .shared-k { font-family: var(--hand); color: var(--pencil); font-size: 0.95rem; margin: 0 0 -4px; }
+.tx .ln { grid-template-columns: 6.4em 1fr; }
+@media (max-width: 520px) { .tx .ln { grid-template-columns: 5.6em 1fr; } .who { font-size: 0.78rem; } }
+.roles .role { padding: 6px 10px; font-size: 0.84rem; }
+#s3Rows .sortrow, #s5Rows .sortrow { padding: 4px 0; }
+@media (max-width: 640px) {
+  .roles { gap: 6px; }
+  .roles .role { font-size: 0.8rem; padding: 4px 8px; }
+  .role h4 { display: inline; font-size: 1rem; margin-right: 4px; }
+  .role .k { display: inline; margin: 0 4px 0 6px; }
+  .role .k:first-of-type { display: none; }
+  #s3Rows .sortrow, #s5Rows .sortrow { grid-template-columns: 1fr !important; gap: 4px; }
+}
