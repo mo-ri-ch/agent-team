@@ -43,7 +43,7 @@ const COURSE_LESSONS = [
     summary: "Install Hermes Agent and pick a model: free on your own laptop, or a cheap one online.",
     leaves: "One agent runs. How do you make it a team?" },
   { n: 7, label: "7", step: "your team", title: "Your team of bots", file: "lesson7.html", ready: false,
-    summary: "Hire Amal Designers' team in Bot Mode: named bots, each with its own role, model, memory and skills.",
+    summary: "Hire Amal Designers' team in Bot Mode: Marketing, Production, Operations and an Analyst, each with its own role, model, memory and skills.",
     leaves: "Your bots share one computer. What if one deletes another's files?" },
   { n: 8, label: "8", step: "own computer", title: "A computer for each bot", file: "lesson8.html", ready: false,
     summary: "Each bot works in its own sandbox (a Docker container), so it can't touch your files or the others'.",
@@ -62,13 +62,16 @@ const COURSE_LESSONS = [
     leaves: null },
 ];
 
-// ---------- The team: sticky notes with faces. <p class="bot-say" data-bot="marketer">Hi!</p> ----------
+// ---------- The team: sticky notes with faces. <p class="bot-say" data-bot="marketing">Hi!</p> ----------
 // The running story: you are the CEO of Amal Designers (handmade dresses for kids under 10).
-// researcher (orange, a magnifying glass) · marketer (pink, a pencil) · support (green, a chat bubble) · you (yellow)
+// Each bot supports a real person: marketing (pink, a pencil) for the sister who posts on Instagram ·
+// production (orange, a needle) for Amma, who sews and sets prices · operations (green, a parcel): packing and courier ·
+// analyst (blue, a chart) for the CEO · you (yellow)
 const BOT_LOOK = {
-  researcher: { name: "Researcher", note: "var(--note-orange)", extra: '<circle cx="56" cy="38" r="4.5" class="bot-tool"/><path d="M59.5 41.5 L63 45" class="bot-tool"/>' },
-  marketer: { name: "Marketer", note: "var(--note-pink)", extra: '<path d="M54 46 L62 34" class="bot-tool"/><path d="M54 46 L53 49 L56 47" class="bot-tool"/>' },
-  support: { name: "Support", note: "var(--note-green)", extra: '<path d="M53 33 H64 V41 H58 L55 44 V41 H53 Z" class="bot-tool"/>' },
+  marketing: { name: "Marketing", note: "var(--note-pink)", extra: '<path d="M54 46 L62 34" class="bot-tool"/><path d="M54 46 L53 49 L56 47" class="bot-tool"/>' },
+  production: { name: "Production", note: "var(--note-orange)", extra: '<path d="M55 47 L63 33" class="bot-tool"/><ellipse cx="62" cy="35" rx="1.2" ry="2.2" class="bot-tool"/>' },
+  operations: { name: "Operations", note: "var(--note-green)", extra: '<rect x="53" y="36" width="11" height="9" class="bot-tool"/><path d="M53 39 H64 M58.5 36 V39" class="bot-tool"/>' },
+  analyst: { name: "Analyst", note: "var(--note-blue)", extra: '<path d="M54 46 V40 M58 46 V36 M62 46 V32" class="bot-tool"/>' },
   you: { name: "You", note: "var(--note-yellow)", extra: "" },
 };
 function botSvg(kind) {
@@ -99,7 +102,7 @@ function setupMyBiz() {
 
 function setupBots() {
   document.querySelectorAll("p.bot-say").forEach(p => {
-    const kind = p.dataset.bot || "researcher";
+    const kind = p.dataset.bot || "marketing";
     const box = document.createElement("div");
     box.className = "neo";
     box.innerHTML = botSvg(kind);
@@ -118,7 +121,7 @@ window.AG = (function () {
   // Who wrote a line: the tag's colour class and its label
   const WHO = {
     you: ["you", "you"], llm: ["llm", "LLM"], prog: ["prog", "program"], human: ["you", "person"],
-    ceo: ["you", "you (CEO)"], researcher: ["a-orange", "Researcher"], marketer: ["a-pink", "Marketer"], support: ["a-green", "Support"],
+    ceo: ["you", "you (CEO)"], marketing: ["a-pink", "Marketing"], production: ["a-orange", "Production"], operations: ["a-green", "Operations"], analyst: ["a-blue", "Analyst"],
     instr: ["a-note", "instructions"],
     round: ["round", "round"],
   };

@@ -7,11 +7,11 @@ def post(who, text):
     chat.append({"who": who, "text": text})
     print(f"{who}: {text}")
 
-BOTS = ["Researcher", "Marketer", "Support"]
+BOTS = ["Marketing", "Production", "Operations"]
 INSTRUCTIONS = {
-    "Researcher": "Find kids' fashion trends. Say where each fact came from.",
-    "Marketer": "Write Instagram captions from the facts in the chat.",
-    "Support": "Check sizes and prices against the catalogue.",
+    "Marketing": "Plan Instagram posts and captions for Amal Designers. Use only facts in the chat.",
+    "Production": "Check sizes, stock and prices. Catalogue: pastel party frock, sizes 1 to 8 years, ₹1,450.",
+    "Operations": "Check packing and shipping. Shipping takes 3 days to most of India.",
 }
 
 def text_for(name):
@@ -24,10 +24,10 @@ def text_for(name):
 # Fake LLM replies for each bot, in order. A fresh copy for each run.
 def fresh_replies():
     return {
-        "Researcher": ["Pastel tulle frocks are big for birthdays (from 3 kids' shops). @Marketer"],
-        "Marketer": ["Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years.” @Support please check.",
-                     "Fixed: “…Sizes 1 to 8 years.” @CEO ready to post."],
-        "Support": ["The catalogue says sizes 1 to 8 years, not 12. @Marketer"],
+        "Marketing": ["Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years. Ships in 2 days!” @Production please check.",
+                      "Fixed: “…Sizes 1 to 8 years. Ships in 3 days.” @CEO ready for your sister to post."],
+        "Production": ["Sizes are 1 to 8 years, not 12. @Operations please check the shipping."],
+        "Operations": ["Shipping takes 3 days, not 2. @Marketing"],
     }
 
 def fake_llm(name, text):
@@ -42,7 +42,7 @@ def by_mentions(text):
             names.append(name)
     return names
 
-print(by_mentions("@Support please check."))
+print(by_mentions("@Production please check."))
 
 # Way 2: a coordinator reads the latest message and names who replies next.
 # It is an LLM too, so it costs one write each time.
@@ -66,13 +66,13 @@ def run_chat(task, router, round_limit=5):
     return "Stopped: the round limit was reached."
 
 replies = fresh_replies()
-print(run_chat("Plan a post for the pastel frock. @Researcher", by_mentions))
+print(run_chat("Plan a post for the pastel frock. @Marketing", by_mentions))
 print("LLM writes:", len(calls))
 
 # The same job with a coordinator: start a fresh chat and count again
 chat.clear()
 calls.clear()
 replies = fresh_replies()
-coordinator_replies = ["Researcher", "Marketer", "Support", "Marketer", "CEO"]
-print(run_chat("Plan a post for the pastel frock. @Researcher", by_coordinator))
+coordinator_replies = ["Marketing", "Production", "Operations", "Marketing", "CEO"]
+print(run_chat("Plan a post for the pastel frock. @Marketing", by_coordinator))
 print("LLM writes:", len(calls))

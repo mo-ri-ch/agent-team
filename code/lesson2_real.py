@@ -8,7 +8,7 @@ from transformers import pipeline   # a ready-made way to load a model and use i
 model = pipeline("text-generation", model="Qwen/Qwen2.5-1.5B-Instruct",
                  device=0 if torch.cuda.is_available() else -1)
 
-NAMES = ["CEO", "Researcher", "Marketer"]
+NAMES = ["CEO", "Marketing", "Production"]
 
 def real_llm(text):
     # The model gets one message: all the text the bot reads.
@@ -25,11 +25,8 @@ def real_llm(text):
         kept.append(line.strip())
     return " ".join(kept).strip()
 
-# The Researcher has no search tool yet, so tell it not to make up facts
-researcher["instructions"] = "You are the Researcher at Amal Designers, a kids' dress brand. Suggest one idea for the post in one sentence. You can't look things up, so never make up facts or prices."
-
 # Start a new chat, and give both bots the real LLM
 chat.clear()   # empty the list
-researcher["llm"] = real_llm
-marketer["llm"] = real_llm
-print(run_chat("Write a caption for the new pastel party frock.", [researcher, marketer]))
+marketing["llm"] = real_llm
+production["llm"] = real_llm
+print(run_chat("Write a caption for the new pastel party frock.", [marketing, production]))

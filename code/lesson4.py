@@ -10,9 +10,9 @@ def show_board():
         lines.append(f'{t["id"]}. {t["task"]} | {t["owner"]} | {t["status"]}')
     return "\n".join(lines)
 
-add_task("Find this week's trend", "Researcher")
-add_task("Write the caption", "Marketer")
-add_task("Check sizes and price", "Support")
+add_task("Write the post", "Marketing")
+add_task("Check sizes and stock", "Production")
+add_task("Book the courier", "Operations")
 print(show_board())
 
 # The chat, as before
@@ -22,11 +22,11 @@ def post(who, text):
     chat.append({"who": who, "text": text})
     print(f"{who}: {text}")
 
-BOTS = ["Researcher", "Marketer", "Support"]
+BOTS = ["Marketing", "Production", "Operations"]
 INSTRUCTIONS = {
-    "Researcher": "Find kids' fashion trends. When done, write: HANDOFF to Marketer: what you found",
-    "Marketer": "Write the caption. When done, write: HANDOFF to Support: what to check",
-    "Support": "Check sizes and prices. When done, write: HANDOFF to CEO: your answer",
+    "Marketing": "Write the Instagram post. When done, write: HANDOFF to Production: what to check",
+    "Production": "Check sizes and stock. Catalogue: pastel frock, sizes 1 to 8 years, 6 ready on Friday. When done, write: HANDOFF to Operations: what is ready",
+    "Operations": "Book the courier. When done, write: HANDOFF to CEO: what you booked",
 }
 
 # What a bot reads now: its instructions, the board, and only the last few messages
@@ -64,9 +64,9 @@ def handoff(name, reply):
 
 # Fake LLM replies
 replies = {
-    "Researcher": ["Pastel tulle frocks are big for birthdays (from 3 kids' shops).\nHANDOFF to Marketer: pastel tulle, birthdays"],
-    "Marketer": ["Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 8 years.”\nHANDOFF to Support: check sizes 1 to 8"],
-    "Support": ["The catalogue says sizes 1 to 8 years, ₹1,450. All correct.\nHANDOFF to CEO: ready to post"],
+    "Marketing": ["Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 8 years.”\nHANDOFF to Production: check sizes 1 to 8"],
+    "Production": ["Sizes 1 to 8 are right. 6 frocks ready on Friday.\nHANDOFF to Operations: 6 frocks, Friday"],
+    "Operations": ["Courier pickup booked for Saturday, 4 PM.\nHANDOFF to CEO: pickup Saturday 4 PM"],
 }
 
 def fake_llm(name, text):
@@ -84,5 +84,5 @@ def run(first, turn_limit=6):
             return "Waiting for the CEO."
     return "Stopped: the turn limit was reached."
 
-print(run("Researcher"))
+print(run("Marketing"))
 print(show_board())

@@ -30,7 +30,7 @@
       <h2>Taking turns wastes turns</h2>
       <p class="say">With bots taking turns in a fixed order, every bot writes after every message, even when it has nothing to add. Each of those writes is one more time an LLM runs: more waiting and more cost.</p>
       <div class="activity">
-        <div class="do"><span data-peek="These messages are examples, written for this page.">Step through.</span> A customer question only Support can answer.</div>
+        <div class="do"><span data-peek="These messages are examples, written for this page.">Step through.</span> A customer question only Production can answer.</div>
         <div class="tx" id="s1Tx" style="min-height:10em;align-content:start"></div>
         <p class="count" id="s1Say" style="margin:8px 0 0"></p>
         <div class="btnrow">
@@ -49,7 +49,7 @@
       <p class="say">Whoever writes a message names who should answer, with <span class="at">@</span> and the name. The program reads the message, finds the names, and only those bots reply. If no bot is named, the chat waits for the CEO.<br><b class="eqbox">next = the bots @mentioned</b><br>Finding names is plain Python, so deciding costs no LLM writes.</p>
       <div class="activity">
         <div class="do">Write a message. See who replies next.</div>
-        <div class="tryrow"><input id="s2In" class="wide" type="text" value="@Support is size 5 in stock?" aria-label="A message"></div>
+        <div class="tryrow"><input id="s2In" class="wide" type="text" value="@Production is size 5 in stock?" aria-label="A message"></div>
         <div class="chips" id="s2Bots" aria-live="polite"></div>
         <p class="count" id="s2Say" style="margin:4px 0 0"></p>
         <div class="chips" id="s2Try"><span class="count" style="align-self:center">Try:</span></div>
@@ -80,13 +80,13 @@
       <p class="say">Remember:<br><b class="eqbox">fixed order: every bot writes, needed or not</b><br><b class="eqbox">next = the bots @mentioned</b> (no LLM writes to decide)<br><b class="eqbox">coordinator writes = messages in the chat</b></p>
       <div class="activity">
         <div class="do"><span data-peek="Take a pen and paper, or use the ✎ pen on this page. List the messages, one per line.">Work each one out.</span> Type the answer, press Check.</div>
-        <div class="pq" data-ans="2" data-tol="0.1" data-hint="Count the bots named with @." data-work="@Marketer and @Support are named. 2 bots reply.">
-          <div class="pq-q">The CEO writes: “New frock photos are up. @Marketer @Support take a look.” How many bots reply next?</div>
+        <div class="pq" data-ans="2" data-tol="0.1" data-hint="Count the bots named with @." data-work="@Marketing and @Production are named. 2 bots reply.">
+          <div class="pq-q">The CEO writes: “New frock photos are up. @Marketing @Production take a look.” How many bots reply next?</div>
           <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
           <div class="pq-fb" aria-live="polite"></div>
         </div>
         <div class="pq" data-ans="4" data-tol="0.1" data-hint="In a fixed order, all the bots write. How many were needed?" data-work="5 bots write, 1 was needed.<br>5 − 1 = 4 wasted writes.">
-          <div class="pq-q"><b>5</b> bots take turns in a fixed order. A message needs only the Researcher. How many writes are wasted?</div>
+          <div class="pq-q"><b>5</b> bots take turns in a fixed order. A message needs only Production. How many writes are wasted?</div>
           <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
           <div class="pq-fb" aria-live="polite"></div>
         </div>
@@ -165,7 +165,7 @@
           <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
           <div class="pq-fb" aria-live="polite"></div>
         </div>
-        <div class="pq" data-ans="3" data-tol="0.1" data-hint="One bot is named each round. How many rounds run?" data-work="Round 1: Support thanks. Round 2: Marketer thanks back. Round 3: Support again.<br>The limit is 3, so 3 replies, then the chat waits for the CEO.">
+        <div class="pq" data-ans="3" data-tol="0.1" data-hint="One bot is named each round. How many rounds run?" data-work="Round 1: Operations thanks. Round 2: Marketing thanks back. Round 3: Operations again.<br>The limit is 3, so 3 replies, then the chat waits for the CEO.">
           <div class="pq-q">Two bots keep thanking each other, each @mentioning the other. Round limit <b>3</b>. How many thank-you replies are posted?</div>
           <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
           <div class="pq-fb" aria-live="polite"></div>
@@ -176,7 +176,7 @@
           <div class="pq-fb" aria-live="polite"></div>
         </div>
         <div class="pq" data-ans="5" data-tol="0.1" data-hint="Each round, one bot is named, so one reply. Count the CEO's message too." data-work="The CEO's message: 1.<br>Round limit 4, one reply per round: 4.<br>1 + 4 = 5 messages.">
-          <div class="pq-q">The CEO writes “@Researcher thanks!”. Then the Researcher and the Marketer keep thanking each other, each naming the other. Round limit <b>4</b>. How many messages are in the chat at the end, counting the CEO's?</div>
+          <div class="pq-q">The CEO writes “@Operations thanks!”. Then Operations and Marketing keep thanking each other, each naming the other. Round limit <b>4</b>. How many messages are in the chat at the end, counting the CEO's?</div>
           <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
           <div class="pq-fb" aria-live="polite"></div>
         </div>
@@ -209,11 +209,11 @@ def post(who, text):
     chat.append({"who": who, "text": text})
     print(f"{who}: {text}")
 
-BOTS = ["Researcher", "Marketer", "Support"]
+BOTS = ["Marketing", "Production", "Operations"]
 INSTRUCTIONS = {
-    "Researcher": "Find kids' fashion trends. Say where each fact came from.",
-    "Marketer": "Write Instagram captions from the facts in the chat.",
-    "Support": "Check sizes and prices against the catalogue.",
+    "Marketing": "Plan Instagram posts and captions for Amal Designers. Use only facts in the chat.",
+    "Production": "Check sizes, stock and prices. Catalogue: pastel party frock, sizes 1 to 8 years, ₹1,450.",
+    "Operations": "Check packing and shipping. Shipping takes 3 days to most of India.",
 }
 
 def text_for(name):
@@ -226,10 +226,10 @@ def text_for(name):
 <span class="c"># Fake LLM replies for each bot, in order. A fresh copy for each run.</span>
 def fresh_replies():
     return {
-        "Researcher": ["Pastel tulle frocks are big for birthdays (from 3 kids' shops). @Marketer"],
-        "Marketer": ["Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years.” @Support please check.",
-                     "Fixed: “…Sizes 1 to 8 years.” @CEO ready to post."],
-        "Support": ["The catalogue says sizes 1 to 8 years, not 12. @Marketer"],
+        "Marketing": ["Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years. Ships in 2 days!” @Production please check.",
+                      "Fixed: “…Sizes 1 to 8 years. Ships in 3 days.” @CEO ready for your sister to post."],
+        "Production": ["Sizes are 1 to 8 years, not 12. @Operations please check the shipping."],
+        "Operations": ["Shipping takes 3 days, not 2. @Marketing"],
     }
 
 def fake_llm(name, text):
@@ -244,7 +244,7 @@ def by_mentions(text):
             names.append(name)
     return names
 
-print(by_mentions("@Support please check."))
+print(by_mentions("@Production please check."))
 
 <span class="c"># Way 2: a coordinator reads the latest message and names who replies next.</span>
 <span class="c"># It is an LLM too, so it costs one write each time.</span>
@@ -268,32 +268,32 @@ def run_chat(task, router, round_limit=5):
     return "Stopped: the round limit was reached."
 
 replies = fresh_replies()
-print(run_chat("Plan a post for the pastel frock. @Researcher", by_mentions))
+print(run_chat("Plan a post for the pastel frock. @Marketing", by_mentions))
 print("LLM writes:", len(calls))
 
 <span class="c"># The same job with a coordinator: start a fresh chat and count again</span>
 chat.clear()
 calls.clear()
 replies = fresh_replies()
-coordinator_replies = ["Researcher", "Marketer", "Support", "Marketer", "CEO"]
-print(run_chat("Plan a post for the pastel frock. @Researcher", by_coordinator))
+coordinator_replies = ["Marketing", "Production", "Operations", "Marketing", "CEO"]
+print(run_chat("Plan a post for the pastel frock. @Marketing", by_coordinator))
 print("LLM writes:", len(calls))</code></pre>
       <div class="run-area">
         <button class="run-code" type="button" aria-expanded="false">▶ Run</button>
         <div class="terminal" hidden><div class="term-bar">Terminal</div><pre class="term-out"><span class="prompt">$ python lesson3.py</span>
-['Support']
-CEO: Plan a post for the pastel frock. @Researcher
-Researcher: Pastel tulle frocks are big for birthdays (from 3 kids' shops). @Marketer
-Marketer: Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years.” @Support please check.
-Support: The catalogue says sizes 1 to 8 years, not 12. @Marketer
-Marketer: Fixed: “…Sizes 1 to 8 years.” @CEO ready to post.
+['Production']
+CEO: Plan a post for the pastel frock. @Marketing
+Marketing: Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years. Ships in 2 days!” @Production please check.
+Production: Sizes are 1 to 8 years, not 12. @Operations please check the shipping.
+Operations: Shipping takes 3 days, not 2. @Marketing
+Marketing: Fixed: “…Sizes 1 to 8 years. Ships in 3 days.” @CEO ready for your sister to post.
 Waiting for the CEO.
 LLM writes: 4
-CEO: Plan a post for the pastel frock. @Researcher
-Researcher: Pastel tulle frocks are big for birthdays (from 3 kids' shops). @Marketer
-Marketer: Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years.” @Support please check.
-Support: The catalogue says sizes 1 to 8 years, not 12. @Marketer
-Marketer: Fixed: “…Sizes 1 to 8 years.” @CEO ready to post.
+CEO: Plan a post for the pastel frock. @Marketing
+Marketing: Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years. Ships in 2 days!” @Production please check.
+Production: Sizes are 1 to 8 years, not 12. @Operations please check the shipping.
+Operations: Shipping takes 3 days, not 2. @Marketing
+Marketing: Fixed: “…Sizes 1 to 8 years. Ships in 3 days.” @CEO ready for your sister to post.
 Waiting for the CEO.
 LLM writes: 9</pre></div>
       </div>
@@ -309,11 +309,11 @@ LLM writes: 9</pre></div>
       <h2>Lesson 3 test</h2>
       <p class="say">5 questions, one for each idea in this lesson. Answer them all right to pass. A wrong answer tells you why, and which page to look at again.</p>
       <div class="test" data-test="3">
-        <div class="quiz" data-page="lesson3.html#2" data-topic="Way 1: @mentions" data-right="Right. Only Support is named, so only Support replies.">
-          <div class="q"><small>1. Predict</small>With @mentions, the Marketer writes: “Caption ready. @Support please check the sizes.” Who replies next?</div>
+        <div class="quiz" data-page="lesson3.html#2" data-topic="Way 1: @mentions" data-right="Right. Only Production is named, so only Production replies.">
+          <div class="q"><small>1. Predict</small>With @mentions, Marketing writes: “Caption ready. @Production please check the sizes.” Who replies next?</div>
           <div class="options">
             <button data-why="With @mentions, only the bots named reply.">Every bot</button>
-            <button data-right>Only Support</button>
+            <button data-right>Only Production</button>
             <button data-why="A bot is named, so the chat goes on. It waits for the CEO only when no bot is named.">No one: it waits for the CEO</button>
           </div>
           <div class="feedback"></div>
@@ -345,10 +345,10 @@ LLM writes: 9</pre></div>
           </div>
           <div class="feedback"></div>
         </div>
-        <div class="quiz" data-page="lesson3.html#9" data-topic="A real coordinator" data-right="Right. “support” is in small letters, so the exact name “Support” isn't found. No bot: wait for the CEO.">
-          <div class="q"><small>5. Predict</small>The real coordinator answers: <code>maybe support?</code> What does the program do?</div>
+        <div class="quiz" data-page="lesson3.html#9" data-topic="A real coordinator" data-right="Right. “production” is in small letters, so the exact name “Production” isn't found. No bot: wait for the CEO.">
+          <div class="q"><small>5. Predict</small>The real coordinator answers: <code>maybe production?</code> What does the program do?</div>
           <div class="options">
-            <button data-why="The program looks for the name spelled exactly, with a capital S.">Support replies</button>
+            <button data-why="The program looks for the name spelled exactly, with a capital P.">Production replies</button>
             <button data-right>No bot is found, so it waits for the CEO</button>
             <button data-why="It doesn't ask again. If no name is found, it waits for the CEO.">It asks the coordinator again</button>
           </div>
@@ -362,7 +362,7 @@ LLM writes: 9</pre></div>
     <section class="part" data-title="A long chat">
       <h2>A long chat</h2>
       <p class="say">Your bots now pass work to the right teammate. But every bot reads the whole chat before it writes, and after a week of jobs the chat is very long: slow, costly, and easy to get lost in.</p>
-      <p class="bot-say" data-bot="marketer">Wait, did anyone already post the red frock? I'd have to read 300 messages to find out.</p>
+      <p class="bot-say" data-bot="marketing">Wait, did anyone already post the red frock? I'd have to read 300 messages to find out.</p>
       <div class="open-question">
         <div>This leaves a question</div>
         <div class="big">The chat grows long. How does the team keep track of the work?</div>
@@ -391,19 +391,18 @@ LLM writes: 9</pre></div>
 <script>
 const $ = id => document.getElementById(id);
 const esc = AG.esc;
-const withAt = t => esc(t).replace(/@(Researcher|Marketer|Support|Operations|CEO)/g, '<span class="at">@$1</span>');
-AG.WHO.operations = ["a-note", "Operations"];
+const withAt = t => esc(t).replace(/@(Marketing|Production|Operations|Analyst|CEO)/g, '<span class="at">@$1</span>');
 AG.WHO.coord = ["llm", "Coordinator"];
 AG.WHO.prog = ["prog", "program"];
-const BOTS = ["Researcher", "Marketer", "Support", "Operations"];
+const BOTS = ["Marketing", "Production", "Operations", "Analyst"];
 
 // ---------- Part 1: fixed order wastes turns ----------
 AG.stepper({ tx: $("s1Tx"), say: $("s1Say"), next: $("s1Next"), back: $("s1Back"), again: $("s1Again"), steps: [
-  { add: [["ceo", "A customer asks: is the red frock in size 5?"]], say: "One question. Only Support has the catalogue." },
-  { add: [["researcher", "Nothing from me."]], say: "Turn 0: the Researcher's turn. It has nothing to add, but it still had to write. 1 write." },
-  { add: [["marketer", "Nothing from me either."]], say: "Turn 1: the Marketer. Another write, not needed. 2 writes." },
-  { add: [["support", "Yes: size 5, 2 in stock, ₹1,450."]], say: "Turn 2: Support answers. The only write that was needed. 3 writes." },
-  { add: [["operations", "Nothing to ship yet."]], say: "Turn 3: Operations. 4 writes, 1 needed, 3 wasted." },
+  { add: [["ceo", "A customer asks: is the red frock in size 5?"]], say: "One question. Only Production has Amma's catalogue." },
+  { add: [["marketing", "Nothing from me."]], say: "Turn 0: Marketing's turn. It has nothing to add, but it still had to write. 1 write." },
+  { add: [["production", "Yes: size 5, 2 in stock, ₹1,450."]], say: "Turn 1: Production answers. The only write that was needed. 2 writes." },
+  { add: [["operations", "Nothing to ship yet."]], say: "Turn 2: Operations. Another write, not needed. 3 writes." },
+  { add: [["analyst", "Nothing from me either."]], say: "Turn 3: the Analyst. 4 writes, 1 needed, 3 wasted." },
 ] });
 
 // ---------- Part 2: find the @mentions ----------
@@ -414,7 +413,7 @@ AG.stepper({ tx: $("s1Tx"), say: $("s1Say"), next: $("s1Next"), back: $("s1Back"
     bots.innerHTML = BOTS.map(n => `<span class="chip${named.includes(n) ? " on" : ""}">${n}</span>`).join("");
     say.textContent = named.length ? `Next: ${named.join(" and ")}. 0 LLM writes to decide.` : "No bot is named, so the chat waits for the CEO.";
   }
-  const TRY = ["@Support is size 5 in stock?", "@Researcher @Marketer plan Saturday's post", "Thanks, all done!", "@support lowercase?"];
+  const TRY = ["@Production is size 5 in stock?", "@Marketing @Analyst how did Saturday's post do?", "Thanks, all done!", "@production lowercase?"];
   TRY.forEach(t => { const b = document.createElement("button"); b.type = "button"; b.className = "chip"; b.textContent = t; b.onclick = () => { inp.value = t; draw(); }; $("s2Try").appendChild(b); });
   inp.oninput = draw;
   addReset(inp, () => { inp.value = TRY[0]; draw(); });
@@ -426,25 +425,25 @@ AG.stepper({ tx: $("s1Tx"), say: $("s1Say"), next: $("s1Next"), back: $("s1Back"
   const N = (k, m) => `Coordinator writes so far: ${k}. Replies: ${m}. Total LLM writes: ${k + m}.`;
   AG.stepper({ tx: $("s3Tx"), say: $("s3Say"), next: $("s3Next"), back: $("s3Back"), again: $("s3Again"), play: $("s3Play"), steps: [
     { add: [["ceo", "Plan a post for the pastel frock."]], say: "The task. No @ anywhere. " + N(0, 0) },
-    { add: [["coord", "→ Researcher"]], say: "The coordinator reads it and names the Researcher. " + N(1, 0) },
-    { add: [["researcher", "Pastel tulle frocks are big for birthdays (from 3 kids' shops)."]], say: N(1, 1) },
-    { add: [["coord", "→ Marketer"]], say: "Facts are in, so: the Marketer. " + N(2, 1) },
-    { add: [["marketer", "Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years.”"]], say: N(2, 2) },
-    { add: [["coord", "→ Support"]], say: "A caption with sizes: Support should check. " + N(3, 2) },
-    { add: [["support", "The catalogue says sizes 1 to 8 years, not 12."]], say: N(3, 3) },
-    { add: [["coord", "→ Marketer"]], say: "A fix is needed: back to the Marketer. " + N(4, 3) },
-    { add: [["marketer", "Fixed: “…Sizes 1 to 8 years.” Ready to post."]], say: N(4, 4) },
+    { add: [["coord", "→ Marketing"]], say: "The coordinator reads it and names Marketing. " + N(1, 0) },
+    { add: [["marketing", "Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years. Ships in 2 days!”"]], say: N(1, 1) },
+    { add: [["coord", "→ Production"]], say: "A caption with sizes: Production should check. " + N(2, 1) },
+    { add: [["production", "The catalogue says sizes 1 to 8 years, not 12."]], say: N(2, 2) },
+    { add: [["coord", "→ Operations"]], say: "It also promises shipping: Operations should check. " + N(3, 2) },
+    { add: [["operations", "Shipping takes 3 days, not 2."]], say: N(3, 3) },
+    { add: [["coord", "→ Marketing"]], say: "Fixes are needed: back to Marketing. " + N(4, 3) },
+    { add: [["marketing", "Fixed: “…Sizes 1 to 8 years. Ships in 3 days.” Ready to post."]], say: N(4, 4) },
     { add: [["coord", "→ CEO"]], say: "Done, so it names the CEO, and the chat waits. 5 messages → 5 coordinator writes. " + N(5, 4) },
   ] });
 })();
 
 // ---------- Part 4: every bot decides ----------
 AG.stepper({ tx: $("s4Tx"), say: $("s4Say"), next: $("s4Next"), back: $("s4Back"), again: $("s4Again"), steps: [
-  { add: [["marketer", "What price should the caption say?"]], say: "One bot message. No @, no coordinator." },
-  { add: [["researcher", "(asks itself: is this for me?) → YES"]], say: "The Researcher reads it and decides: 1 deciding write." },
-  { add: [["support", "(asks itself: is this for me?) → YES"]], say: "Support decides too: 2 deciding writes. 1 message × (3 − 1) bots = 2." },
-  { add: [["researcher", "Similar frocks sell for ₹1,200 to ₹1,800."]], say: "Both said yes, so both answer…" },
-  { add: [["support", "Ours is ₹1,450, from the catalogue."]], say: "…at the same time. Two answers to one question: the Marketer must sort it out. Here Support's is the one to use." },
+  { add: [["marketing", "What price should the caption say?"]], say: "One bot message. No @, no coordinator." },
+  { add: [["production", "(asks itself: is this for me?) → YES"]], say: "Production reads it and decides: 1 deciding write." },
+  { add: [["operations", "(asks itself: is this for me?) → YES"]], say: "Operations decides too: 2 deciding writes. 1 message × (3 − 1) bots = 2." },
+  { add: [["production", "₹1,450, from the catalogue."]], say: "Both said yes, so both answer…" },
+  { add: [["operations", "Add ₹80 for shipping."]], say: "…at the same time. Two answers to one question: Marketing must sort out which price goes in the caption." },
 ] });
 
 // ---------- Part 5: compare the three ways ----------
@@ -464,11 +463,11 @@ AG.stepper({ tx: $("s4Tx"), say: $("s4Say"), next: $("s4Next"), back: $("s4Back"
 
 // ---------- Part 6: a round limit stops a polite loop ----------
 (function roundLimit() {
-  const LOOP = [["support", "Happy to help! The caption was great, @Marketer!"], ["marketer", "You're welcome, @Support!"], ["support", "Thank you for saying that, @Marketer!"], ["marketer", "Anytime, @Support!"], ["support", "You're the best, @Marketer!"], ["marketer", "No, you are, @Support!"]];
+  const LOOP = [["operations", "Happy to help! The caption was great, @Marketing!"], ["marketing", "You're welcome, @Operations!"], ["operations", "Thank you for saying that, @Marketing!"], ["marketing", "Anytime, @Operations!"], ["operations", "You're the best, @Marketing!"], ["marketing", "No, you are, @Operations!"]];
   let limit = 3, at = 0;
   const tx = $("s6Tx"), say = $("s6Say"), next = $("s6Next"), again = $("s6Again");
   function draw() {
-    let html = AG.line(["ceo", withAt("Caption's posted. @Support thanks for checking the sizes!")], { html: true });
+    let html = AG.line(["ceo", withAt("Caption's posted. @Operations thanks for checking the shipping!")], { html: true });
     LOOP.slice(0, at).forEach((l, i) => html += AG.line([l[0], withAt(l[1])], { html: true, isNew: i === at - 1 }));
     const end = at >= limit;
     if (end) html += AG.line(["prog", `Round limit ${limit} reached: stop and wait for the CEO.`], { isNew: true });
@@ -485,15 +484,15 @@ AG.stepper({ tx: $("s4Tx"), say: $("s4Say"), next: $("s4Next"), back: $("s4Back"
 
 // ---------- Part 7: what the program does with a real coordinator's answer ----------
 (function realAnswers() {
-  const TEAM = ["Researcher", "Marketer", "Support"];
-  const ANS = ["Marketer", "I think the Marketer should reply next.", "CEO", "the researcher, probably"];
+  const TEAM = ["Marketing", "Production", "Operations"];
+  const ANS = ["Marketing", "I think Production should reply next.", "CEO", "operations, probably"];
   const pickOf = a => TEAM.find(n => a.includes(n)) || "wait";
   const rows = $("s7Rows"), say = $("s7Say");
   let pick = {};
   function draw() {
     rows.innerHTML = ANS.map((a, i) => {
       const right = pickOf(a), p = pick[i], cls = p ? (p === right ? " right" : " wrong") : "";
-      const why = right === "wait" ? (a === "CEO" ? "CEO isn't a bot: wait for the CEO." : "“researcher” is in small letters, so the exact name isn't found: wait for the CEO.") : `“${right}” appears in it, so ${right} replies.`;
+      const why = right === "wait" ? (a === "CEO" ? "CEO isn't a bot: wait for the CEO." : "“operations” is in small letters, so the exact name isn't found: wait for the CEO.") : `“${right}” appears in it, so ${right} replies.`;
       return `<div class="sortrow${cls}" style="grid-template-columns:1fr auto"><code>${esc(a)}</code><span class="seg">${[...TEAM, "wait"].map(b =>
         `<button type="button" data-i="${i}" data-b="${b}" class="${p === b ? "on" : ""}">${b === "wait" ? "Wait for CEO" : b}</button>`).join("")}</span>${p ? `<span class="why">${p === right ? "✓" : "✗"} ${why}</span>` : ""}</div>`;
     }).join("");

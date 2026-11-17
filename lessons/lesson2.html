@@ -28,7 +28,7 @@
     <!-- 1 -->
     <section class="part" data-title="✏️ Quick basics: reading Python">
       <h2>✏️ Quick basics: reading Python</h2>
-      <p class="bot-say" data-bot="researcher">Time to build us for real, in Python. You'll only need to read four things.</p>
+      <p class="bot-say" data-bot="marketing">Time to build us for real, in Python. You'll only need to read four things.</p>
       <div class="activity" id="qbBox">
         <div class="do">Pick one. Guess what it prints.</div>
         <div class="modes" role="tablist" aria-label="Which Python idea">
@@ -50,12 +50,12 @@ print(who + ": hello")</code></pre>
           </div>
         </div>
         <div data-qbp="list" hidden>
-<pre><code>bots = ["Researcher", "Marketer"]
+<pre><code>bots = ["Marketing", "Production"]
 print(bots[1])</code></pre>
           <div class="quiz" style="margin:8px 0" data-right="Right. A list keeps items in order, and Python counts from 0, so [1] is the second.">
             <div class="options">
-              <button data-why="Python counts from 0: [0] is the first item, [1] the second.">Researcher</button>
-              <button data-right>Marketer</button>
+              <button data-why="Python counts from 0: [0] is the first item, [1] the second.">Marketing</button>
+              <button data-right>Production</button>
               <button data-why="There are 2 items, at [0] and [1], so [1] is there.">an error</button>
             </div>
             <div class="feedback"></div>
@@ -77,12 +77,12 @@ print(msg["text"])</code></pre>
 <pre><code>def greet(name):
     return "Hi " + name
 
-print(greet("Marketer"))</code></pre>
-          <div class="quiz" style="margin:8px 0" data-right='Right. "Marketer" goes in as name, and return hands back "Hi Marketer".'>
+print(greet("Production"))</code></pre>
+          <div class="quiz" style="margin:8px 0" data-right='Right. "Production" goes in as name, and return hands back "Hi Production".'>
             <div class="options">
-              <button data-right>Hi Marketer</button>
-              <button data-why='name is a name for whatever goes in. Here, that&apos;s "Marketer".'>Hi name</button>
-              <button data-why="def only makes the function. greet(&quot;Marketer&quot;) runs it.">nothing</button>
+              <button data-right>Hi Production</button>
+              <button data-why='name is a name for whatever goes in. Here, that&apos;s "Production".'>Hi name</button>
+              <button data-why="def only makes the function. greet(&quot;Production&quot;) runs it.">nothing</button>
             </div>
             <div class="feedback"></div>
           </div>
@@ -101,7 +101,7 @@ print(greet("Marketer"))</code></pre>
 <pre><code>def post(who, text):
     chat.append({"who": who, "text": text})</code></pre>
         <div class="tryrow">
-          <select id="p2Who" aria-label="Who writes"><option>CEO</option><option>Researcher</option><option>Marketer</option></select>
+          <select id="p2Who" aria-label="Who writes"><option>CEO</option><option>Marketing</option><option>Production</option></select>
           <input id="p2Text" class="wide" type="text" value="Pastel frocks are trending." aria-label="Message">
           <button class="primary" id="p2Post" type="button">Post</button>
         </div>
@@ -119,8 +119,8 @@ print(greet("Marketer"))</code></pre>
       <div class="activity">
         <div class="do">Pick a bot. See the text its LLM reads.</div>
         <div class="modes" role="tablist" aria-label="Which bot">
-          <button class="mode on" data-rb="researcher" role="tab" aria-selected="true">Researcher</button>
-          <button class="mode" data-rb="marketer" role="tab" aria-selected="false">Marketer</button>
+          <button class="mode on" data-rb="marketing" role="tab" aria-selected="true">Marketing</button>
+          <button class="mode" data-rb="production" role="tab" aria-selected="false">Production</button>
         </div>
         <div class="written" id="p3Text" style="font-size:.9rem"></div>
         <p class="count" id="p3Say" style="margin:6px 0 0"></p>
@@ -134,22 +134,22 @@ print(greet("Marketer"))</code></pre>
       <div class="activity">
         <div class="do"><span data-peek="Take a pen and paper, or use the ✎ pen on this page. Write the lines out if it helps.">Work each one out.</span> Type the answer, press Check.</div>
         <div class="pq" data-ans="9" data-tol="0.1" data-hint="Use the box: lines = messages + 4." data-work="5 messages + 4 = 9 lines.">
-          <div class="pq-q">The chat has <b>5</b> messages. How many lines does <code>text_for(marketer)</code> give?</div>
+          <div class="pq-q">The chat has <b>5</b> messages. How many lines does <code>text_for(production)</code> give?</div>
           <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
           <div class="pq-fb" aria-live="polite"></div>
         </div>
         <div class="pq" data-ans="4" data-tol="0.1" data-hint="Lines without messages: the instructions, the empty line, Chat so far:, and the name." data-work="0 messages + 4 = 4 lines: the instructions, an empty line, Chat so far:, and the bot's name.">
-          <div class="pq-q">The chat is empty. How many lines does <code>text_for(researcher)</code> give?</div>
+          <div class="pq-q">The chat is empty. How many lines does <code>text_for(marketing)</code> give?</div>
           <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
           <div class="pq-fb" aria-live="polite"></div>
         </div>
         <div class="pq" data-ans="3" data-tol="0.1" data-hint="Work backwards: lines − 4 = messages." data-work="7 lines − 4 = 3 messages.">
-          <div class="pq-q"><code>text_for(marketer)</code> gave <b>7</b> lines. How many messages are in the chat?</div>
+          <div class="pq-q"><code>text_for(production)</code> gave <b>7</b> lines. How many messages are in the chat?</div>
           <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
           <div class="pq-fb" aria-live="polite"></div>
         </div>
         <div class="pq" data-ans="2" data-tol="0.1" data-hint="Each post adds one message, so one more line in the text." data-work="Before: 3 messages → 7 lines.<br>2 posts → 5 messages → 9 lines.<br>9 − 7 = 2 more lines.">
-          <div class="pq-q">The chat has 3 messages. Then the CEO and the Researcher each post once. How many <b>more</b> lines does <code>text_for(marketer)</code> give now?</div>
+          <div class="pq-q">The chat has 3 messages. Then the CEO and Marketing each post once. How many <b>more</b> lines does <code>text_for(production)</code> give now?</div>
           <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
           <div class="pq-fb" aria-live="polite"></div>
         </div>
@@ -161,7 +161,7 @@ print(greet("Marketer"))</code></pre>
     <section class="part" data-title="Taking turns">
       <h2>Taking turns</h2>
       <p class="say">The bots sit in a list, and the turns are counted 0, 1, 2 … The bot for a turn is found with <code>%</code>: it gives what's left over after dividing. With 2 bots:</p>
-      <p class="say">turn 3 → 3 ÷ 2 = 1, with <b>1</b> left over → <code>3 % 2</code> is 1 → <code>bots[1]</code>, the Marketer.<br><b class="eqbox">bot = bots[turn % number of bots]</b></p>
+      <p class="say">turn 3 → 3 ÷ 2 = 1, with <b>1</b> left over → <code>3 % 2</code> is 1 → <code>bots[1]</code>, Production.<br><b class="eqbox">bot = bots[turn % number of bots]</b></p>
       <div class="activity">
         <div class="do">Pick how many bots. Then go turn by turn.</div>
         <div class="chips" id="p4N"></div>
@@ -179,9 +179,9 @@ print(greet("Marketer"))</code></pre>
     <!-- 5 -->
     <section class="part" data-title="DONE, or the turn limit">
       <h2>DONE, or the turn limit</h2>
-      <p class="say">The Marketer's instructions say: when the caption is final, end with <code>DONE</code>. So after each reply, the loop checks for <code>DONE</code> and stops. In case it never comes, it also stops after a set number of turns, the <mark>turn limit</mark>.<br><b class="eqbox">stop at DONE, or at the turn limit</b></p>
+      <p class="say">Marketing's instructions say: when the caption is final, end with <code>DONE</code>. So after each reply, the loop checks for <code>DONE</code> and stops. In case it never comes, it also stops after a set number of turns, the <mark>turn limit</mark>.<br><b class="eqbox">stop at DONE, or at the turn limit</b></p>
       <div class="activity">
-        <div class="do"><span data-peek="These replies come from a fake LLM: lists of replies written by hand, handed back in order. It lets you test the loop without a real model.">Step through a run.</span> Then try a Marketer that never says DONE.</div>
+        <div class="do"><span data-peek="These replies come from a fake LLM: lists of replies written by hand, handed back in order. It lets you test the loop without a real model.">Step through a run.</span> Then try a Marketing bot that never says DONE.</div>
         <div class="modes" role="tablist" aria-label="Which run">
           <button class="mode on" data-run="done" role="tab" aria-selected="true">Says DONE</button>
           <button class="mode" data-run="never" role="tab" aria-selected="false">Never says DONE</button>
@@ -208,8 +208,8 @@ print(greet("Marketer"))</code></pre>
           <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
           <div class="pq-fb" aria-live="polite"></div>
         </div>
-        <div class="pq" data-ans="3" data-tol="0.1" data-hint="With 2 bots and a limit of 6, turns 0 to 5 run. Which of those go to bots[0]?" data-work="Turns 0, 1, 2, 3, 4, 5.<br>turn % 2 is 0 for turns 0, 2 and 4.<br>So the Researcher replies 3 times.">
-          <div class="pq-q">Researcher and Marketer, turn limit <b>6</b>, and no one ever says DONE. How many times does the Researcher (<code>bots[0]</code>) reply?</div>
+        <div class="pq" data-ans="3" data-tol="0.1" data-hint="With 2 bots and a limit of 6, turns 0 to 5 run. Which of those go to bots[0]?" data-work="Turns 0, 1, 2, 3, 4, 5.<br>turn % 2 is 0 for turns 0, 2 and 4.<br>So Marketing replies 3 times.">
+          <div class="pq-q">Marketing and Production, turn limit <b>6</b>, and no one ever says DONE. How many times does Marketing (<code>bots[0]</code>) reply?</div>
           <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
           <div class="pq-fb" aria-live="polite"></div>
         </div>
@@ -219,7 +219,7 @@ print(greet("Marketer"))</code></pre>
           <div class="pq-fb" aria-live="polite"></div>
         </div>
         <div class="pq" data-ans="11" data-tol="0.1" data-hint="Turns count from 0. If DONE comes in turn 5, how many turns ran? Then add the CEO's task, then 4 lines for text_for." data-work="Turns 0 to 5 ran: 6 turns, so 6 messages.<br>Plus the CEO's task: 7 messages.<br>text_for: 7 + 4 = 11 lines.">
-          <div class="pq-q">A run stops at DONE in turn <b>5</b>. Then you call <code>text_for(marketer)</code>. How many lines does it give?</div>
+          <div class="pq-q">A run stops at DONE in turn <b>5</b>. Then you call <code>text_for(production)</code>. How many lines does it give?</div>
           <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
           <div class="pq-fb" aria-live="polite"></div>
         </div>
@@ -232,14 +232,14 @@ print(greet("Marketer"))</code></pre>
       <h2>A real LLM</h2>
       <p class="say">In Colab, each bot's fake LLM is swapped for a real one. Its text ends with chat lines like <code>CEO: …</code>, so it guesses more chat lines and often writes other bots' messages too. Here's that kind of reply (an example made for this page).</p>
       <div class="activity">
-        <div class="do">The Marketer's LLM wrote all four lines. Tap the first one it shouldn't have written.</div>
+        <div class="do">Marketing's LLM wrote all four lines. Tap the first one it shouldn't have written.</div>
         <div class="tx" id="p6Tx"></div>
         <p class="redcheck" id="p6Say" hidden></p>
         <div class="tool-run" id="p6Kept" hidden></div>
       </div>
       <p class="say" style="position:relative">So the program keeps the reply only up to the first line that starts with another name. If it starts with its own name, that name is dropped.<br><b class="eqbox">cut the reply where another name starts</b><button class="doubt" type="button" data-peek-from="realPeek" aria-label="Which real LLM, and does it cost anything?">🤔</button></p>
       <div hidden id="realPeek"><b>🤔 Which real LLM, and does it cost anything?</b>
-        <div style="margin-top:6px">A small, free model, Qwen2.5 1.5B, that runs inside Colab. You only need a Google account. Small models make more mistakes, and may never write DONE, so the turn limit matters. These bots have no tools yet, so the Researcher's instructions tell it not to make up facts.</div>
+        <div style="margin-top:6px">A small, free model, Qwen2.5 1.5B, that runs inside Colab. You only need a Google account. Small models make more mistakes, and may never write DONE, so the turn limit matters. These bots have no tools yet, so Production's catalogue is written into its instructions. Otherwise it would make up sizes and prices.</div>
       </div>
       <p class="hook">Here's all of it in Python.</p>
     </section>
@@ -257,10 +257,10 @@ def post(who, text):
     print(f"{who}: {text}")
 
 <span class="c"># A bot: a name, its own instructions, and an LLM to write with</span>
-researcher = {"name": "Researcher",
-              "instructions": "You are the Researcher at Amal Designers, a kids' dress brand. Find trends and prices. Say where each fact came from."}
-marketer = {"name": "Marketer",
-            "instructions": "You are the Marketer at Amal Designers. Write one Instagram caption from the facts in the chat. When it is final, end with DONE."}
+marketing = {"name": "Marketing",
+             "instructions": "You plan Instagram posts for Amal Designers, a kids' dress brand. Write one caption, using only facts in the chat. When it is final, end with DONE."}
+production = {"name": "Production",
+              "instructions": "You run production at Amal Designers. Catalogue: pastel party frock, sizes 1 to 8 years, ₹1,450. Amma can sew 6 a week. Check every size and price."}
 
 <span class="c"># What a bot reads: its own instructions + the chat so far.</span>
 <span class="c"># The last line is its own name, so the LLM writes as that bot.</span>
@@ -272,19 +272,18 @@ def text_for(bot):
     return "\n".join(lines)
 
 <span class="c"># Fake LLMs: each bot's replies, written by hand, in order</span>
-researcher_replies = ["Pastel frocks are big for birthdays this month (from 3 kids' shops). Most cost ₹1,200 to ₹1,800.",
-                      "Yes: buyers in those shops' reviews ask for handmade. Say that."]
-marketer_replies = ["Draft: “Twirl-ready pastel frocks for birthdays 💫 DM to order!” Researcher, anything to add?",
-                    "Final: “Twirl-ready pastel frocks for birthdays 💫 Handmade by Amal Designers. DM to order!” DONE"]
+marketing_replies = ["Draft: “Twirl-ready pastel frocks 💫 Sizes 1 to 12 years. DM to order!” Production, are the details right?",
+                     "Final: “Twirl-ready pastel frocks 💫 Sizes 1 to 8 years, ₹1,450. Only 6 this week, DM to order!” DONE"]
+production_replies = ["Sizes are 1 to 8 years, not 12. Price ₹1,450. Amma can sew 6 this week."]
 
-def fake_researcher(text):
-    return researcher_replies.pop(0)
+def fake_marketing(text):
+    return marketing_replies.pop(0)
 
-def fake_marketer(text):
-    return marketer_replies.pop(0)
+def fake_production(text):
+    return production_replies.pop(0)
 
-researcher["llm"] = fake_researcher
-marketer["llm"] = fake_marketer
+marketing["llm"] = fake_marketing
+production["llm"] = fake_production
 
 <span class="c"># Taking turns: turn 0 → bot 0, turn 1 → bot 1, turn 2 → bot 0 …</span>
 <span class="c"># (% gives what's left over after dividing: 2 % 2 is 0, 3 % 2 is 1)</span>
@@ -300,17 +299,16 @@ def run_chat(task, bots, turn_limit=6):
             return "Done after " + str(turn + 1) + " turns."
     return "Stopped: the turn limit was reached."
 
-print(run_chat("Write a caption for the new pastel party frock.", [researcher, marketer]))</code></pre>
+print(run_chat("Write a caption for the new pastel party frock.", [marketing, production]))</code></pre>
       <div class="run-area">
         <button class="run-code" type="button" aria-expanded="false">▶ Run</button>
         <div class="terminal" hidden><div class="term-bar">Terminal</div><pre class="term-out"><span class="prompt">$ python lesson2.py</span>
 1
 CEO: Write a caption for the new pastel party frock.
-Researcher: Pastel frocks are big for birthdays this month (from 3 kids' shops). Most cost ₹1,200 to ₹1,800.
-Marketer: Draft: “Twirl-ready pastel frocks for birthdays 💫 DM to order!” Researcher, anything to add?
-Researcher: Yes: buyers in those shops' reviews ask for handmade. Say that.
-Marketer: Final: “Twirl-ready pastel frocks for birthdays 💫 Handmade by Amal Designers. DM to order!” DONE
-Done after 4 turns.</pre></div>
+Marketing: Draft: “Twirl-ready pastel frocks 💫 Sizes 1 to 12 years. DM to order!” Production, are the details right?
+Production: Sizes are 1 to 8 years, not 12. Price ₹1,450. Amma can sew 6 this week.
+Marketing: Final: “Twirl-ready pastel frocks 💫 Sizes 1 to 8 years, ₹1,450. Only 6 this week, DM to order!” DONE
+Done after 3 turns.</pre></div>
       </div>
       <p class="run-links">
         <a class="btn primary" href="https://colab.research.google.com/github/mo-ri-ch/agent-team/blob/main/notebooks/lesson2.ipynb" target="_blank" rel="noopener">▶ Run it in Google Colab</a>
@@ -325,7 +323,7 @@ Done after 4 turns.</pre></div>
       <p class="say">5 questions, one for each idea in this lesson. Answer them all right to pass. A wrong answer tells you why, and which page to look at again.</p>
       <div class="test" data-test="2">
         <div class="quiz" data-page="lesson2.html#2" data-topic="The chat is a list" data-right="Right. append adds one message to the end: 2 + 1 = 3.">
-          <div class="q"><small>1. Predict</small>The chat has 2 messages. Then <code>post("Marketer", "Hi")</code> runs. What is <code>len(chat)</code>?</div>
+          <div class="q"><small>1. Predict</small>The chat has 2 messages. Then <code>post("Marketing", "Hi")</code> runs. What is <code>len(chat)</code>?</div>
           <div class="options">
             <button data-why="post adds a message, so the list grows.">2</button>
             <button data-right>3</button>
@@ -334,7 +332,7 @@ Done after 4 turns.</pre></div>
           <div class="feedback"></div>
         </div>
         <div class="quiz" data-page="lesson2.html#3" data-topic="What a bot reads" data-right="Right. 6 messages + 4 = 10 lines.">
-          <div class="q"><small>2. Count</small>The chat has 6 messages. How many lines does <code>text_for(researcher)</code> give?</div>
+          <div class="q"><small>2. Count</small>The chat has 6 messages. How many lines does <code>text_for(marketing)</code> give?</div>
           <div class="options">
             <button data-why="Don't forget the 4 other lines: instructions, an empty line, Chat so far:, and the name.">6</button>
             <button data-why="It's messages + 4: the instructions, an empty line, Chat so far:, and the name.">8</button>
@@ -361,7 +359,7 @@ Done after 4 turns.</pre></div>
           <div class="feedback"></div>
         </div>
         <div class="quiz" data-page="lesson2.html#8" data-topic="A real LLM" data-right="Right. Cut where another name starts. Its own name at the start is dropped.">
-          <div class="q"><small>5. Predict</small>The Marketer's real LLM writes:<br><code>Marketer: Love it!</code><br><code>CEO: Thanks</code><br>What does the program keep?</div>
+          <div class="q"><small>5. Predict</small>Marketing's real LLM writes:<br><code>Marketing: Love it!</code><br><code>CEO: Thanks</code><br>What does the program keep?</div>
           <div class="options">
             <button data-right>Love it!</button>
             <button data-why="CEO: starts another name, so the reply is cut there.">Love it! CEO: Thanks</button>
@@ -376,8 +374,8 @@ Done after 4 turns.</pre></div>
     <!-- 9 -->
     <section class="part" data-title="Five bots?">
       <h2>Five bots?</h2>
-      <p class="say">Your two bots take turns in a fixed order. But Amal Designers needs more: a Researcher, a Marketer, Support, Operations… In a real group chat, the next speaker isn't always the next in line.</p>
-      <p class="bot-say" data-bot="support">A customer just asked about sizes. Do I really have to wait for four turns?</p>
+      <p class="say">Your two bots take turns in a fixed order. But Amal Designers needs more: Marketing, Production, Operations, an Analyst… In a real group chat, the next speaker isn't always the next in line.</p>
+      <p class="bot-say" data-bot="operations">A customer just asked about delivery. Do I really have to wait for four turns?</p>
       <div class="open-question">
         <div>This leaves a question</div>
         <div class="big">Two bots take turns easily. With five, who speaks next?</div>
@@ -407,10 +405,10 @@ Done after 4 turns.</pre></div>
 const $ = id => document.getElementById(id);
 const esc = AG.esc;
 const INSTR = {
-  researcher: "You are the Researcher at Amal Designers, a kids' dress brand. Find trends and prices. Say where each fact came from.",
-  marketer: "You are the Marketer at Amal Designers. Write one Instagram caption from the facts in the chat. When it is final, end with DONE.",
+  marketing: "You plan Instagram posts for Amal Designers, a kids' dress brand. Write one caption, using only facts in the chat. When it is final, end with DONE.",
+  production: "You run production at Amal Designers. Catalogue: pastel party frock, sizes 1 to 8 years, ₹1,450. Amma can sew 6 a week. Check every size and price.",
 };
-const NAME = { researcher: "Researcher", marketer: "Marketer" };
+const NAME = { marketing: "Marketing", production: "Production" };
 
 // ---------- Part 1: quick basics, four tabs ----------
 (function quickBasics() {
@@ -441,8 +439,8 @@ const NAME = { researcher: "Researcher", marketer: "Marketer" };
 (function whatItReads() {
   const CHAT = [
     ["CEO", "Write a caption for the new pastel party frock."],
-    ["Researcher", "Pastel frocks are big for birthdays this month (from 3 kids' shops)."],
-    ["Marketer", "Draft: “Twirl-ready pastel frocks 💫 DM to order!”"],
+    ["Marketing", "Draft: “Twirl-ready pastel frocks 💫 Sizes 1 to 12 years.” Production, are the details right?"],
+    ["Production", "Sizes are 1 to 8 years, not 12. Price ₹1,450."],
   ];
   const out = $("p3Text"), say = $("p3Say");
   function show(bot) {
@@ -454,13 +452,13 @@ const NAME = { researcher: "Researcher", marketer: "Marketer" };
     say.textContent = `${CHAT.length} messages + 4 = ${lines.length} lines. Only the first and the last line change from bot to bot.`;
   }
   const set = AG.modes(out.closest(".activity"), "rb", show);
-  addReset(out, () => { set("researcher"); show("researcher"); });
-  show("researcher");
+  addReset(out, () => { set("marketing"); show("marketing"); });
+  show("marketing");
 })();
 
 // ---------- Part 4: taking turns with % ----------
 (function turns() {
-  const ALL = ["Researcher", "Marketer", "Support", "Operations"];
+  const ALL = ["Marketing", "Production", "Operations", "Analyst"];
   let n = 2, turn = 0;
   const math = $("p4Math"), bots = $("p4Bots"), next = $("p4Next"), back = $("p4Back");
   function draw() {
@@ -480,17 +478,15 @@ const NAME = { researcher: "Researcher", marketer: "Marketer" };
 (function wholeRun() {
   const DONE = [
     { add: [["ceo", "Write a caption for the new pastel party frock."]], say: "post(\"CEO\", task): the first message. Press Next turn." },
-    { add: [["researcher", "Pastel frocks are big for birthdays this month (from 3 kids' shops). Most cost ₹1,200 to ₹1,800."]], say: "Turn 0: 0 % 2 = 0 → the Researcher. No DONE, so go on." },
-    { add: [["marketer", "Draft: “Twirl-ready pastel frocks for birthdays 💫 DM to order!” Researcher, anything to add?"]], say: "Turn 1: 1 % 2 = 1 → the Marketer. A draft, no DONE yet." },
-    { add: [["researcher", "Yes: buyers in those shops' reviews ask for handmade. Say that."]], say: "Turn 2: 2 % 2 = 0 → the Researcher again." },
-    { add: [["marketer", "Final: “Twirl-ready pastel frocks for birthdays 💫 Handmade by Amal Designers. DM to order!” DONE"]], say: "Turn 3: the Marketer writes DONE. The loop stops: “Done after 4 turns.” (turn 3 + 1)" },
+    { add: [["marketing", "Draft: “Twirl-ready pastel frocks 💫 Sizes 1 to 12 years. DM to order!” Production, are the details right?"]], say: "Turn 0: 0 % 2 = 0 → Marketing. A draft, no DONE, so go on." },
+    { add: [["production", "Sizes are 1 to 8 years, not 12. Price ₹1,450. Amma can sew 6 this week."]], say: "Turn 1: 1 % 2 = 1 → Production. It checks the catalogue. No DONE." },
+    { add: [["marketing", "Final: “Twirl-ready pastel frocks 💫 Sizes 1 to 8 years, ₹1,450. Only 6 this week, DM to order!” DONE"]], say: "Turn 2: 2 % 2 = 0 → Marketing writes DONE. The loop stops: “Done after 3 turns.” (turn 2 + 1)" },
   ];
-  const NEVER = [DONE[0], DONE[1],
-    { add: [["marketer", "Draft: “Twirl-ready pastel frocks 💫” Researcher, anything to add?"]], say: "Turn 1 → the Marketer. No DONE." },
-    { add: [["researcher", "Buyers ask for handmade."]], say: "Turn 2 → the Researcher." },
-    { add: [["marketer", "Draft 2: “Handmade, twirl-ready frocks 💫” Anything else?"]], say: "Turn 3 → the Marketer. Still no DONE." },
-    { add: [["researcher", "Maybe mention birthdays?"]], say: "Turn 4 → the Researcher." },
-    { add: [["marketer", "Draft 3: “Handmade birthday frocks 💫” Thoughts?"]], say: "Turn 5 → the Marketer. That was turn 5, the 6th turn: the turn limit. “Stopped: the turn limit was reached.”" },
+  const NEVER = [DONE[0], DONE[1], DONE[2],
+    { add: [["marketing", "Draft 2: “Pastel frocks 💫 Sizes 1 to 8 years.” Anything else?"]], say: "Turn 2 → Marketing. Still no DONE." },
+    { add: [["production", "Maybe add the price, ₹1,450?"]], say: "Turn 3 → Production." },
+    { add: [["marketing", "Draft 3: “Pastel frocks 💫 1 to 8 years, ₹1,450.” Thoughts?"]], say: "Turn 4 → Marketing." },
+    { add: [["production", "Looks fine to me. What do you think?"]], say: "Turn 5 → Production. That was turn 5, the 6th turn: the turn limit. “Stopped: the turn limit was reached.”" },
   ];
   const steps = [];
   const load = run => steps.splice(0, steps.length, ...(run === "done" ? DONE : NEVER));
@@ -502,14 +498,14 @@ const NAME = { researcher: "Researcher", marketer: "Marketer" };
 // ---------- Part 6: tap the first line it shouldn't have written ----------
 (function cutIt() {
   const LINES = [
-    "Marketer: Twirl-ready pastel frocks for birthdays 💫",
-    "Handmade by Amal Designers. DM to order! DONE",
+    "Marketing: Twirl-ready pastel frocks 💫 Sizes 1 to 8 years.",
+    "Only 6 this week, DM to order! DONE",
     "CEO: Perfect, posting it now!",
-    "Researcher: Great caption!",
+    "Production: Great caption!",
   ];
   const WHY = [
     "That's its own name at the start. Its own reply can begin with it: the program just drops the name.",
-    "Still the Marketer's own caption, on a second line. Keep it.",
+    "Still Marketing's own caption, on a second line. Keep it.",
   ];
   const tx = $("p6Tx"), say = $("p6Say"), kept = $("p6Kept");
   function draw() {
@@ -520,8 +516,8 @@ const NAME = { researcher: "Researcher", marketer: "Marketer" };
       say.hidden = false;
       if (i === 2) {
         b.classList.add("right"); say.classList.add("good");
-        say.textContent = "Yes! CEO: starts another name. The Marketer can't write the CEO's message, so the program cuts from here.";
-        kept.innerHTML = "Kept and posted as the Marketer: <b>Twirl-ready pastel frocks for birthdays 💫 Handmade by Amal Designers. DM to order! DONE</b>";
+        say.textContent = "Yes! CEO: starts another name. Marketing can't write the CEO's message, so the program cuts from here.";
+        kept.innerHTML = "Kept and posted as Marketing: <b>Twirl-ready pastel frocks 💫 Sizes 1 to 8 years. Only 6 this week, DM to order! DONE</b>";
         kept.hidden = false;
       } else {
         b.classList.add("wrong"); say.classList.remove("good");

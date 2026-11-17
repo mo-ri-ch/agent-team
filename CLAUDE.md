@@ -20,7 +20,10 @@
   example, and the skills fit any small business.
 - **Audience:** students and tech-comfortable small-business people. Lessons 2–5 need basic Python; readers may skip
   them and jump to Lesson 6, so Lesson 6 starts from zero (a quick basics page: what a terminal is, copy and paste a command).
-- The team so far: Researcher (orange, search), Marketer (pink), Support (green, catalogue). `<p class="bot-say" data-bot="marketer">…</p>`.
+- **The team (Rishal, 17 Nov 2026), used in every lesson:** each bot supports a real person. Marketing (pink; plans posts
+  and captions for the sister, finds trends with search), Production (orange; Amma's catalogue: sizes, stock, prices,
+  sewing time), Operations (green; packing, courier, delivery times, tracking messages), Analyst (blue; weekly numbers
+  and projections for the CEO, from Lesson 3 on). One-word names so @mentions work. `<p class="bot-say" data-bot="marketing">…</p>`.
 - Lesson numbers start at 1. Saved progress uses `n`; never change `n` or the id "agent-team".
 - Lesson 1: browser activities only. Code (Colab) starts in Lesson 2.
 - Every lesson ends with `<div class="mybiz" data-key="lN">task</div>` (Rishal, 17 Nov 2026: usable in college; each

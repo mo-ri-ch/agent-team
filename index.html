@@ -28,8 +28,8 @@
     <section class="hero">
       <div>
         <h1>Build your own <span class="swash">AI team</span>.</h1>
-        <p class="say">You're the CEO. Your employees are AI bots: a researcher, a marketer, a support helper and more. They <b>split the work, talk in one group chat and check each other</b>, on your own laptop, and you reach them from your phone.</p>
-        <p class="story"><img class="brand-logo" src="assets/img/amal-designers-256.png" alt="Amal Designers logo" width="56" height="55">We follow a real small business: <b data-peek="A family business: handmade dresses for kids under 10, sold on Instagram and WhatsApp. Customers and prices in this course are made up.">Amal Designers</b>, a kids' dress brand that wants to grow.</p>
+        <p class="say">You're the CEO. Your employees are AI bots: one for marketing, one for production, one for shipping, and an analyst. They <b>split the work, talk in one group chat and check each other</b>, on your own laptop, and you reach them from your phone.</p>
+        <p class="story"><img class="brand-logo" src="assets/img/amal-designers-256.png" alt="Amal Designers logo" width="56" height="55"><span>We follow a real small business: <b data-peek="A family business: handmade dresses for kids under 10, sold on Instagram and WhatsApp. Customers and prices in this course are made up.">Amal Designers</b>, a kids' dress brand that wants to grow.</span></p>
         <div class="actions">
           <a class="btn primary" href="lessons/lesson1.html">Start Lesson 1</a>
           <button data-note="needNote" aria-expanded="false" aria-controls="needNote">What you need</button>
@@ -84,7 +84,7 @@
       </div>
 
       <div class="demo-side">
-        <p class="bot-say" data-bot="researcher" id="botLine">We work for Amal Designers. Give us a job, boss, and watch us work it out in our group chat.</p>
+        <p class="bot-say" data-bot="marketing" id="botLine">We work for Amal Designers. Give us a job, boss, and watch us work it out in our group chat.</p>
         <div class="activity demo" id="demo">
           <div class="chips" id="jobs" role="group" aria-label="Pick a job"></div>
           <div class="tx" id="chat" aria-live="polite"></div>
@@ -114,21 +114,20 @@
 <script>
 // ---------- Watch the team work: a job goes into the group chat, the bots @mention each other ----------
 (function demo() {
-  const at = t => AG.esc(t).replace(/@(Researcher|Marketer|Support|CEO)/g, '<span class="at">@$1</span>');
+  const at = t => AG.esc(t).replace(/@(Marketing|Production|Operations|Analyst|CEO)/g, '<span class="at">@$1</span>');
   const JOBS = [
     { label: "This week's post", steps: [
-      { add: [["ceo", "We need a post for the new pastel party frock. @Researcher what's trending?"]], say: "You, the CEO, post the job in the group chat and @mention the Researcher." },
-      { add: [["researcher", "Pastel tulle frocks are big for birthdays this month. Reels with a twirl get the most views. @Marketer"]], say: "Only the Researcher can search the web. It posts what it found and hands over." },
-      { add: [["marketer", "Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years. DM to order!” @Support please check the details."]], say: "The Marketer writes a caption, then asks Support to check it against the catalogue." },
-      { add: [["support", "The catalogue says sizes 1 to 8 years for this frock, not 12. @Marketer please fix it."]], say: "Support has the catalogue, so it spots a size that isn't true." },
-      { add: [["marketer", "Fixed: “…Sizes 1 to 8 years.” @CEO ready for your sister to post."]], say: "The Marketer fixes it and hands it back. A person still decides what goes out." },
+      { add: [["ceo", "@Marketing plan this week's post for the new pastel party frock."]], say: "You, the CEO, post the job in the group chat and @mention Marketing." },
+      { add: [["marketing", "Trending in 3 kids' shops: pastel tulle for birthdays. Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years.” @Production please check."]], say: "Marketing searches for trends, drafts a caption, and asks Production to check it." },
+      { add: [["production", "The catalogue says sizes 1 to 8 years, not 12. ₹1,450. Amma can sew 6 this week. @Marketing"]], say: "Production knows Amma's catalogue and sewing time, so it spots a size that isn't true." },
+      { add: [["marketing", "Fixed: “…Sizes 1 to 8 years. Only 6 this week!” Sending it to your sister for 7 PM. @CEO"]], say: "Marketing fixes it and plans the post for your sister. She still decides and posts it herself." },
     ] },
-    { label: "A customer question", steps: [
-      { add: [["ceo", "A customer asks on WhatsApp: “Do you have the red frock in size 5, before Saturday?” @Support"]], say: "This time you start with Support." },
-      { add: [["support", "Catalogue: red frock, size 5, 2 in stock, ₹1,450. Delivery to Kochi takes 2–3 days. Draft reply below. @CEO"]], say: "Support checks the catalogue and drafts a reply. It never sends it on its own." },
-      { add: [["support", "Draft: “Yes! Size 5 is in stock at ₹1,450. Order today and it reaches you by Friday 🎀”"]], say: "The draft uses only facts from the catalogue." },
-      { add: [["ceo", "Looks good, sending it. @Marketer can we post the red frock this week too?"]], say: "You approve and send it, then give the Marketer a new job." },
-      { add: [["marketer", "Yes! A Saturday reel: “Party ready by the weekend 🎀”. Draft coming tomorrow morning. @CEO"]], say: "One chat, many jobs. Each bot picks up the part that is its role." },
+    { label: "A new order", steps: [
+      { add: [["ceo", "WhatsApp order: red frock, size 5, needed by Saturday. @Production"]], say: "A real-life job: an order comes in. You pass it to Production." },
+      { add: [["production", "Red frock, size 5: 2 in stock, ₹1,450. No sewing needed. @Operations can it reach Kochi by Saturday?"]], say: "Production checks stock and asks Operations about delivery." },
+      { add: [["operations", "Yes: Amma packs it today, courier pickup at 4 PM, 2 days to Kochi. Draft reply: “Yes! It reaches you by Friday 🎀” @CEO"]], say: "Operations plans the packing and courier, and drafts the customer reply. It never sends it on its own." },
+      { add: [["ceo", "Approved, sending it. @Analyst how's this week going?"]], say: "You approve the reply, then ask the Analyst." },
+      { add: [["analyst", "12 orders so far, up from 9 last week (+33%). At this pace: about 50 this month."]], say: "The Analyst counts orders and shows where this pace leads. One chat, four roles, and you decide." },
     ] },
   ];
   const tx = document.getElementById("chat"), say = document.getElementById("say");

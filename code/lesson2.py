@@ -7,10 +7,10 @@ def post(who, text):
     print(f"{who}: {text}")
 
 # A bot: a name, its own instructions, and an LLM to write with
-researcher = {"name": "Researcher",
-              "instructions": "You are the Researcher at Amal Designers, a kids' dress brand. Find trends and prices. Say where each fact came from."}
-marketer = {"name": "Marketer",
-            "instructions": "You are the Marketer at Amal Designers. Write one Instagram caption from the facts in the chat. When it is final, end with DONE."}
+marketing = {"name": "Marketing",
+             "instructions": "You plan Instagram posts for Amal Designers, a kids' dress brand. Write one caption, using only facts in the chat. When it is final, end with DONE."}
+production = {"name": "Production",
+              "instructions": "You run production at Amal Designers. Catalogue: pastel party frock, sizes 1 to 8 years, ₹1,450. Amma can sew 6 a week. Check every size and price."}
 
 # What a bot reads: its own instructions + the chat so far.
 # The last line is its own name, so the LLM writes as that bot.
@@ -22,19 +22,18 @@ def text_for(bot):
     return "\n".join(lines)
 
 # Fake LLMs: each bot's replies, written by hand, in order
-researcher_replies = ["Pastel frocks are big for birthdays this month (from 3 kids' shops). Most cost ₹1,200 to ₹1,800.",
-                      "Yes: buyers in those shops' reviews ask for handmade. Say that."]
-marketer_replies = ["Draft: “Twirl-ready pastel frocks for birthdays 💫 DM to order!” Researcher, anything to add?",
-                    "Final: “Twirl-ready pastel frocks for birthdays 💫 Handmade by Amal Designers. DM to order!” DONE"]
+marketing_replies = ["Draft: “Twirl-ready pastel frocks 💫 Sizes 1 to 12 years. DM to order!” Production, are the details right?",
+                     "Final: “Twirl-ready pastel frocks 💫 Sizes 1 to 8 years, ₹1,450. Only 6 this week, DM to order!” DONE"]
+production_replies = ["Sizes are 1 to 8 years, not 12. Price ₹1,450. Amma can sew 6 this week."]
 
-def fake_researcher(text):
-    return researcher_replies.pop(0)
+def fake_marketing(text):
+    return marketing_replies.pop(0)
 
-def fake_marketer(text):
-    return marketer_replies.pop(0)
+def fake_production(text):
+    return production_replies.pop(0)
 
-researcher["llm"] = fake_researcher
-marketer["llm"] = fake_marketer
+marketing["llm"] = fake_marketing
+production["llm"] = fake_production
 
 # Taking turns: turn 0 → bot 0, turn 1 → bot 1, turn 2 → bot 0 …
 # (% gives what's left over after dividing: 2 % 2 is 0, 3 % 2 is 1)
@@ -50,4 +49,4 @@ def run_chat(task, bots, turn_limit=6):
             return "Done after " + str(turn + 1) + " turns."
     return "Stopped: the turn limit was reached."
 
-print(run_chat("Write a caption for the new pastel party frock.", [researcher, marketer]))
+print(run_chat("Write a caption for the new pastel party frock.", [marketing, production]))

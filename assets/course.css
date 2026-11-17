@@ -183,7 +183,7 @@ pre.mapcode code .cl.dim { opacity: 0.45; }
 .roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 0 12px; }
 @media (max-width: 640px) { .roles { grid-template-columns: 1fr; } }
 .role { padding: 8px 10px; border-radius: 4px 4px 10px 4px; color: var(--ink); font-size: 0.88rem; line-height: 1.4; }
-.role.researcher { background: var(--note-orange); } .role.marketer { background: var(--note-pink); } .role.support { background: var(--note-green); }
+.role.marketing { background: var(--note-pink); } .role.production { background: var(--note-orange); } .role.operations { background: var(--note-green); }
 .role h4 { font-family: var(--head); font-size: 1.1rem; margin: 0 0 4px; }
 .role .k { font-family: var(--hand); display: block; margin-top: 4px; }
 .role code { font-size: 0.85em; }
@@ -226,3 +226,4 @@ pre.mapcode code .cl.dim { opacity: 0.45; }
 .bar .pct { text-align: right; }
 @media (prefers-reduced-motion: reduce) { .bar .fill { transition: none; } }
 @media (max-width: 520px) { .bar { grid-template-columns: 7em 1fr 2.5em !important; font-size: .8rem; } .bar + p.count { margin-left: 0 !important; } }
+.who.a-blue { background: var(--note-blue); }

@@ -47,7 +47,7 @@
     <section class="part" data-title="A company in a chat">
       <h2>A company in a chat</h2>
       <img class="brand-logo big" src="../assets/img/amal-designers-256.png" alt="Amal Designers logo" width="84" height="82">
-      <p class="say">You're the CEO of <b data-peek="A real family business: handmade dresses for kids under 10, sold on Instagram and WhatsApp. Customers and prices in this course are made up.">Amal Designers</b>, a small kids' dress brand. Instead of hiring people, you give each job to an agent, and they all talk in one group chat. Here we call each agent in the chat a <mark>bot</mark>. Writing <span class="at">@</span> and a bot's name asks that bot to reply next.</p>
+      <p class="say">You're the CEO of <b data-peek="A real family business: handmade dresses for kids under 10, sold on Instagram and WhatsApp. Customers and prices in this course are made up.">Amal Designers</b>, a small kids' dress brand. Your sister posts on Instagram, and Amma sews and packs. You give each of them an agent to help, and the agents all talk in one group chat. Here we call each agent in the chat a <mark>bot</mark>. Writing <span class="at">@</span> and a bot's name asks that bot to reply next.</p>
       <div class="activity">
         <div class="do"><span data-peek="These messages are examples, written for this page. Later in the course you build bots that write their own.">Step through the chat.</span> Watch who does what.</div>
         <div class="tx" id="s2Tx"></div>
@@ -60,18 +60,18 @@
         </div>
       </div>
       <p class="say">Three bots, each doing one part, in one shared chat. That's a <mark>team</mark>.<br><b class="eqbox">team = bots with one role each + one shared chat</b></p>
-      <p class="hook">All three are the same kind of agent. So what makes the Marketer a marketer?</p>
+      <p class="hook">All three are the same kind of agent. So what makes Marketing a marketer?</p>
     </section>
 
     <!-- 3 -->
     <section class="part" data-title="What makes a role">
       <h2>What makes a role</h2>
-      <p class="say">Each bot gets its own <mark>instructions</mark>: text, placed before the chat, that says what its job is. Each also gets its own <mark>tools</mark>: the things its program can do when asked. Only the Researcher has <code>search</code>, so only it can look things up on the web.<br><b class="eqbox">role = instructions + tools</b></p>
+      <p class="say">Each bot gets its own <mark>instructions</mark>: text, placed before the chat, that says what its job is. Each also gets its own <mark>tools</mark>: the things its program can do when asked. Only Marketing has <code>search</code>, so only it can look things up on the web.<br><b class="eqbox">role = instructions + tools</b></p>
       <div class="activity">
         <div class="roles">
-          <div class="role researcher"><h4>Researcher</h4><span class="k">instructions</span>Find kids' fashion trends and prices. Say where each fact came from.<span class="k">tools</span><code>search</code></div>
-          <div class="role marketer"><h4>Marketer</h4><span class="k">instructions</span>Write Instagram post ideas and captions. Use only facts in the chat.<span class="k">tools</span>none</div>
-          <div class="role support"><h4>Support</h4><span class="k">instructions</span>Answer from the catalogue only. Draft replies; never send them.<span class="k">tools</span><code>catalogue</code></div>
+          <div class="role marketing"><h4>Marketing</h4><span class="k">instructions</span>Plan posts and captions for my sister. Find trends; say where each came from.<span class="k">tools</span><code>search</code></div>
+          <div class="role production"><h4>Production</h4><span class="k">instructions</span>Answer from Amma's catalogue: sizes, stock, prices, sewing time.<span class="k">tools</span><code>catalogue</code></div>
+          <div class="role operations"><h4>Operations</h4><span class="k">instructions</span>Plan packing and shipping. Draft delivery messages; never send them.<span class="k">tools</span><code>courier</code></div>
         </div>
         <div class="do">Who should get each job?</div>
         <div id="s3Rows"></div>
@@ -83,13 +83,13 @@
     <!-- 4 -->
     <section class="part" data-title="What each bot reads">
       <h2>What each bot reads</h2>
-      <p class="say">Before a bot writes, it reads two things: its own instructions, which only it sees, and the whole chat so far.<br><b class="eqbox">a bot reads = its own instructions + the chat so far</b><br>The Marketer replies third, so it reads its instructions and 2 messages: yours and the Researcher's.</p>
+      <p class="say">Before a bot writes, it reads two things: its own instructions, which only it sees, and the whole chat so far.<br><b class="eqbox">a bot reads = its own instructions + the chat so far</b><br>Production replies after Marketing, so it reads its instructions and 2 messages: yours and Marketing's.</p>
       <div class="activity">
         <div class="do">Pick a bot. See what it reads just before it writes.</div>
         <div class="modes" role="tablist" aria-label="Which bot">
-          <button class="mode on" data-bot="researcher" role="tab" aria-selected="true">Researcher</button>
-          <button class="mode" data-bot="marketer" role="tab" aria-selected="false">Marketer</button>
-          <button class="mode" data-bot="support" role="tab" aria-selected="false">Support</button>
+          <button class="mode on" data-bot="marketing" role="tab" aria-selected="true">Marketing</button>
+          <button class="mode" data-bot="production" role="tab" aria-selected="false">Production</button>
+          <button class="mode" data-bot="operations" role="tab" aria-selected="false">Operations</button>
         </div>
         <div class="reads">
           <div class="own" id="s4Own"></div>
@@ -162,7 +162,7 @@
           <div class="options">
             <button data-right>Its own instructions, and a tool that makes pictures</button>
             <button data-why="Its role comes from its instructions and tools. Without a picture tool, it can only write text about pictures.">Only a new name</button>
-            <button data-why="The other bots don't need anything new. The new bot needs its own instructions and tools.">New instructions for the Marketer</button>
+            <button data-why="The other bots don't need anything new. The new bot needs its own instructions and tools.">New instructions for Marketing</button>
           </div>
           <div class="feedback"></div>
         </div>
@@ -176,11 +176,11 @@
           <div class="feedback"></div>
         </div>
         <div class="quiz" data-page="lesson1.html#4" data-topic="What each bot reads" data-right="Right. A bot never sees another bot's instructions. Only what is written in the chat is shared.">
-          <div class="q"><small>4. Spot the mistake</small>A friend says: “The Marketer followed Support's instructions.” What's wrong?</div>
+          <div class="q"><small>4. Spot the mistake</small>A friend says: “Marketing followed Production's instructions.” What's wrong?</div>
           <div class="options">
             <button data-why="Bots do read the whole chat. But instructions aren't in the chat.">Nothing. Every bot reads everything.</button>
-            <button data-right>The Marketer can't see Support's instructions, only the chat</button>
-            <button data-why="Support does have instructions: they say what its job is. Only Support sees them.">Support has no instructions</button>
+            <button data-right>Marketing can't see Production's instructions, only the chat</button>
+            <button data-why="Production does have instructions: they say what its job is. Only Production sees them.">Production has no instructions</button>
           </div>
           <div class="feedback"></div>
         </div>
@@ -189,7 +189,7 @@
           <div class="options">
             <button data-right>Solo: one small step</button>
             <button data-why="A team means more writes, so more time and cost, with no parts to split.">A team of 3, to be safe</button>
-            <button data-why="It doesn't need research, marketing and support. It's one calculation.">A team: Researcher, Marketer and Support</button>
+            <button data-why="It doesn't need marketing, production and shipping. It's one calculation.">A team: Marketing, Production and Operations</button>
           </div>
           <div class="feedback"></div>
         </div>
@@ -201,7 +201,7 @@
     <section class="part" data-title="Your turn to build">
       <h2>Your turn to build</h2>
       <p class="say">So far, the messages were written for you. Next, you write the bots yourself, in Python, and make two of them talk. Later, the same team runs on your laptop for Amal Designers.</p>
-      <p class="bot-say" data-bot="marketer">I'd love to meet the Researcher properly. Can you build us, boss?</p>
+      <p class="bot-say" data-bot="marketing">I'd love to talk to Production for real. Can you build us, boss?</p>
       <div class="open-question">
         <div>This leaves a question</div>
         <div class="big">You've watched a team chat. Can you build two bots that talk, yourself?</div>
@@ -228,7 +228,7 @@
 <script src="https://mo-ri-ch.github.io/study-notebook-design/v1/guide.js"></script>
 <script>
 const $ = id => document.getElementById(id);
-const withAt = t => AG.esc(t).replace(/@(Researcher|Marketer|Support|CEO)/g, '<span class="at">@$1</span>');
+const withAt = t => AG.esc(t).replace(/@(Marketing|Production|Operations|Analyst|CEO)/g, '<span class="at">@$1</span>');
 
 // ---------- Part 1: one agent, one round ----------
 AG.stepper({ tx: $("s1Tx"), say: $("s1Say"), next: $("s1Next"), back: $("s1Back"), again: $("s1Again"), steps: [
@@ -240,23 +240,23 @@ AG.stepper({ tx: $("s1Tx"), say: $("s1Say"), next: $("s1Next"), back: $("s1Back"
 
 // ---------- Part 2: the team in a group chat ----------
 const CHAT = [
-  { add: [["ceo", withAt("We need a post for the new pastel party frock. @Researcher what's trending?")]], say: "You, the CEO, post the job and ask the Researcher to start." },
-  { add: [["researcher", withAt("From 3 kids' fashion shops: pastel tulle frocks are big for birthdays this month. @Marketer")]], say: "The Researcher searches the web, posts what it found with its source, and asks the Marketer to go next." },
-  { add: [["marketer", withAt("Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years. DM to order!” @Support please check.")]], say: "The Marketer writes a caption, then asks Support to check it." },
-  { add: [["support", withAt("The catalogue says sizes 1 to 8 years, not 12. @Marketer please fix it.")]], say: "Support compares the caption with the catalogue and finds a size that isn't true." },
-  { add: [["marketer", withAt("Fixed: “…Sizes 1 to 8 years.” @CEO ready to post.")]], say: "The Marketer fixes it and hands it back to you. Each bot did one part of the job." },
+  { add: [["ceo", withAt("We need a post for the new pastel party frock. @Marketing")]], say: "You, the CEO, post the job and ask Marketing to start." },
+  { add: [["marketing", withAt("Trending in 3 kids' shops: pastel tulle for birthdays. Caption: “Twirl-ready pastel frock 💫 Sizes 1 to 12 years. Ships in 2 days!” @Production @Operations please check.")]], say: "Marketing searches for trends, writes a caption, and asks the other two to check it." },
+  { add: [["production", withAt("The catalogue says sizes 1 to 8 years, not 12.")]], say: "Production compares the caption with Amma's catalogue and finds a size that isn't true." },
+  { add: [["operations", withAt("Shipping takes 3 days to most places, not 2.")]], say: "Operations checks the delivery time and finds another mistake." },
+  { add: [["marketing", withAt("Fixed: “…Sizes 1 to 8 years. Ships in 3 days.” @CEO ready for your sister to post.")]], say: "Marketing fixes both and hands it back. Each bot did one part, and your sister still decides what goes out." },
 ];
 AG.stepper({ tx: $("s2Tx"), say: $("s2Say"), next: $("s2Next"), back: $("s2Back"), again: $("s2Again"), play: $("s2Play"), steps: CHAT, html: true });
 
 // ---------- Part 3: who gets each job? ----------
 (function whoGetsIt() {
-  const BOTS = ["researcher", "marketer", "support"], NAME = { researcher: "Researcher", marketer: "Marketer", support: "Support" };
+  const BOTS = ["marketing", "production", "operations"], NAME = { marketing: "Marketing", production: "Production", operations: "Operations" };
   const JOBS = [   // [job, right bot, why]
-    ["Find what birthday frocks cost in other shops", "researcher", "it needs the web, and only the Researcher has search."],
-    ["Write a caption for Saturday's reel", "marketer", "captions are the Marketer's job."],
-    ["A customer asks: is size 6 in stock?", "support", "stock is in the catalogue, and only Support has that tool."],
-    ["Find which colours are trending this Diwali", "researcher", "trends need a web search, and only the Researcher has that tool."],
-    ["Plan 3 Instagram posts for next week", "marketer", "planning posts is the Marketer's job."],
+    ["Find what birthday frocks cost in other shops", "marketing", "it needs the web, and only Marketing has search."],
+    ["Write a caption for Saturday's reel", "marketing", "captions are Marketing's job."],
+    ["A customer asks: is size 6 in stock?", "production", "stock is in Amma's catalogue, and only Production has that tool."],
+    ["Book tomorrow's courier pickup", "operations", "the courier is Operations' tool."],
+    ["Can Amma sew 10 more frocks by Diwali?", "production", "sewing time is in the catalogue: Production's job."],
   ];
   const rows = $("s3Rows"), say = $("s3Say");
   let pick = {};
@@ -265,7 +265,7 @@ AG.stepper({ tx: $("s2Tx"), say: $("s2Say"), next: $("s2Next"), back: $("s2Back"
       const p = pick[i], cls = p ? (p === right ? " right" : " wrong") : "";
       return `<div class="sortrow${cls}" style="grid-template-columns:1fr auto"><span>${job}</span><span class="seg">${BOTS.map(b =>
         `<button type="button" data-i="${i}" data-b="${b}" class="${p === b ? "on" : ""}">${NAME[b]}</button>`).join("")}</span>${
-        p && p !== right ? `<span class="why">✗ The ${NAME[right]}: ${why}</span>` : p ? `<span class="why">✓ ${why[0].toUpperCase() + why.slice(1)}</span>` : ""}</div>`;
+        p && p !== right ? `<span class="why">✗ ${NAME[right]}: ${why}</span>` : p ? `<span class="why">✓ ${why[0].toUpperCase() + why.slice(1)}</span>` : ""}</div>`;
     }).join("");
     rows.querySelectorAll("button").forEach(b => b.onclick = () => { pick[b.dataset.i] = b.dataset.b; draw(); });
     const n = Object.keys(pick).length, ok = JOBS.filter(([, r], i) => pick[i] === r).length;
@@ -280,12 +280,12 @@ AG.stepper({ tx: $("s2Tx"), say: $("s2Say"), next: $("s2Next"), back: $("s2Back"
 // ---------- Part 4: what each bot reads ----------
 (function whatItReads() {
   const OWN = {
-    researcher: ["var(--note-orange)", "Find kids' fashion trends and prices. Say where each fact came from."],
-    marketer: ["var(--note-pink)", "Write Instagram post ideas and captions. Use only facts in the chat."],
-    support: ["var(--note-green)", "Answer from the catalogue only. Draft replies; never send them."],
+    marketing: ["var(--note-pink)", "Plan posts and captions for my sister. Find trends; say where each came from."],
+    production: ["var(--note-orange)", "Answer from Amma's catalogue: sizes, stock, prices, sewing time."],
+    operations: ["var(--note-green)", "Plan packing and shipping. Draft delivery messages; never send them."],
   };
-  const TURN = { researcher: 1, marketer: 2, support: 3 };   // how many messages are in the chat at its turn
-  const NAME = { researcher: "Researcher", marketer: "Marketer", support: "Support" };
+  const TURN = { marketing: 1, production: 2, operations: 3 };   // how many messages are in the chat at its turn
+  const NAME = { marketing: "Marketing", production: "Production", operations: "Operations" };
   const MSGS = CHAT.slice(0, 3).map(s => s.add[0]);
   const own = $("s4Own"), tx = $("s4Tx"), say = $("s4Say");
   function show(bot) {
@@ -295,11 +295,11 @@ AG.stepper({ tx: $("s2Tx"), say: $("s2Say"), next: $("s2Next"), back: $("s2Back"
     tx.innerHTML = MSGS.slice(0, n).map(l => AG.line(l, { html: true })).join("") +
       `<div class="ln"><span class="who ${AG.WHO[bot][0]}">${NAME[bot]}</span><span class="txt count">✍️ writes next…</span></div>`;
     const others = Object.keys(NAME).filter(b => b !== bot).map(b => NAME[b]).join(" and ");
-    say.textContent = `${NAME[bot]} reads its own instructions + ${n} message${n > 1 ? "s" : ""}. It never sees ${others}'s instructions.`;
+    say.textContent = `${NAME[bot]} reads its own instructions + ${n} message${n > 1 ? "s" : ""}. It never sees the instructions of ${others}.`;
   }
   const set = AG.modes(document.querySelector("#s4Own").closest(".activity"), "bot", show);
-  addReset(own, () => { set("researcher"); show("researcher"); });
-  show("researcher");
+  addReset(own, () => { set("marketing"); show("marketing"); });
+  show("marketing");
 })();
 
 // ---------- Part 5: team or solo? ----------

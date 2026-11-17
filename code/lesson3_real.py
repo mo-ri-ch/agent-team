@@ -27,7 +27,7 @@ def real_llm(name, text):
 
 # The coordinator: its own instructions, the chat, then "Next:"
 COORDINATOR = """You run the team chat at Amal Designers, a kids' dress brand.
-Bots: Researcher (finds trends), Marketer (writes captions), Support (checks sizes and prices).
+Bots: Marketing (writes captions), Production (checks sizes and prices), Operations (checks shipping).
 Read the chat. Who should reply next? Reply with one name only.
 Reply CEO when the caption is ready, or when the CEO must decide."""
 
@@ -43,9 +43,6 @@ def real_coordinator(text):
         if name in answer:   # the first bot name in its answer
             return [name]
     return []                # no bot named: wait for the CEO
-
-# No tools yet, so the Researcher must not make up facts
-INSTRUCTIONS["Researcher"] = "Suggest one idea for the post, in one sentence. You can't look things up, so never make up facts or prices."
 
 # run_chat calls fake_llm, so point that name at the real LLM
 fake_llm = real_llm

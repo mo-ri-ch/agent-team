@@ -23,16 +23,12 @@ def real_llm(name, text):
         kept.append(line.strip())
     return "\n".join(kept).strip()
 
-# No tools yet, so the Researcher must not make up facts
-INSTRUCTIONS["Researcher"] = ("Suggest one idea for an Instagram post about a pastel party frock, in one sentence. "
-                              "Never make up facts or prices. Then write on a new line: HANDOFF to Marketer: your idea")
-
 # A fresh board and chat, and the real LLM for every bot
 board.clear()
 chat.clear()
-add_task("Suggest a post idea", "Researcher")
-add_task("Write the caption", "Marketer")
-add_task("Check sizes and price", "Support")
+add_task("Write the post", "Marketing")
+add_task("Check sizes and stock", "Production")
+add_task("Book the courier", "Operations")
 fake_llm = real_llm   # run() calls fake_llm, so point that name at the real LLM
-print(run("Researcher"))
+print(run("Marketing"))
 print(show_board())   # tasks still "doing" mean a bot forgot its HANDOFF line
