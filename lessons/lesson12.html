@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run it every day</title>
+<meta name="description" content="Lesson 12 of Build an AI Team: keep the team running for real. Services that restart, health checks and logs, backups, safe updates, laptop or server, and the final project: the whole Amal Designers team.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Kalam:wght@400&family=Patrick+Hand&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem("notebook-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
+<link rel="stylesheet" href="https://mo-ri-ch.github.io/study-notebook-design/v1/style.css">
+<link rel="stylesheet" href="../assets/course.css">
+<style>
+  .order { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; }
+  .done-list { display: grid; gap: 4px; margin: 0 0 8px; padding: 0; list-style: none; counter-reset: st; }
+  .done-list li { counter-increment: st; padding: 5px 10px; border: 1.5px solid var(--ink); border-radius: 6px; background: var(--note-green); color: var(--ink); font-size: .9rem; }
+  .done-list li::before { content: counter(st) ". "; font-weight: 700; }
+  .done-list li.empty { background: transparent; border-style: dashed; color: var(--pencil); }
+  .done-list li.empty::before { content: ""; }
+  .survive { display: grid; gap: 4px; margin: 8px 0 0; }
+  .survive div { padding: 5px 10px; border-radius: 6px; border: 1.5px solid var(--ink); font-size: .9rem; color: var(--ink); }
+  .survive .ok { background: var(--note-green); }
+  .survive .lost { background: var(--hl-pink); }
+  .proj { width: 100%; border-collapse: collapse; font-size: .92rem; margin: 8px 0 4px; }
+  .proj th, .proj td { border-bottom: 1px dashed var(--rule); padding: 4px 6px; text-align: right; }
+  .proj th:first-child, .proj td:first-child { text-align: left; }
+  .stamp { display: inline-block; border: 2px solid var(--ink); border-radius: 6px; padding: 2px 8px; font-family: var(--mono); font-size: .8rem; background: var(--hl-yellow); color: var(--ink); }
+  .clock { font-family: var(--mono); font-size: .85rem; font-weight: 700; }
+  .qrow { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px dashed var(--rule); font-size: .92rem; }
+  .verdict { margin: 10px 0 0; padding: 8px 12px; border: 2px solid var(--ink); border-radius: 8px; background: var(--card); }
+  .vnote { font-size: .9rem; color: var(--pencil); }
+  .checks label { display: flex; gap: 8px; align-items: baseline; padding: 3px 0; }
+  @media (max-width: 560px) { .qrow { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body data-pen="blue">
+<div class="wrap">
+  <header class="topbar">
+    <a class="home" href="../">← Build an AI Team</a>
+    <span class="where">Lesson 12 of 12</span>
+  </header>
+
+  <main data-paged>
+    <div class="paged-head">
+      <h1>Run it every day</h1>
+      <div class="progress" aria-label="Lesson parts"></div>
+    </div>
+
+    <!-- 1 -->
+    <section class="part" data-title="What keeps it running">
+      <h2>What keeps it running</h2>
+      <p class="say">Everything your team does, chats and scheduled jobs, runs inside each bot's <mark>gateway</mark>. If a gateway stops, that bot goes quiet. In Lesson 9 you installed each gateway as a <b>service</b>: the computer restarts it if it crashes, and starts it again when the computer starts. A service can't wake a sleeping laptop, though.<br><b class="eqbox">gateway stops → bot goes quiet</b></p>
+      <div class="activity">
+        <div class="do">Something happens. Does the team come back by itself?</div>
+        <div id="s1Rows"></div>
+        <p class="redcheck" id="s1Say" hidden></p>
+      </div>
+      <p class="say near" style="position:relative">Check a bot any time with <code>marketing gateway status</code>.<button class="doubt" type="button" data-peek-from="wslPeek" aria-label="On Windows too?">🤔</button></p>
+      <div hidden id="wslPeek"><b>🤔 On Windows too?</b>
+        <div style="margin-top:6px">With WSL2, the services live inside Ubuntu, and Ubuntu only starts when something opens it. After Windows restarts, open the Ubuntu app once (or set it to open when you log in), and the gateways start with it.</div>
+      </div>
+      <p class="hook">And when it's running, but something's off?</p>
+    </section>
+
+    <!-- 2 -->
+    <section class="part" data-title="Is it healthy?">
+      <h2>Is it healthy?</h2>
+      <p class="say">Three commands answer most questions. <code>status</code>: is it running? <code>logs</code>: what did it do, and what went wrong? <code>doctor</code>: is the setup itself OK? Start with status, then read the logs. Logs are the bot's diary: every message, job and error, with the time.<br><b class="eqbox">status → logs → doctor</b></p>
+      <div class="activity">
+        <div class="do">Which command do you run first?</div>
+        <div id="s2Rows"></div>
+        <p class="redcheck" id="s2Say" hidden></p>
+      </div>
+<pre><code>marketing gateway status   <span class="c"># running?</span>
+marketing logs             <span class="c"># what happened, and errors</span>
+hermes doctor              <span class="c"># config, keys and services OK?</span></code></pre>
+      <p class="hook">Now, the day a disk dies.</p>
+    </section>
+
+    <!-- 3 -->
+    <section class="part" data-title="Back it up">
+      <h2>Back it up</h2>
+      <p class="say"><code>hermes backup</code> saves all of <code>~/.hermes</code> into one zip: every bot, its memory, SOUL.md, schedules and keys. Because it holds keys, treat the zip like a password. Two more things: your business files live in the shared folder, not in Hermes, so copy that too; and a backup on the same laptop dies with the laptop.<br><b class="eqbox">back up Hermes and the shared folder · keep it off the laptop</b></p>
+      <div class="activity">
+        <div class="do">Choose your habits. Then the laptop's disk dies.</div>
+        <div id="s3Opts"></div>
+        <div class="btnrow"><button class="primary" id="s3Go">💥 The disk dies</button></div>
+        <div class="survive" id="s3Out"></div>
+      </div>
+<pre><code>hermes backup                    <span class="c"># → ~/hermes-backup-&lt;date&gt;.zip</span>
+hermes import hermes-backup-….zip <span class="c"># on a new machine, gateways stopped</span></code></pre>
+      <p class="hook">Backups also make updates safe.</p>
+    </section>
+
+    <!-- 4 -->
+    <section class="part" data-title="Update safely">
+      <h2>Update safely</h2>
+      <p class="say">Hermes gets a new version almost every week: fixes, and sometimes new settings. <code>hermes update</code> pulls it in and restarts the gateways. Update when you're around to check, never right before a busy sale day, and take a backup with it, so you can go back.<br><b class="eqbox">quiet time · backup · update · check</b></p>
+      <div class="activity">
+        <div class="do">Tap the steps in the right order.</div>
+        <ol class="done-list" id="s4Done"></ol>
+        <div class="order" id="s4Left"></div>
+        <p class="count" id="s4Say" style="margin:4px 0 0"></p>
+      </div>
+      <p class="hook">One last choice: where the team lives.</p>
+    </section>
+
+    <!-- 5 -->
+    <section class="part" data-title="Laptop or server?">
+      <h2>Laptop or server?</h2>
+      <p class="say">A laptop is fine if it stays on when jobs run. If it sleeps at night, or travels with you, move the team to a small <mark>server</mark>: a computer you rent online, about $5 a month. The gateway only calls out to Telegram and the model, so you open nothing on it except your login. A server that small can't run a local model, so bots there use an online one.</p>
+      <div class="activity">
+        <div class="do">Answer three questions about your business.</div>
+        <div id="s5Q"></div>
+        <div class="verdict" id="s5Say"></div>
+      </div>
+<pre><code><span class="c"># moving: back up on the laptop, then on the server</span>
+hermes import hermes-backup-….zip
+marketing gateway install
+sudo loginctl enable-linger "$USER"   <span class="c"># keep running after you log out</span></code></pre>
+      <p class="hook">Count it on new numbers.</p>
+    </section>
+
+    <section class="part" data-nonum data-title="✏️ Practice 12.1">
+      <h2>✏️ Practice 12.1</h2>
+      <p class="say">Remember:<br><b class="eqbox">gateway stops → bot goes quiet</b><br><b class="eqbox">back up Hermes and the shared folder · keep it off the laptop</b><br>Since your last backup, everything new can be lost.</p>
+      <div class="activity">
+        <div class="do"><span data-peek="Take a pen and paper, or use the ✎ pen on this page.">Work each one out.</span> Type the answer, press Check.</div>
+        <div class="pq" data-ans="60" data-tol="0.1" data-hint="Cost a month × 12 months." data-work="$5 × 12 = $60 a year.">
+          <div class="pq-q">A small server costs <b>$5</b> a month. What does it cost for a year?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="7" data-tol="0.1" data-hint="Which jobs fall between 11 PM and 7 AM? Then × 7 days." data-work="Only the 3 AM check falls while it sleeps: 1 a day × 7 days = 7.">
+          <div class="pq-q">The laptop sleeps from <b>11 PM to 7 AM</b>. Jobs run every day at 9 AM, 2 PM, 8 PM and 3 AM. How many jobs are missed in a week?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="6" data-tol="0.1" data-hint="Count the days from Sunday night to Saturday night." data-work="Monday, Tuesday, Wednesday, Thursday, Friday, Saturday: 6 days.">
+          <div class="pq-q">You back up every <b>Sunday</b> night. The disk dies the next <b>Saturday</b> night. How many days of new work are lost?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+        <div class="pq" data-ans="100" data-tol="0.1" data-hint="80 + 25% of 80." data-work="25% of 80 = 20. 80 + 20 = 100 orders a month.">
+          <div class="pq-q">The business gets <b>80</b> orders a month. The Analyst projects <b>25%</b> more in a year. How many orders a month is that?</div>
+          <div class="pq-in"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><button class="primary pq-check" type="button" hidden>Check</button></div>
+          <div class="pq-fb" aria-live="polite"></div>
+        </div>
+      </div>
+      <p class="hook">Now, the final project.</p>
+    </section>
+
+    <!-- 7 -->
+    <section class="part" data-title="Final project: the whole team">
+      <h2>Final project: the whole team</h2>
+      <p class="say">Here is Amal Designers with every lesson switched on: four bots in sandboxes, on Telegram, with schedules, approvals and backups. Marketing doesn't just plan: it gives the social media manager one task each morning and checks in each evening.<br><b class="eqbox">bots plan, draft and follow up · people decide</b></p>
+      <div class="activity">
+        <div class="do">Step through one Monday.</div>
+        <div class="tx" id="s7Tx" style="min-height:7em;align-content:start"></div>
+        <p class="count" id="s7Say" style="margin:8px 0 0"></p>
+        <div class="btnrow">
+          <button class="primary" id="s7Next">Next →</button>
+          <button id="s7Back" hidden>← Back</button>
+          <button id="s7Again" hidden>↺ Start again</button>
+        </div>
+      </div>
+<pre><code>marketing cron create "0 9 * * *" "Give the social media manager today's one task, with a draft caption." --name "Daily task" --deliver telegram
+marketing cron create "0 20 * * *" "Ask if today's task is done. Report to the CEO." --name "Check-in" --deliver telegram</code></pre>
+      <p class="hook">And the Analyst looks further ahead.</p>
+    </section>
+
+    <!-- 8 -->
+    <section class="part" data-title="The Analyst's projection">
+      <h2>The Analyst's projection</h2>
+      <p class="say">Each Monday the Analyst also shows where today's pace leads in 1, 2 and 3 years. That's a <mark>projection</mark>: it assumes the same growth every month. It's useful for planning fabric, money and help, but it is not a promise. Its SOUL.md says: “Label every future number as a projection, and say what it assumes.”<br><b class="eqbox">in n months = today × (1 + growth)ⁿ</b><br>60 orders, 3% a month: 60 × 1.03¹² ≈ 86 in a year.</p>
+      <div class="activity">
+        <div class="do">Set today's numbers. Watch the projection.</div>
+        <div class="tryrow"><label for="s8N">orders a month</label><input id="s8N" type="range" min="20" max="200" step="10" value="60" style="width:8em"><b id="s8NV"></b>
+          <label for="s8G" style="margin-left:10px">growth a month</label><input id="s8G" type="range" min="0" max="8" step="1" value="3" style="width:8em"><b id="s8GV"></b></div>
+        <table class="proj" id="s8T"></table>
+        <p class="count" id="s8Say" style="margin:4px 0 0"></p>
+      </div>
+      <p class="hook">What if the team stops working one day?</p>
+    </section>
+
+    <!-- 9 -->
+    <section class="part" data-title="When it goes wrong">
+      <h2>When it goes wrong</h2>
+      <p class="say">Running for real means things break. Start with status and logs, and keep your last backup somewhere safe.</p>
+      <div class="activity">
+        <div class="do">Match each problem to its fix.</div>
+        <div id="s9Rows"></div>
+        <p class="redcheck" id="s9Say" hidden></p>
+      </div>
+      <p class="vnote">Checked against Hermes Agent v0.23 (November 2026). See the <a href="https://hermes-agent.nousresearch.com/docs/reference/cli-commands" target="_blank" rel="noopener">Hermes command list</a> for every option.</p>
+      <p class="hook">Quick check: did it all make sense?</p>
+    </section>
+
+    <!-- 10 -->
+    <section class="part" data-title="Lesson test">
+      <h2>Lesson 12 test</h2>
+      <p class="say">5 questions, one for each big idea in this lesson. Answer them all right to pass. A wrong answer tells you why, and which page to look at again.</p>
+      <div class="test" data-test="12">
+        <div class="quiz" data-page="lesson12.html#1" data-topic="What keeps it running" data-right="Right. A service starts again when the computer starts.">
+          <div class="q"><small>1. Predict</small>The gateways are installed as services. The laptop restarts at night for an update. What happens?</div>
+          <div class="options">
+            <button data-why="That's what a service saves you from.">The bots stay off until you start each one</button>
+            <button data-right>The gateways start again by themselves</button>
+            <button data-why="A restart doesn't touch your bots' settings or memory.">The bots forget everything</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson12.html#3" data-topic="Back it up" data-right="Right. Off the laptop, and private, because it holds your keys.">
+          <div class="q"><small>2. Decide</small>Where should the backup zip live?</div>
+          <div class="options">
+            <button data-why="Then it dies with the laptop.">Next to ~/.hermes on the laptop</button>
+            <button data-why="Bots can read the shared folder, and the zip holds your keys.">In the shared folder</button>
+            <button data-right>On a drive or private cloud folder, away from the laptop</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson12.html#4" data-topic="Update safely" data-right="Right. Update when you have time to check, with a backup.">
+          <div class="q"><small>3. Pick</small>A new Hermes version is out on Friday. Your big sale starts Saturday. When do you update?</div>
+          <div class="options">
+            <button data-why="If something breaks, it breaks on your busiest day.">Friday night, before the sale</button>
+            <button data-right>After the sale, at a quiet time, with <code>hermes update --backup</code></button>
+            <button data-why="Skipping updates forever means missing fixes.">Never: it works now</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson12.html#5" data-topic="Laptop or server?" data-right="Right. Jobs need a computer that's awake when they run.">
+          <div class="q"><small>4. Choose</small>Your laptop goes in a bag every night, and the Operations check runs at 3 AM. What fits?</div>
+          <div class="options">
+            <button data-right>A small server with an online model</button>
+            <button data-why="Nothing runs while the laptop sleeps.">The laptop, as it is</button>
+            <button data-why="A $5 server is too small for a local model.">A $5 server running Ollama</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+        <div class="quiz" data-page="lesson12.html#8" data-topic="The Analyst's projection" data-right="Right. It's a projection that assumes steady growth, not a promise.">
+          <div class="q"><small>5. Read it</small>The report says “about 170 orders a month in 3 years.” How should the CEO read it?</div>
+          <div class="options">
+            <button data-why="Nobody can promise 3 years of steady growth.">A target the team will hit</button>
+            <button data-right>A projection: if growth stays the same every month</button>
+            <button data-why="It's useful for planning, as long as you know what it assumes.">Useless: ignore it</button>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+      <p class="hook">The end of the course.</p>
+    </section>
+
+    <!-- 11 -->
+    <section class="part" data-title="Your team, for real">
+      <h2>Your team, for real</h2>
+      <p class="say">You started with one question: why a team? Now you run one: bots that talk, hand off, live in sandboxes, answer on Telegram, work on a schedule, ask before risky steps, and keep running. You're the CEO. Tick what you've really done:</p>
+      <div class="activity" id="s11Checks"><div class="checks">
+        <label><input type="checkbox" data-k="service"> Every bot's gateway is installed as a service, and comes back after a restart</label>
+        <label><input type="checkbox" data-k="health"> Ran <code>gateway status</code>, <code>logs</code> and <code>hermes doctor</code> once, to know what healthy looks like</label>
+        <label><input type="checkbox" data-k="backup"> Made a backup of Hermes and the shared folder, and stored it off the laptop</label>
+        <label><input type="checkbox" data-k="update"> Updated once with <code>--backup</code>, then checked</label>
+        <label><input type="checkbox" data-k="where"> Decided: laptop or server</label>
+        <label><input type="checkbox" data-k="final"> Ran the whole team for one real week</label>
+        </div>
+      </div>
+      <p class="bot-say" data-bot="marketing">Monday's task is ready for the social media manager. Anything you want to change, CEO?</p>
+      <div class="open-question">
+        <div>The course ends here</div>
+        <div class="big">Your business doesn't. What will your team do first?</div>
+        <div><a href="../">Back to the course map</a></div>
+      </div>
+      <div class="mybiz" data-key="l12">Final project, for your business: write your team's one-page plan. For each bot: its job, its schedule, what it drafts, and which person decides. Then build it, one bot at a time.</div>
+      <p><button class="done-toggle" data-done="12">Mark lesson as done</button></p>
+    </section>
+  </main>
+</div>
+
+<nav class="pagebar" aria-label="Move between parts">
+  <div class="inner">
+    <button data-page-back>← Previous</button>
+    <span data-page-label></span>
+    <button class="primary" data-page-next>Next →</button>
+  </div>
+</nav>
+
+<script src="../assets/course.js"></script>
+<script src="../assets/practice.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/common.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/pen.js"></script>
+<script src="https://mo-ri-ch.github.io/study-notebook-design/v1/guide.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+AG.WHO.smm = ["a-note", "social media"];
+AG.WHO.designer = ["a-note", "designer"];
+
+function sortRows(rowsEl, sayEl, items, opts, allRight) {
+  let pick = {};
+  function draw() {
+    rowsEl.innerHTML = items.map(([l, right, why], i) => {
+      const p = pick[i], cls = p ? (p === right ? " right" : " wrong") : "";
+      return `<div class="sortrow${cls}" style="grid-template-columns:1fr"><span>${l}</span><span class="seg">${opts.map(([key, t]) =>
+        `<button type="button" data-i="${i}" data-b="${key}" class="${p === key ? "on" : ""}">${t}</button>`).join("")}</span>${p ? `<span class="why">${p === right ? "✓" : "✗"} ${why}</span>` : ""}</div>`;
+    }).join("");
+    rowsEl.querySelectorAll("button").forEach(b => b.onclick = () => { pick[b.dataset.i] = b.dataset.b; draw(); });
+    const n = Object.keys(pick).length, ok = items.filter((q, i) => pick[i] === q[1]).length;
+    sayEl.hidden = n < items.length; sayEl.classList.toggle("good", ok === items.length);
+    sayEl.textContent = ok === items.length ? allRight : `${ok} of ${items.length} right. Tap another choice to change one.`;
+  }
+  addReset(rowsEl, () => { pick = {}; draw(); });
+  draw();
+}
+
+// ---------- Part 1: does it come back? ----------
+sortRows($("s1Rows"), $("s1Say"), [
+  ["A gateway crashes at noon", "back", "The service sees it stop and starts it again."],
+  ["The laptop restarts after an update", "back", "Services start again when the computer starts (on Windows, once Ubuntu opens)."],
+  ["The laptop sleeps with the lid closed", "you", "Nothing runs while it sleeps. Jobs at those times are missed."],
+  ["The battery runs out", "you", "It's off until you plug it in and switch it on. Then the services start."],
+], [["back", "Comes back by itself"], ["you", "Waits for you"]], "✓ All 4 right. A service handles crashes and restarts. Sleep and power are up to you, or a server.");
+
+// ---------- Part 2: which command first? ----------
+sortRows($("s2Rows"), $("s2Say"), [
+  ["Marketing hasn't answered anyone since lunch", "status", "First: is its gateway even running?"],
+  ["It's running, but the 9 AM task never arrived", "logs", "The logs show whether the job ran, and any error."],
+  ["After changing config.yaml, no bot will start", "doctor", "Doctor checks the config, keys and services."],
+  ["A customer says the tracking reply was odd yesterday", "logs", "The logs show what Operations drafted, and when."],
+], [["status", "status"], ["logs", "logs"], ["doctor", "doctor"]], "✓ All 4 right. Running? Then what happened? Then is the setup OK?");
+
+// ---------- Part 3: the disk dies ----------
+(function disk() {
+  const H = [["hermes", "Run <code>hermes backup</code> every week"], ["shared", "Copy the shared folder every week"], ["off", "Keep the copies off the laptop (a drive or a private cloud folder)"]];
+  const opts = $("s3Opts"), out = $("s3Out");
+  let on = {};
+  function draw() {
+    opts.innerHTML = H.map(([k, t]) => `<label style="display:flex;gap:8px;align-items:baseline;padding:2px 0"><input type="checkbox" data-k="${k}" ${on[k] ? "checked" : ""}> ${t}</label>`).join("");
+    opts.querySelectorAll("input").forEach(c => c.onchange = () => { on[c.dataset.k] = c.checked; out.innerHTML = ""; });
+  }
+  $("s3Go").onclick = () => {
+    const safe = on.off;
+    const rows = [
+      ["The bots, their SOUL.md, memory and schedules", on.hermes && safe],
+      ["The keys (in the zip, so keep it private)", on.hermes && safe],
+      ["Orders, price list, captions and photos", on.shared && safe],
+    ];
+    let note = "";
+    if ((on.hermes || on.shared) && !safe) note = `<div class="lost">The copies were on the same disk, so they died too.</div>`;
+    else if (rows.every(r => r[1])) note = `<div class="ok">Install Hermes on a new machine, run <code>hermes import</code>, copy the folder back. At most a week lost.</div>`;
+    out.innerHTML = rows.map(([t, ok]) => `<div class="${ok ? "ok" : "lost"}">${ok ? "✓ Back" : "✗ Lost"}: ${t}</div>`).join("") + note;
+  };
+  addReset(opts, () => { on = {}; out.innerHTML = ""; draw(); });
+  draw();
+})();
+
+// ---------- Part 4: update in order ----------
+(function upd() {
+  const STEPS = [
+    ["Pick a quiet time when you're around", ""],
+    ["Check there is one: <code>hermes update --check</code>", "First pick a time you can watch it."],
+    ["Update with a backup: <code>hermes update --backup</code>", "Check there's an update first."],
+    ["Check the setup: <code>hermes doctor</code>", "Update first, then check."],
+    ["Check each bot runs: <code>marketing gateway status</code>", "Run doctor before checking each bot."],
+  ];
+  const mix = [3, 0, 4, 2, 1];
+  const done = $("s4Done"), left = $("s4Left"), say = $("s4Say");
+  let n = 0;
+  function draw(msg) {
+    done.innerHTML = STEPS.slice(0, n).map(s => `<li>${s[0]}</li>`).join("") + (n < STEPS.length ? `<li class="empty">Step ${n + 1}: ?</li>` : "");
+    left.innerHTML = mix.filter(i => i >= n).map(i => `<button type="button" data-i="${i}">${STEPS[i][0]}</button>`).join("");
+    left.querySelectorAll("button").forEach(b => b.onclick = () => {
+      const i = +b.dataset.i;
+      if (i === n) { n++; draw(n === STEPS.length ? "✓ All 5 in order. If anything's wrong, the backup lets you go back." : "✓ Right. What comes next?"); }
+      else draw("Not yet. " + STEPS[i][1]);
+    });
+    say.innerHTML = msg || "Which step comes first?";
+  }
+  addReset(left, () => { n = 0; draw(); });
+  draw();
+})();
+
+// ---------- Part 5: laptop or server? ----------
+(function where() {
+  const Q = [["sleep", "Is the laptop asleep, off or in a bag for part of the day?"], ["night", "Do any jobs run at those times?"], ["local", "Do your bots use a local model (Ollama)?"]];
+  const box = $("s5Q"), say = $("s5Say");
+  let a = {};
+  function draw() {
+    box.innerHTML = Q.map(([k, t]) => `<div class="qrow"><span>${t}</span><span class="seg">${["yes", "no"].map(v => `<button type="button" data-k="${k}" data-v="${v}" class="${a[k] === v ? "on" : ""}">${v}</button>`).join("")}</span></div>`).join("");
+    box.querySelectorAll("button").forEach(b => b.onclick = () => { a[b.dataset.k] = b.dataset.v; draw(); });
+    if (Object.keys(a).length < 3) { say.textContent = "Answer all three."; return; }
+    if (a.sleep === "no" || a.night === "no") say.innerHTML = "<b>Stay on the laptop.</b> It's awake whenever a job runs. Keep it plugged in, and back up weekly.";
+    else if (a.local === "yes") say.innerHTML = "<b>A server, with an online model.</b> A $5 server can't run Ollama. Or keep a desktop computer at home switched on, and run the local model there.";
+    else say.innerHTML = "<b>A small server, about $5 a month.</b> Move with <code>hermes backup</code> and <code>hermes import</code>, then install each gateway as a service there.";
+  }
+  addReset(box, () => { a = {}; draw(); });
+  draw();
+})();
+
+// ---------- Part 7: one Monday ----------
+AG.stepper({ tx: $("s7Tx"), say: $("s7Say"), next: $("s7Next"), back: $("s7Back"), again: $("s7Again"), steps: [
+  { add: [["analyst", "Weekly report: 18 orders (last week 15). Top seller: the yellow frock. Projection, not a promise: about 86 orders a month in a year at this pace."]], say: "9:00 AM. The Analyst's weekly job." },
+  { add: [["marketing", "Today's one task: post the yellow frock reel at 7 PM. Draft caption is in shared/posts/monday.md."]], say: "9:00 AM. Marketing gives the social media manager a task. A person posts; the bot only drafts." },
+  { add: [["production", "3 orders need the yellow frock in size 4. Fabric left for 2. Reorder? (designer decides)"], ["designer", "Yes, order 5 metres."]], say: "10:00 AM. Production flags a shortage. The designer decides." },
+  { add: [["operations", "Packing list: 4 parcels. Tracking messages drafted for the CEO to send."]], say: "2:00 PM. Operations' daily job. Drafts, not sends." },
+  { add: [["marketing", "Did the reel go up? Reply done, or tell me what's stuck."], ["smm", "Done ✅ 7:05 PM."]], say: "8:00 PM. Marketing checks in." },
+  { add: [["marketing", "Today: reel posted. Tomorrow's task: a customer review story. OK?"], ["ceo", "Approved."]], say: "8:05 PM. The CEO gets one short report, and one decision. Bots plan, draft and follow up; people decide." },
+] });
+
+// ---------- Part 8: projection ----------
+(function proj() {
+  const N = $("s8N"), G = $("s8G"), T = $("s8T"), say = $("s8Say");
+  const PRICE = 1450, f = x => Math.round(x).toLocaleString("en-US");
+  function draw() {
+    const n = +N.value, g = +G.value / 100; $("s8NV").textContent = n; $("s8GV").textContent = G.value + "%";
+    const rows = [1, 2, 3].map(y => { const o = n * Math.pow(1 + g, 12 * y), lo = n * Math.pow(1 + g / 2, 12 * y); return `<tr><td>in ${y} year${y > 1 ? "s" : ""}</td><td>${f(o)}</td><td>₹${f(o * PRICE)}</td><td>${f(lo)}</td></tr>`; });
+    T.innerHTML = `<tr><th></th><th>orders a month</th><th>sales a month</th><th>if growth halves</th></tr><tr><td>today</td><td>${f(n)}</td><td>₹${f(n * PRICE)}</td><td>${f(n)}</td></tr>` + rows.join("");
+    say.innerHTML = `<span class="stamp">PROJECTION, NOT A PROMISE</span> Assumes ${G.value}% growth every month and an average dress at ₹1,450.`;
+  }
+  N.oninput = draw; G.oninput = draw;
+  addReset(T, () => { N.value = 60; G.value = 3; draw(); });
+  draw();
+})();
+
+// ---------- Part 9: problem → fix ----------
+sortRows($("s9Rows"), $("s9Say"), [
+  ["After a power cut, one bot didn't come back", "service", "Its gateway was never installed as a service. Run <code>production gateway install</code>."],
+  ["A bot is running but ignores messages", "logs", "Read its logs: an expired key or a model error usually shows there."],
+  ["After an update, no bot will start", "doctor", "Run <code>hermes doctor</code>. If it can't fix it, go back using the backup you took with the update."],
+  ["The laptop was stolen", "import", "Revoke every key, install Hermes on a new machine, <code>hermes import</code> your last backup, then put in new keys."],
+], [["service", "Install the service"], ["logs", "Read the logs"], ["doctor", "Doctor, then roll back"], ["import", "Revoke, then import"]], "✓ All 4 right. Status, logs, doctor, and a backup kept elsewhere.");
+
+// ---------- Part 11: what you've really done ----------
+(function checks() {
+  const key = `${COURSE.id}-l12-checks`;
+  let saved = {}; try { saved = JSON.parse(localStorage.getItem(key) || "{}"); } catch (e) {}
+  document.querySelectorAll("#s11Checks input").forEach(c => {
+    c.checked = !!saved[c.dataset.k];
+    c.onchange = () => { saved[c.dataset.k] = c.checked; try { localStorage.setItem(key, JSON.stringify(saved)); } catch (e) {} };
+  });
+})();
+</script>
+</body>
+</html>

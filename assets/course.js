@@ -62,7 +62,7 @@ const COURSE_LESSONS = [
   { n: 11, label: "11", step: "safety", title: "Safe by default", file: "lesson11.html", ready: true, test: 9,
     summary: "Approval before anything risky, API keys kept secret, and a limit on what it can spend.",
     leaves: "It's safe. Will it still be running next week?" },
-  { n: 12, label: "12", step: "for real", title: "Run it every day", file: "lesson12.html", ready: false,
+  { n: 12, label: "12", step: "for real", title: "Run it every day", file: "lesson12.html", ready: true, test: 10,
     summary: "Keeps running after a restart, with logs, backups and updates. Final project: the full Amal Designers team, or one for your own business.",
     leaves: null },
 ];
