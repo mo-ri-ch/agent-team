@@ -1,0 +1,18 @@
+# Paste these settings into ~/.hermes/profiles/operations/config.yaml
+# (keep the model: section that "operations setup" wrote; replace any keys already there with these).
+# setup.sh writes a copy with HOME_DIR filled in, to ~/AmalDesigners/kit/
+
+terminal:
+  backend: docker              # Lesson 8: its own sandbox
+  docker_volumes:
+    - "HOME_DIR/AmalDesigners/shared:/workspace/shared"   # the one folder it shares with you
+  container_memory: 1024       # MB: one runaway bot can't freeze the laptop
+  docker_forward_env: []       # Lesson 11: keys stay out of the sandbox
+
+telegram:                      # Lesson 9: answer in the team group only when @mentioned
+  require_mention: true
+  exclusive_bot_mentions: true
+
+approvals:                     # Lesson 11: ask before anything risky
+  mode: manual
+  timeout: 300                 # seconds; no answer = denied

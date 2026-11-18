@@ -25,4 +25,6 @@ company. Interactive notebook-style lessons for beginners and teachers. Standalo
 11. Safe by default
 12. Run it every day
 
+**Starter kit:** [`starter-kit/`](starter-kit/) has every file for running the team: SOUL.md for each bot, settings, scheduled jobs, backup script and checklists.
+
 The notebook look comes from [study-notebook-design](https://github.com/mo-ri-ch/study-notebook-design).

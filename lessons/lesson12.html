@@ -166,7 +166,8 @@ sudo loginctl enable-linger "$USER"   <span class="c"># keep running after you l
         </div>
       </div>
 <pre><code>marketing cron create "0 9 * * *" "Give the social media manager today's one task, with a draft caption." --name "Daily task" --deliver telegram
-marketing cron create "0 20 * * *" "Ask if today's task is done. Report to the CEO." --name "Check-in" --deliver telegram</code></pre>
+marketing cron create "0 19 * * *" "Check whether today's task is done. If not, ask the social media manager what's stuck. Report to the CEO in one line." --name "Check-in" --deliver telegram
+<span class="c"># all five jobs: jobs.sh in the starter kit</span></code></pre>
       <p class="hook">And the Analyst looks further ahead.</p>
     </section>
 
@@ -254,7 +255,7 @@ marketing cron create "0 20 * * *" "Ask if today's task is done. Report to the C
     <!-- 11 -->
     <section class="part" data-title="Your team, for real">
       <h2>Your team, for real</h2>
-      <p class="say">You started with one question: why a team? Now you run one: bots that talk, hand off, live in sandboxes, answer on Telegram, work on a schedule, ask before risky steps, and keep running. You're the CEO. Tick what you've really done:</p>
+      <p class="say">You started with one question: why a team? Now you run one, as its CEO. Tick what you've really done:</p>
       <div class="activity" id="s11Checks"><div class="checks">
         <label><input type="checkbox" data-k="service"> Every bot's gateway is installed as a service, and comes back after a restart</label>
         <label><input type="checkbox" data-k="health"> Ran <code>gateway status</code>, <code>logs</code> and <code>hermes doctor</code> once, to know what healthy looks like</label>
@@ -270,6 +271,7 @@ marketing cron create "0 20 * * *" "Ask if today's task is done. Report to the C
         <div class="big">Your business doesn't. What will your team do first?</div>
         <div><a href="../">Back to the course map</a></div>
       </div>
+      <p class="say">Every file from Lessons 7–12 is in the <a href="https://github.com/mo-ri-ch/agent-team/tree/main/starter-kit" target="_blank" rel="noopener">starter kit</a>. Start with <code>bash setup.sh</code>.</p>
       <div class="mybiz" data-key="l12">Final project, for your business: write your team's one-page plan. For each bot: its job, its schedule, what it drafts, and which person decides. Then build it, one bot at a time.</div>
       <p><button class="done-toggle" data-done="12">Mark lesson as done</button></p>
     </section>
@@ -397,12 +399,12 @@ sortRows($("s2Rows"), $("s2Say"), [
 
 // ---------- Part 7: one Monday ----------
 AG.stepper({ tx: $("s7Tx"), say: $("s7Say"), next: $("s7Next"), back: $("s7Back"), again: $("s7Again"), steps: [
+  { add: [["production", "3 orders need the yellow frock in size 4. Fabric left for 2. Reorder? (designer decides)"], ["designer", "Yes, order 5 metres."]], say: "8:00 AM. Production's sewing plan flags a shortage. The designer decides." },
   { add: [["analyst", "Weekly report: 18 orders (last week 15). Top seller: the yellow frock. Projection, not a promise: about 86 orders a month in a year at this pace."]], say: "9:00 AM. The Analyst's weekly job." },
-  { add: [["marketing", "Today's one task: post the yellow frock reel at 7 PM. Draft caption is in shared/posts/monday.md."]], say: "9:00 AM. Marketing gives the social media manager a task. A person posts; the bot only drafts." },
-  { add: [["production", "3 orders need the yellow frock in size 4. Fabric left for 2. Reorder? (designer decides)"], ["designer", "Yes, order 5 metres."]], say: "10:00 AM. Production flags a shortage. The designer decides." },
-  { add: [["operations", "Packing list: 4 parcels. Tracking messages drafted for the CEO to send."]], say: "2:00 PM. Operations' daily job. Drafts, not sends." },
-  { add: [["marketing", "Did the reel go up? Reply done, or tell me what's stuck."], ["smm", "Done ✅ 7:05 PM."]], say: "8:00 PM. Marketing checks in." },
-  { add: [["marketing", "Today: reel posted. Tomorrow's task: a customer review story. OK?"], ["ceo", "Approved."]], say: "8:05 PM. The CEO gets one short report, and one decision. Bots plan, draft and follow up; people decide." },
+  { add: [["marketing", "Today's one task: post the yellow frock reel at 6 PM. Draft caption is in shared/posts/monday.md."]], say: "9:00 AM. Marketing gives the social media manager a task. A person posts; the bot only drafts." },
+  { add: [["operations", "Packing list: 4 parcels. Tracking messages drafted for the CEO to send."]], say: "3:00 PM. Operations' packing job. Drafts, not sends." },
+  { add: [["marketing", "Did the reel go up? Reply done, or tell me what's stuck."], ["smm", "Done ✅ 6:10 PM."]], say: "7:00 PM. Marketing checks in." },
+  { add: [["marketing", "Today: reel posted. Tomorrow's task: a customer review story. OK?"], ["ceo", "Approved."]], say: "7:05 PM. The CEO gets one short report, and one decision. Bots plan, draft and follow up; people decide." },
 ] });
 
 // ---------- Part 8: projection ----------
